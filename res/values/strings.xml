@@ -8,6 +8,7 @@
     <string name="action_speedo">Tacho</string>
     <string name="action_help">Hilfe</string>
     <string name="bluetooth">Bluetooth</string>
+    <string name="refresh">Neu laden</string>
     <string name="passwort">Passwort</string>
 
 </resources>
