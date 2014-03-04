@@ -2,7 +2,12 @@
 <resources>
 
     <string name="app_name">E-App</string>
-    <string name="action_settings">Settings</string>
-    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Einstellungen</string>
+    <string name="action_main">Home</string>
+    <string name="action_about">Über</string>
+    <string name="action_speedo">Tacho</string>
+    <string name="action_help">Hilfe</string>
+    <string name="bluetooth">Bluetooth</string>
+    <string name="passwort">Passwort</string>
 
 </resources>

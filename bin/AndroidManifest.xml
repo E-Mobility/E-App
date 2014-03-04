@@ -22,6 +22,16 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name="de.dhbw.e_mobility.e_app.AboutActivity" >
+        </activity>
+        <activity android:name="de.dhbw.e_mobility.e_app.BluetoothActivity" >
+        </activity>
+        <activity android:name="de.dhbw.e_mobility.e_app.HelpActivity" >
+        </activity>
+        <activity android:name="de.dhbw.e_mobility.e_app.SettingsActivity" >
+        </activity>
+        <activity android:name="de.dhbw.e_mobility.e_app.SpeedoActivity" >
+        </activity>
     </application>
 
 </manifest>
