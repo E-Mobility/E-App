@@ -21,6 +21,9 @@ public class MainActivity extends Activity {
 		return true;
 	}
 
+	// TODO Activities beim wechseln schliessen oder so, weil sonst mehrere
+	// uebereinander geoeffnet sind..
+
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case R.id.action_settings:

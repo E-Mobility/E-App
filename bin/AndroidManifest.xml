@@ -8,8 +8,12 @@
         android:minSdkVersion="10"
         android:targetSdkVersion="10" />
 
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+    <uses-permission android:name="android.permission.BLUETOOTH" />
+
     <application
         android:allowBackup="true"
+        android:debuggable="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
@@ -32,6 +36,11 @@
         </activity>
         <activity android:name="de.dhbw.e_mobility.e_app.SpeedoActivity" >
         </activity>
+        <activity
+            android:name=".DeviceListActivity"
+            android:configChanges="orientation|keyboardHidden"
+            android:label="@string/deviceList_select"
+            android:theme="@android:style/Theme.Dialog" />
     </application>
 
 </manifest>
