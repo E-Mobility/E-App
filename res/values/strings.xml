@@ -15,16 +15,19 @@
     <string name="deviceList_scanning">Suche läuft &#8230;</string>
     <string name="deviceList_select">Gerät auswählen</string>
     <string name="deviceList_noDevices">Kein Bluetooth-Gerät in der Nähe gefunden</string>
-    <string name="deviceList_noPairedDevices">Kein Pairing-Geräte verfügbar</string>
+    <string name="deviceList_noPairedDevices">Kein Pairing-Gerät verfügbar</string>
     <string name="deviceList_pairedDevices">Pairing-Geräte</string>
     <string name="deviceList_devices">Verfügbare Geräte</string>
     <string name="deviceList_scan">Nach Geräten suchen</string>
 
     <!-- SettingsActivity -->
     
-    <string name="settings_bluetoothNotAvailable">Bluetooth ist leider nicht möglich!</string>
-    <string name="settings_bluetoothNotEnabled">Bluetooth wurde nicht aktiviert!</string>
     <string name="settings_bluetooth">Bluetooth</string>
+    <string name="settings_bluetoothNotAvailable">Bluetooth ist leider nicht möglich!</string>
+    <string name="settings_bluetoothDisabled">Bluetooth ist deaktiviert</string>
+    <string name="settings_bluetoothEnabled">Bluetooth aktiv, aber nicht verbunden</string>
+    <string name="settings_bluetoothRequestDisconnect">Soll die Verbindung getrennt werden?</string>
+    <string name="settings_bluetoothConnected">Verbunden mit </string>
     
     <string name="title_connecting">connecting...</string>
     <string name="title_connected_to">connected: </string>

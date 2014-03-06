@@ -28,8 +28,6 @@
         </activity>
         <activity android:name="de.dhbw.e_mobility.e_app.AboutActivity" >
         </activity>
-        <activity android:name="de.dhbw.e_mobility.e_app.BluetoothActivity" >
-        </activity>
         <activity android:name="de.dhbw.e_mobility.e_app.HelpActivity" >
         </activity>
         <activity android:name="de.dhbw.e_mobility.e_app.SettingsActivity" >
@@ -37,7 +35,7 @@
         <activity android:name="de.dhbw.e_mobility.e_app.SpeedoActivity" >
         </activity>
         <activity
-            android:name=".DeviceListActivity"
+            android:name="de.dhbw.e_mobility.e_app.bluetooth.BluetoothDiscoveryActivity"
             android:configChanges="orientation|keyboardHidden"
             android:label="@string/deviceList_select"
             android:theme="@android:style/Theme.Dialog" />

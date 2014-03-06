@@ -14,10 +14,14 @@
  * limitations under the License.
  */
 
-package de.dhbw.e_mobility.e_app;
+package de.dhbw.e_mobility.e_app.bluetooth;
 
 import java.util.Set;
 
+import de.dhbw.e_mobility.e_app.R;
+import de.dhbw.e_mobility.e_app.R.id;
+import de.dhbw.e_mobility.e_app.R.layout;
+import de.dhbw.e_mobility.e_app.R.string;
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
@@ -59,7 +63,7 @@ import android.widget.TextView;
  * the MAC address of the device is sent back to the parent Activity in the
  * result Intent.
  */
-public class DeviceListActivity extends Activity {
+public class BluetoothDiscoveryActivity extends Activity {
 
 	// Return Intent extra
 	public static String EXTRA_DEVICE_ADDRESS = "device_address";
@@ -109,7 +113,7 @@ public class DeviceListActivity extends Activity {
 		// Register for broadcasts when a device is discovered
 		IntentFilter filter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
 		this.registerReceiver(mReceiver, filter);
-
+		
 		// Register for broadcasts when discovery has finished
 		filter = new IntentFilter(BluetoothAdapter.ACTION_DISCOVERY_FINISHED);
 		this.registerReceiver(mReceiver, filter);
@@ -124,6 +128,7 @@ public class DeviceListActivity extends Activity {
 		if (pairedDevices.size() > 0) {
 			findViewById(R.id.deviceList_pairedDevices).setVisibility(
 					View.VISIBLE);
+			findViewById(R.id.deviceList_pairedDevicesList).setEnabled(true);
 			for (BluetoothDevice device : pairedDevices) {
 				mPairedDevicesArrayAdapter.add(device.getName() + "\n"
 						+ device.getAddress());
@@ -195,6 +200,8 @@ public class DeviceListActivity extends Activity {
 		@Override
 		public void onReceive(Context context, Intent intent) {
 			String action = intent.getAction();
+			
+			// TODO Klicken auf "kein Paringgeraet" verbieten -> sonst absturtz!
 
 			// When discovery finds a device
 			if (BluetoothDevice.ACTION_FOUND.equals(action)) {

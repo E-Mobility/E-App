@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package de.dhbw.e_mobility.e_app;
+package de.dhbw.e_mobility.e_app.bluetooth;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -26,10 +26,9 @@ import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothServerSocket;
 import android.bluetooth.BluetoothSocket;
 import android.content.Context;
-import android.os.Bundle;
 import android.os.Handler;
-import android.os.Message;
 import android.util.Log;
+import de.dhbw.e_mobility.e_app.SettingsActivity;
 
 /**
  * This class does all the work for setting up and managing Bluetooth
@@ -43,14 +42,12 @@ public class BluetoothChatService {
 	private static final boolean D = true;
 
 	// Name for the SDP record when creating server socket
-	private static final String NAME_SECURE = "BluetoothChatSecure";
-	private static final String NAME_INSECURE = "BluetoothChatInsecure";
+	private static final String NAME_SECURE = "eAppBluetoothSecure";
+	private static final String NAME_INSECURE = "eAppBluetoothInsecure";
 
 	// Unique UUID for this application
-	private static final UUID MY_UUID_SECURE = UUID
-			.fromString("fa87c0d0-afac-11de-8a39-0800200c9a66");
-	private static final UUID MY_UUID_INSECURE = UUID
-			.fromString("8ce255c0-200a-11e0-ac64-0800200c9a66");
+	private static final UUID MY_UUID_SECURE = UUID.fromString("1e6a1e60-a573-11e3-a5e2-0800200c9a66");
+	private static final UUID MY_UUID_INSECURE = UUID.fromString("1e6a1e61-a573-11e3-a5e2-0800200c9a66");
 
 	// Member fields
 	private final BluetoothAdapter mAdapter;
@@ -77,9 +74,10 @@ public class BluetoothChatService {
 	 *            The UI Activity Context
 	 * @param handler
 	 *            A Handler to send messages back to the UI Activity
+	 * @param mBluetoothAdapter 
 	 */
-	public BluetoothChatService(Context context, Handler handler) {
-		mAdapter = BluetoothAdapter.getDefaultAdapter();
+	public BluetoothChatService( Handler handler, BluetoothAdapter mBluetoothAdapter) {
+		mAdapter = mBluetoothAdapter;
 		mState = STATE_NONE;
 		mHandler = handler;
 	}
@@ -213,12 +211,12 @@ public class BluetoothChatService {
 		mConnectedThread.start();
 
 		// Send the name of the connected device back to the UI Activity
-		Message msg = mHandler
-				.obtainMessage(SettingsActivity.MESSAGE_DEVICE_NAME);
-		Bundle bundle = new Bundle();
-		bundle.putString(SettingsActivity.DEVICE_NAME, device.getName());
-		msg.setData(bundle);
-		mHandler.sendMessage(msg);
+//		Message msg = mHandler
+//				.obtainMessage(SettingsActivity.MESSAGE_DEVICE_NAME);
+//		Bundle bundle = new Bundle();
+//		bundle.putString(SettingsActivity.DEVICE_NAME, device.getName());
+//		msg.setData(bundle);
+//		mHandler.sendMessage(msg);
 
 		setState(STATE_CONNECTED);
 	}
@@ -277,11 +275,13 @@ public class BluetoothChatService {
 	 */
 	private void connectionFailed() {
 		// Send a failure message back to the Activity
-		Message msg = mHandler.obtainMessage(SettingsActivity.MESSAGE_TOAST);
-		Bundle bundle = new Bundle();
-		bundle.putString(SettingsActivity.TOAST, "Unable to connect device");
-		msg.setData(bundle);
-		mHandler.sendMessage(msg);
+//		Message msg = mHandler.obtainMessage(SettingsActivity.MESSAGE_TOAST);
+//		Bundle bundle = new Bundle();
+//		bundle.putString(SettingsActivity.TOAST, "Unable to connect device");
+//		msg.setData(bundle);
+//		mHandler.sendMessage(msg);
+		
+		Log.d(TAG, "Connection FAILED!");
 
 		// Start the service over to restart listening mode
 		BluetoothChatService.this.start();
@@ -292,12 +292,14 @@ public class BluetoothChatService {
 	 */
 	private void connectionLost() {
 		// Send a failure message back to the Activity
-		Message msg = mHandler.obtainMessage(SettingsActivity.MESSAGE_TOAST);
-		Bundle bundle = new Bundle();
-		bundle.putString(SettingsActivity.TOAST, "Device connection was lost");
-		msg.setData(bundle);
-		mHandler.sendMessage(msg);
+//		Message msg = mHandler.obtainMessage(SettingsActivity.MESSAGE_TOAST);
+//		Bundle bundle = new Bundle();
+//		bundle.putString(SettingsActivity.TOAST, "Device connection was lost");
+//		msg.setData(bundle);
+//		mHandler.sendMessage(msg);
 
+		Log.d(TAG, "Connection LOST!");
+		
 		// Start the service over to restart listening mode
 		BluetoothChatService.this.start();
 	}
@@ -427,8 +429,9 @@ public class BluetoothChatService {
 			Log.i(TAG, "BEGIN mConnectThread SocketType:" + mSocketType);
 			setName("ConnectThread" + mSocketType);
 
-			// Always cancel discovery because it will slow down a connection
-			mAdapter.cancelDiscovery();
+//			// Always cancel discovery because it will slow down a connection
+//			mAdapter.cancelDiscovery();
+			//.. wird schon im "bluetoothDeviceProvider" gemacht
 
 			// Make a connection to the BluetoothSocket
 			try {
