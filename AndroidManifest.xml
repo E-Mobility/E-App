@@ -12,19 +12,35 @@
     <uses-permission android:name="android.permission.BLUETOOTH" />
 
     <application
+        android:name=".Helper"
         android:allowBackup="true"
         android:debuggable="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
-        <activity
-            android:name="de.dhbw.e_mobility.e_app.MainActivity"
+
+        <!--
+             <activity
+            android:name="de.dhbw.e_mobility.e_app.test.BluetoothDemo"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+        -->
+        <activity
+            android:name="de.dhbw.e_mobility.e_app.MainActivity"
+            android:label="@string/app_name" >
+
+            <!--  -->
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+            <!--  -->
         </activity>
         <activity android:name="de.dhbw.e_mobility.e_app.AboutActivity" >
         </activity>
@@ -38,6 +54,11 @@
             android:name="de.dhbw.e_mobility.e_app.bluetooth.BluetoothDiscoveryActivity"
             android:configChanges="orientation|keyboardHidden"
             android:label="@string/deviceList_select"
+            android:theme="@android:style/Theme.Dialog" />
+        <activity
+            android:name="de.dhbw.e_mobility.e_app.bluetooth.BluetoothDisconnectDialog"
+            android:configChanges="orientation|keyboardHidden"
+            android:label="@string/dialog_disconnect_title"
             android:theme="@android:style/Theme.Dialog" />
     </application>
 

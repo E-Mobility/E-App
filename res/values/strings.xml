@@ -22,15 +22,23 @@
 
     <!-- SettingsActivity -->
     
+    <string name="bluetooth_bound_bounded">Erfolgreich gekoppelt mit </string>
+    <string name="bluetooth_bound_bounding">Kopplung läuft &#8230;</string>
+    <string name="bluetooth_bound_none">Entkoppelt</string>
+
     <string name="settings_bluetooth">Bluetooth</string>
     <string name="settings_bluetoothNotAvailable">Bluetooth ist leider nicht möglich!</string>
     <string name="settings_bluetoothDisabled">Bluetooth ist deaktiviert</string>
     <string name="settings_bluetoothEnabled">Bluetooth aktiv, aber nicht verbunden</string>
-    <string name="settings_bluetoothRequestDisconnect">Soll die Verbindung getrennt werden?</string>
     <string name="settings_bluetoothConnected">Verbunden mit </string>
     
     <string name="title_connecting">connecting...</string>
     <string name="title_connected_to">connected: </string>
     <string name="title_not_connected">not connected</string>
+
+    <string name="dialog_disconnect_title">Verbindung trennen</string>
+    <string name="dialog_disconnect">Kopplung wirklich aufheben?</string>
+    <string name="dialog_yes">Ja</string>
+    <string name="dialog_no">Nein</string>
     
 </resources>

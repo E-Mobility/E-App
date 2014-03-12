@@ -16,7 +16,6 @@
 
 package de.dhbw.e_mobility.e_app;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -28,6 +27,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 import de.dhbw.e_mobility.e_app.bluetooth.BluetoothDeviceProvider;
+import de.dhbw.e_mobility.e_app.bluetooth.BluetoothDisconnectDialog;
 import de.dhbw.e_mobility.e_app.bluetooth.BluetoothDiscoveryActivity;
 
 /**
@@ -40,12 +40,20 @@ public class SettingsActivity extends PreferenceActivity {
 	public static final int MESSAGE_READ = 2;
 	public static final int MESSAGE_WRITE = 3;
 	public static final int MESSAGE_DEVICE_NAME = 4;
-	public static final int MESSAGE_TOAST = 5;
+	public static final int MESSAGE_LONG_TOAST = 5;
+	public static final int MESSAGE_SHORT_TOAST = 6;
+	public static final int UPDATE_BLUETOOTHINFO = 7;
 
 	// Intent Request Codes
-	protected static final int BLUETOOTH_REQUEST_ENABLE = 1;
-	protected static final int BLUETOOTH_REQUEST_DISCONNECT = 2;
-	protected static final int BLUETOOTH_REQUEST_DISCOVERY = 3;
+	private static final int BLUETOOTH_REQUEST_ENABLE = 1;
+	private static final int BLUETOOTH_REQUEST_DISCONNECT = 2;
+	private static final int BLUETOOTH_REQUEST_DISCOVERY = 3;
+
+	// Preferences Elements
+	private static final String SETTINGS_BLUETOOTH = "settings_bluetooth";
+
+	// Message parameter
+	public static final String MESSAGE_TEXT = "settings_bluetooth";
 
 	// Settings Items
 	private BluetoothDeviceProvider deviceProvider;
@@ -55,10 +63,13 @@ public class SettingsActivity extends PreferenceActivity {
 		super.onCreate(savedInstanceState);
 		addPreferencesFromResource(R.layout.activity_settings);
 
-		deviceProvider = new BluetoothDeviceProvider(setupHandler());
+		// Setup own handler
+		final Handler mHandler = setupHandler();
+		deviceProvider = new BluetoothDeviceProvider(mHandler,
+				getApplicationContext());
 
 		// Get Bluetooth-Preference
-		Preference pref_bluetooth = (Preference) findPreference("settings_bluetooth");
+		Preference pref_bluetooth = (Preference) findPreference(SETTINGS_BLUETOOTH);
 
 		// Initialize the click events for the Bluetooth-Preference
 		pref_bluetooth
@@ -73,18 +84,18 @@ public class SettingsActivity extends PreferenceActivity {
 							return true;
 						}
 						if (deviceProvider.isConnected()) {
-							startActivityForResult(
-									new Intent(
-											""
-													+ R.string.settings_bluetoothRequestDisconnect),
+							startActivityForResult(new Intent(
+									getApplicationContext(),
+									BluetoothDisconnectDialog.class),
 									BLUETOOTH_REQUEST_DISCONNECT);
 							return true;
 						}
+						BluetoothDiscoveryActivity
+								.setDeviceProvider(deviceProvider);
 						startActivityForResult(new Intent(
 								getApplicationContext(),
 								BluetoothDiscoveryActivity.class),
 								BLUETOOTH_REQUEST_DISCOVERY);
-
 						return true;
 					}
 				});
@@ -96,57 +107,17 @@ public class SettingsActivity extends PreferenceActivity {
 		return new Handler() {
 			@Override
 			public void handleMessage(Message msg) {
-				if (msg.what == MESSAGE_TOAST) {
-					Toast.makeText(getApplicationContext(), msg.arg1,
+				if (msg.what == MESSAGE_LONG_TOAST) {
+					Toast.makeText(getApplicationContext(),
+							msg.getData().getString(MESSAGE_TEXT),
 							Toast.LENGTH_LONG).show();
-				}
+				} else if (msg.what == MESSAGE_SHORT_TOAST) {
+					Toast.makeText(getApplicationContext(),
+							msg.getData().getString(MESSAGE_TEXT),
+							Toast.LENGTH_SHORT).show();
 
-				switch (msg.what) {
-				// case MESSAGE_STATE_CHANGE:
-				// if (D)
-				// Log.i(TAG, "MESSAGE_STATE_CHANGE: " + msg.arg1);
-				// switch (msg.arg1) {
-				// case BluetoothChatService.STATE_CONNECTED:
-				// mTitle.setText(R.string.title_connected_to);
-				// mTitle.append(mConnectedDeviceName);
-				// mConversationArrayAdapter.clear();
-				// break;
-				// case BluetoothChatService.STATE_CONNECTING:
-				// mTitle.setText(R.string.title_connecting);
-				// break;
-				// case BluetoothChatService.STATE_LISTEN:
-				// case BluetoothChatService.STATE_NONE:
-				// mTitle.setText(R.string.title_not_connected);
-				// break;
-				// }
-				// break;
-				// case MESSAGE_WRITE:
-				// byte[] writeBuf = (byte[]) msg.obj;
-				// // construct a string from the buffer
-				// String writeMessage = new String(writeBuf);
-				// mConversationArrayAdapter.add("Me:  " + writeMessage);
-				// break;
-				// case MESSAGE_READ:
-				// byte[] readBuf = (byte[]) msg.obj;
-				// // construct a string from the valid bytes in the buffer
-				// String readMessage = new String(readBuf, 0, msg.arg1);
-				// mConversationArrayAdapter.add(mConnectedDeviceName + ":  "
-				// + readMessage);
-				// break;
-				// case MESSAGE_DEVICE_NAME:
-				// // save the connected device's name
-				// mConnectedDeviceName = msg.getData().getString(DEVICE_NAME);
-				// Toast.makeText(getApplicationContext(),
-				// "Connected to " + mConnectedDeviceName,
-				// Toast.LENGTH_SHORT).show();
-				// break;
-				// case MESSAGE_TOAST:
-				// Toast.makeText(getApplicationContext(),
-				// msg.getData().getString(TOAST), Toast.LENGTH_SHORT)
-				// .show();
-				// break;
-				default:
-					break;
+				} else if (msg.what == UPDATE_BLUETOOTHINFO) {
+					updateBluetoothInfo();
 				}
 			}
 		};
@@ -165,7 +136,7 @@ public class SettingsActivity extends PreferenceActivity {
 
 	// Updates the summary of the bluetooth preference
 	private void updateBluetoothInfo() {
-		Preference bluetooth_pref = (Preference) findPreference("settings_bluetooth");
+		Preference bluetooth_pref = (Preference) findPreference(SETTINGS_BLUETOOTH);
 		if (deviceProvider.isBluetoothDisabled()) {
 			bluetooth_pref.setSummary(R.string.settings_bluetoothDisabled);
 			return;
@@ -190,37 +161,44 @@ public class SettingsActivity extends PreferenceActivity {
 
 	@Override
 	public void onDestroy() {
-		super.onDestroy();
-		deviceProvider.stopService();
+		if (deviceProvider != null) {
+			deviceProvider.stopService(); // TODO evtl weg, damit verbindung
+											// bestehen bleibt -- oder onResume
+											// wieder neue verbindung herstellen
+			deviceProvider.unregisterReceiver(getApplicationContext());
+			deviceProvider = null;
+		}
 
+		super.onDestroy();
 	}
 
 	@Override
 	public void onActivityResult(int resCode, int reqCode, Intent data) {
 
-
 		if (resCode == BLUETOOTH_REQUEST_ENABLE) {
 			// If Enable-Bluetooth is true
-			if (reqCode == Activity.RESULT_OK) {
-				updateBluetoothInfo();
-			} else {
+			if (reqCode != Activity.RESULT_OK) {
 				Toast.makeText(this, R.string.settings_bluetoothDisabled,
 						Toast.LENGTH_SHORT).show();
 			}
+			// else {
+			// updateBluetoothInfo();
+			// }
 		} else if (resCode == BLUETOOTH_REQUEST_DISCONNECT) {
 			// If Bluetooth-Deivce should disconnect
 			if (reqCode == Activity.RESULT_OK) {
 				deviceProvider.stopService();
-				updateBluetoothInfo();
+				// updateBluetoothInfo();
 			}
 		} else if (resCode == BLUETOOTH_REQUEST_DISCOVERY) {
 			// If Bluetooth-Deivce was selected
 			if (reqCode == Activity.RESULT_OK) {
-				deviceProvider.connectDevice(data, false);
-//				deviceProvider.connectDevice(data, true);
-				updateBluetoothInfo();
+				deviceProvider.connectDevice(data);
+				// deviceProvider.connectDevice(data, true);
+				// updateBluetoothInfo();
 			}
 		}
+		updateBluetoothInfo();
 	}
 
 	@Override
@@ -248,5 +226,4 @@ public class SettingsActivity extends PreferenceActivity {
 			return super.onOptionsItemSelected(item);
 		}
 	}
-
 }
