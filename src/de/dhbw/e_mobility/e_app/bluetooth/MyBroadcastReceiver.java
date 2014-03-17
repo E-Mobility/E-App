@@ -37,9 +37,20 @@ public class MyBroadcastReceiver extends BroadcastReceiver {
 		if (BluetoothDevice.ACTION_ACL_CONNECTED.equals(action)) {
 			Log.d("BluetoothDevice-ACTION", "ACTION_ACL_CONNECTED");
 			isACLconnected = true;
-			deviceProviderHandler.obtainMessage(
-					BluetoothDeviceProvider.BLUETOOTH_ACTION_ACL_CONNECTED)
-					.sendToTarget();
+			BluetoothDevice deviceExtra = intent
+					.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
+			// Already bonded device
+			if (deviceExtra.getBondState() == BluetoothDevice.BOND_BONDED) {
+				deviceProviderHandler
+						.obtainMessage(
+								BluetoothDeviceProvider.BLUETOOTH_ACTION_ACL_CONNECTED_BONDED)
+						.sendToTarget();
+
+			} else {
+				deviceProviderHandler.obtainMessage(
+						BluetoothDeviceProvider.BLUETOOTH_ACTION_ACL_CONNECTED)
+						.sendToTarget();
+			}
 		} else if (BluetoothDevice.ACTION_ACL_DISCONNECT_REQUESTED
 				.equals(action)) {
 			Log.d("BluetoothDevice-ACTION", "ACTION_ACL_DISCONNECT_REQUESTED");
@@ -67,7 +78,8 @@ public class MyBroadcastReceiver extends BroadcastReceiver {
 						"ACTION_BOND_STATE_CHANGED-BOND_BONDED");
 				bundle.putString(BluetoothDeviceProvider.BLUETOOTH_DEVICE_NAME,
 						deviceExtra.getName());
-				bundle.putString(BluetoothDeviceProvider.BLUETOOTH_DEVICE_ADDRESS,
+				bundle.putString(
+						BluetoothDeviceProvider.BLUETOOTH_DEVICE_ADDRESS,
 						deviceExtra.getAddress());
 				msg.what = BluetoothDeviceProvider.BLUETOOTH_ACTION_BOND_STATE_CHANGED_BOND_BONDED;
 			} else if (extraState == BluetoothDevice.BOND_BONDING) {
@@ -111,9 +123,19 @@ public class MyBroadcastReceiver extends BroadcastReceiver {
 			}
 		} else if (BluetoothDevice.ACTION_NAME_CHANGED.equals(action)) {
 			Log.d("BluetoothDevice-ACTION", "ACTION_NAME_CHANGED");
-			deviceProviderHandler.obtainMessage(
-					BluetoothDeviceProvider.BLUETOOTH_ACTION_NAME_CHANGED)
-					.sendToTarget();
+			BluetoothDevice deviceExtra = intent
+					.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
+			String nameExtra = intent
+					.getParcelableExtra(BluetoothDevice.EXTRA_NAME);
+			Bundle bundle = new Bundle();
+			bundle.putString(BluetoothDeviceProvider.BLUETOOTH_DEVICE_NAME,
+					nameExtra);
+			bundle.putString(BluetoothDeviceProvider.BLUETOOTH_DEVICE_ADDRESS,
+					deviceExtra.getAddress());
+			Message msg = new Message();
+			msg.what = BluetoothDeviceProvider.BLUETOOTH_ACTION_NAME_CHANGED;
+			msg.setData(bundle);
+			deviceProviderHandler.sendMessage(msg);
 		} else if (action
 				.equals("android.bluetooth.device.action.PAIRING_REQUEST")) {
 			Log.d("BluetoothDevice-ACTION", "ACTION_PAIRING_REQUEST");
@@ -138,7 +160,9 @@ public class MyBroadcastReceiver extends BroadcastReceiver {
 				Message msg = new Message();
 				msg.what = BluetoothDeviceProvider.BLUETOOTH_ACTION_UUID;
 				msg.setData(bundle);
-				deviceProviderHandler.sendMessage(msg);
+				if (uuidExtra.length > 0)
+					System.out.println(uuidExtra[0]);
+				// deviceProviderHandler.sendMessage(msg); // TODO
 			}
 		}
 

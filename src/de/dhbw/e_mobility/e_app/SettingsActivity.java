@@ -83,7 +83,7 @@ public class SettingsActivity extends PreferenceActivity {
 									BLUETOOTH_REQUEST_ENABLE);
 							return true;
 						}
-						if (deviceProvider.isConnected()) {
+						if (deviceProvider.getConnectedDeviceName() != null) {
 							startActivityForResult(new Intent(
 									getApplicationContext(),
 									BluetoothDisconnectDialog.class),
@@ -141,9 +141,10 @@ public class SettingsActivity extends PreferenceActivity {
 			bluetooth_pref.setSummary(R.string.settings_bluetoothDisabled);
 			return;
 		}
-		if (deviceProvider.isConnected()) {
+		String tmpStr = deviceProvider.getConnectedDeviceName();
+		if (tmpStr != null) {
 			bluetooth_pref.setSummary(R.string.settings_bluetoothConnected
-					+ deviceProvider.getConnectedDeviceName());
+					+ tmpStr);
 			return;
 		}
 		bluetooth_pref.setSummary(R.string.settings_bluetoothEnabled);

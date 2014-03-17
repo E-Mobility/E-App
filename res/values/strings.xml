@@ -37,7 +37,7 @@
     <string name="title_not_connected">not connected</string>
 
     <string name="dialog_disconnect_title">Verbindung trennen</string>
-    <string name="dialog_disconnect">Kopplung wirklich aufheben?</string>
+    <string name="dialog_disconnect">Verbindung wirklich trennen?</string>
     <string name="dialog_yes">Ja</string>
     <string name="dialog_no">Nein</string>
     

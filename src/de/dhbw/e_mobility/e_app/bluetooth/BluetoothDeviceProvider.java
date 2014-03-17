@@ -25,15 +25,16 @@ public class BluetoothDeviceProvider {
 	// Member object for the chat services
 	private BluetoothChatService mChatService = null;
 
+	// private BluetoothDevice mDevice;
+
 	private final Handler mHandler;
 	private Handler discoveryHandler;
-
-	private BluetoothDevice mDevice;
 
 	private MyBroadcastReceiver mReceiver;
 
 	// BluetoothDevice-ACTIONS
 	public static final int BLUETOOTH_ACTION_ACL_CONNECTED = 1;
+	public static final int BLUETOOTH_ACTION_ACL_CONNECTED_BONDED = 12;
 	public static final int BLUETOOTH_ACTION_ACL_DISCONNECT_REQUESTED = 2;
 	public static final int BLUETOOTH_ACTION_ACL_DISCONNECTED = 3;
 	public static final int BLUETOOTH_ACTION_BOND_STATE_CHANGED_BOND_BONDED = 4;
@@ -80,8 +81,9 @@ public class BluetoothDeviceProvider {
 			showToast(R.string.settings_bluetoothNotAvailable);
 		}
 
-		mChatService = new BluetoothChatService(mHandler, mBluetoothAdapter);
-		// mChatService.start();
+		String password = "1234";
+		
+		mChatService = new BluetoothChatService(mHandler, password);
 
 		// Set up own BroadcastReceiver
 		mReceiver = new MyBroadcastReceiver(setupHandler());
@@ -180,34 +182,46 @@ public class BluetoothDeviceProvider {
 
 	// Connect to a bluetooth device
 	public void connectDevice(Intent data) {
+		// TODO
+		// hier überprüfen ob device schon bonded, connected,...
+		// dann settingselemnt anpassen
+		// TODO
+
 		// Get the device MAC address
 		String address = data.getExtras().getString(BLUETOOTH_DEVICE_ADDRESS);
 		// Get the BLuetoothDevice object
 		BluetoothDevice device = mBluetoothAdapter.getRemoteDevice(address);
+		
+		createBond(device);
+		// TODO in thread auslagern
 
-		try {
-			// Try to get the UUID
-			Class cl = Class.forName("android.bluetooth.BluetoothDevice");
-			Class[] par = {};
-			Method method = cl.getMethod("fetchUuidsWithSdp", par);
-			Object[] args = {};
-			method.invoke(device, args);
-			// Thanks to
-			// http://wiresareobsolete.com/wordpress/2010/11/android-bluetooth-rfcomm/
-			// TODO catches verarbeiten
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		} catch (SecurityException e) {
-			e.printStackTrace();
-		} catch (NoSuchMethodException e) {
-			e.printStackTrace();
-		} catch (IllegalArgumentException e) {
-			e.printStackTrace();
-		} catch (IllegalAccessException e) {
-			e.printStackTrace();
-		} catch (InvocationTargetException e) {
-			e.printStackTrace();
-		}
+		mChatService.connect(device);
+		
+		// TODO und dann?? --> benötige ich die UUID zum verbinden??
+		
+//		try {
+//			// Try to get the UUID
+//			Class cl = Class.forName("android.bluetooth.BluetoothDevice");
+//			Class[] par = {};
+//			Method method = cl.getMethod("fetchUuidsWithSdp", par);
+//			Object[] args = {};
+//			method.invoke(device, args);
+//			// Thanks to
+//			// http://wiresareobsolete.com/wordpress/2010/11/android-bluetooth-rfcomm/
+//			// TODO catches verarbeiten
+//		} catch (ClassNotFoundException e) {
+//			e.printStackTrace();
+//		} catch (SecurityException e) {
+//			e.printStackTrace();
+//		} catch (NoSuchMethodException e) {
+//			e.printStackTrace();
+//		} catch (IllegalArgumentException e) {
+//			e.printStackTrace();
+//		} catch (IllegalAccessException e) {
+//			e.printStackTrace();
+//		} catch (InvocationTargetException e) {
+//			e.printStackTrace();
+//		}
 	}
 
 	// Stop the bluetooth chat services
@@ -217,7 +231,6 @@ public class BluetoothDeviceProvider {
 			// probleme mit controller)
 			mChatService.stop();
 		}
-		mDevice = null;
 	}
 
 	// Checks if bluetooth is disabled
@@ -225,17 +238,26 @@ public class BluetoothDeviceProvider {
 		return !mBluetoothAdapter.isEnabled();
 	}
 
-	// Checks if bluetooth is connected with a device
-	public boolean isConnected() {
-		return (mDevice != null);
-	}
+	// // Checks if bluetooth is connected with a device
+	// public boolean isConnected() {
+	// mChatService
+	// return (mDevice != null);
+	// }
 
 	// Returns the connected device name
 	public String getConnectedDeviceName() {
-		if (isConnected()) {
-			return mDevice.getName();
+		if (mChatService != null) {
+			BluetoothDevice tmpDevice = mChatService.getRemoteDevice();
+			if (tmpDevice != null) {
+				return tmpDevice.getName();
+			}
 		}
 		return null;
+
+		// if (isConnected()) {
+		// return mDevice.getName();
+		// }
+		// return null;
 	}
 
 	// Returns the question for enabling bluetooth
@@ -299,13 +321,15 @@ public class BluetoothDeviceProvider {
 			public void handleMessage(Message msg) {
 				// BluetoothDevice-ACTIONS
 				if (msg.what == BLUETOOTH_ACTION_ACL_CONNECTED) {
+				} else if (msg.what == BLUETOOTH_ACTION_ACL_CONNECTED_BONDED) {
+
 				} else if (msg.what == BLUETOOTH_ACTION_ACL_DISCONNECT_REQUESTED) {
 				} else if (msg.what == BLUETOOTH_ACTION_ACL_DISCONNECTED) {
 				} else if (msg.what == BLUETOOTH_ACTION_BOND_STATE_CHANGED_BOND_BONDED) {
 					// showToast(R.string.bluetooth_bound_bounded, msg.getData()
 					// .getString(BLUETOOTH_DEVICE_NAME));
-					mDevice = mBluetoothAdapter.getRemoteDevice(msg.getData()
-							.getString(BLUETOOTH_DEVICE_ADDRESS));
+					// mDevice = mBluetoothAdapter.getRemoteDevice(msg.getData()
+					// .getString(BLUETOOTH_DEVICE_ADDRESS));
 					mHandler.obtainMessage(
 							SettingsActivity.UPDATE_BLUETOOTHINFO)
 							.sendToTarget();
@@ -313,7 +337,7 @@ public class BluetoothDeviceProvider {
 					showToast(R.string.bluetooth_bound_bounding);
 				} else if (msg.what == BLUETOOTH_ACTION_BOND_STATE_CHANGED_BOND_NONE) {
 					showToast(R.string.bluetooth_bound_none);
-					mDevice = null;
+					// mDevice = null;
 					mHandler.obtainMessage(
 							SettingsActivity.UPDATE_BLUETOOTHINFO)
 							.sendToTarget();
@@ -326,6 +350,13 @@ public class BluetoothDeviceProvider {
 							+ "\n"
 							+ bundle.getString(BLUETOOTH_DEVICE_ADDRESS));
 				} else if (msg.what == BLUETOOTH_ACTION_NAME_CHANGED) {
+					Bundle bundle = msg.getData();
+					BluetoothDevice device = mBluetoothAdapter
+							.getRemoteDevice(bundle
+									.getString(BLUETOOTH_DEVICE_ADDRESS));
+					String deviceName = msg.getData().getString(
+							BLUETOOTH_DEVICE_NAME);
+					System.out.println("Name geändert: " + deviceName);
 				} else if (msg.what == BLUETOOTH_ACTION_PAIRING_REQUEST) {
 				} else if (msg.what == BLUETOOTH_ACTION_UUID) {
 					Bundle bundle = msg.getData();
@@ -334,22 +365,20 @@ public class BluetoothDeviceProvider {
 									.getString(BLUETOOTH_DEVICE_ADDRESS));
 					ParcelUuid deviceUUID = ParcelUuid.fromString(msg.getData()
 							.getString(BLUETOOTH_DEVICE_UUID));
-					mChatService.setUUID(deviceUUID);
-					mChatService.start();
 					mChatService.connect(device);
 				}
 
 				// BluetoothAdapter-ACTIONS
 				else if (msg.what == BLUETOOTH_ACTION_CONNECTION_STATE_CHANGED_CONNECTED) {
-					mDevice = mBluetoothAdapter.getRemoteDevice(msg.getData()
-							.getString(BLUETOOTH_DEVICE_ADDRESS));
+					// mDevice = mBluetoothAdapter.getRemoteDevice(msg.getData()
+					// .getString(BLUETOOTH_DEVICE_ADDRESS));
 					showToast(R.string.settings_bluetoothConnected, msg
 							.getData().getString(BLUETOOTH_DEVICE_NAME));
 				} else if (msg.what == BLUETOOTH_ACTION_CONNECTION_STATE_CHANGED_CONNECTING) {
 				} else if (msg.what == BLUETOOTH_ACTION_CONNECTION_STATE_CHANGED_DISCONNECTED) {
-					mDevice = null;
+					// mDevice = null;
 				} else if (msg.what == BLUETOOTH_ACTION_CONNECTION_STATE_CHANGED_DISCONNECTING) {
-					mDevice = null;
+					// mDevice = null;
 				} else if (msg.what == BLUETOOTH_ACTION_DISCOVERY_FINISHED) {
 					// When discovery is finished, change the Activity title
 					if (discoveredDevicesArrayAdapter.getCount() == 0) {
