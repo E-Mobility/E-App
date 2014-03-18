@@ -1,0 +1,91 @@
+Kommandoübersicht
+=================
+(Kommandos mit # sind in Parameterliste enthalten)
+=================
+at [Attetion]
+at-0 [Attention without response]
+at-dflt [Auf Werkseinstellungen zurücksetzten]
+at-upwd=txt [Passwort setzten (max. 9 Zeichen)]
+at-logout [Abmelden]
+at-push=n [0: Aus, 1: Mechanische, 2: Plain-Text Ausgabe]
+# at-pushint=n [Pushintervall setzten (in 100ms)]
+at-calibl [Autokalibrierung für unteren Strommessbereich]
+# at-calibl=n [Kalibrierung für unteren Strommessbereich]
+at-calibh [Autokalibrierung für oberen Strommessbereich]
+# at-calibh=n [Kalibrierung für oberen Strommessbereich]
+# at-pp=n [Prozentsatz wie viel von 5V als Vollgas gelten]
+# at-vl=n [Erste Alarmschwelle (in 1/10 V)]
+# at-vll=n [Zweite Alarmschwelle (in 1/10 V) --> Shutting Down System]
+# at-cl=n [Erste Alarmschwelle (in mAh)]
+# at-cll=n [Zweite Alarmschwelle (in mAh)]
+# at-mm=n [Abstand zwischen zwei Tachoimpulsen (in mm)]
+# at-kpc=n [Proportionaler Faktor zu Gashebel (0-16)]
+# at-kic=n [Integraler Faktor zu Gashebel (0-16)]
+# at-kps=n [Proportionaler Faktor zur Geschwindigkeitsregulierung (0-16)]
+# at-kis=n [Integraler Faktor zur Geschwindigkeitsregulierung (0-16)]
+# at-kk=n [Fixer Faktor zur Geschwindigkeitsregulierung (0-100)]
+# at-light=n [Licht aus/ein schalten (0-1)]
+# at-lvl=n [Lichtspannung einstellen (1-4 = 6V-9V)]
+at-ccap [Akkukapazitätszähler zurücksetzten]
+at-cdist [Tachoimpulszähler zurücksetzten]
+# at-cl1.0=n [Anfahrstrom für Profil 0 (in mA)]
+# at-cl1.1=n [Anfahrstrom für Profil 1 (in mA)]
+# at-cl2.0=n [Dauerfahrstrom für Profil 0 (in mA)]
+# at-cl2.1=n [Dauerfahrstrom für Profil 1 (in mA)]
+# at-sl1.0=n [Max.-Geschwindigkeit Anfahhilfe für Profil 0 (in 1/10
+km/h)]
+# at-sl1.1=n [Max.-Geschwindigkeit Anfahhilfe für Profil 1 (in 1/10
+km/h)]
+# at-sl2.0=n [Max.-Geschwindigkeit für Profil 0 (in 1/10 km/h)]
+# at-sl2.1=n [Max.-Geschwindigkeit für Profil 1 (in 1/10 km/h)]
+# at-clt.0=n [Timer regelt von cl2 auf cl1 zurück für Profil 0 (in s)]
+# at-clt.1=n [Timer regelt von cl2 auf cl1 zurück für Profil 1 (in s)]
+# at-pedal=n [Pedaliererkennung (0: Gashebel, 1: ohne, 2: mit Richtung)]
+------------ [Realität: 0: Gashebel, 1: mit Richtung, 2: gar nicht]
+at-eon [Motor einschalten]
+at-eoff [Motor ausschalten]
+# at-oto=n [Timout für Autologout setzten (in s)]
+# at-ccm=n [Cruse-Control-Mode setzten (0: aus, 1: ein)]
+# at-thm=n [Gashebelmodus setzten (0: Transparent, 1: Linear, 2:
+Sensibel)]
+# at-pr=n [Profil auswählen (0-1: Profil, 2: Cruse-Control)]
+--------- [Cruse-Control=Button verhalten wählt beim Start das Profil]
+# at-ptime=5 [Reaktionszeit der Pedaliererkennung (in 100ms)]
+# at-va=n [Korrekturwert für Spannungsanzeige (-30...30 in 1/10 V)]
+at-? [Parameterliste ausgeben]
+
+
+Beispielausgaben
+================
+at-push=2
+---------
+1) U: 37,6 V
+2) I: 0,062 A
+3) C: 24,86 Ah
+4) V: 0,0 kmh
+5) T: 0,0 %
+6) M: 17,500 A
+7) D: 50465219
+8) P: 0
+---------
+1) Spannung (in V)
+2) Strom (in A)
+3) Stromverbrauch (in Ah)
+4) Geschwindigkeit (in km/h)
+5) Gasgriffstellung (in %)
+6) Aktueller max. zulässiger Strom (in A)
+7) Distanz (Vielfache von 50xTachoimpuls)
+8) Aktives Profil
+#########
+at-push=1
+---------
+376__62__0__89507475__17500__50465219__0
+1)___2)__3)_4)________5)_____6)________7)
+---------
+1) Spannung (in 1/10 V)
+2) Strom (in mA)
+3) Geschwindigkeit (in 1/10 km/h)
+4) Stromverbrauch (in mAsec)
+5) Aktueller max. zulässiger Strom (in mA)
+6) Distanz (Vielfache von 50xTachoimpuls)
+7) Aktives Profil
