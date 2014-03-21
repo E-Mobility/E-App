@@ -12,51 +12,33 @@
     <uses-permission android:name="android.permission.BLUETOOTH" />
 
     <application
-        android:name=".Helper"
         android:allowBackup="true"
         android:debuggable="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
-
-        <!--
-             <activity
-            android:name="de.dhbw.e_mobility.e_app.test.BluetoothDemo"
-            android:label="@string/app_name" >
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
-        -->
         <activity
             android:name="de.dhbw.e_mobility.e_app.MainActivity"
-            android:label="@string/app_name" >
-
-            <!--  -->
+            android:configChanges="orientation|keyboardHidden"
+            android:label="@string/activity_main_title" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-            <!--  -->
-        </activity>
-        <activity android:name="de.dhbw.e_mobility.e_app.AboutActivity" >
-        </activity>
-        <activity android:name="de.dhbw.e_mobility.e_app.HelpActivity" >
-        </activity>
-        <activity android:name="de.dhbw.e_mobility.e_app.SettingsActivity" >
-        </activity>
-        <activity android:name="de.dhbw.e_mobility.e_app.SpeedoActivity" >
         </activity>
         <activity
-            android:name="de.dhbw.e_mobility.e_app.bluetooth.BluetoothDiscoveryActivity"
+            android:name="de.dhbw.e_mobility.e_app.SettingsActivity"
             android:configChanges="orientation|keyboardHidden"
-            android:label="@string/deviceList_select"
+            android:label="@string/activity_settings_title" >
+        </activity>
+        <activity
+            android:name="de.dhbw.e_mobility.e_app.bluetooth.BluetoothDialogDiscovery"
+            android:configChanges="orientation|keyboardHidden"
+            android:label="@string/dialog_deviceList_title"
             android:theme="@android:style/Theme.Dialog" />
         <activity
-            android:name="de.dhbw.e_mobility.e_app.bluetooth.BluetoothDisconnectDialog"
+            android:name="de.dhbw.e_mobility.e_app.bluetooth.BluetoothDialogDisconnect"
             android:configChanges="orientation|keyboardHidden"
             android:label="@string/dialog_disconnect_title"
             android:theme="@android:style/Theme.Dialog" />

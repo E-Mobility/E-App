@@ -12,13 +12,13 @@
     <string name="passwort">Passwort</string>
 
     <!-- DeviceListActivity -->
-    <string name="deviceList_scanning">Suche läuft &#8230;</string>
-    <string name="deviceList_select">Gerät auswählen</string>
-    <string name="deviceList_noDevices">Kein Bluetooth-Gerät in der Nähe gefunden</string>
-    <string name="deviceList_noPairedDevices">Kein Pairing-Gerät verfügbar</string>
-    <string name="deviceList_pairedDevices">Pairing-Geräte</string>
-    <string name="deviceList_devices">Verfügbare Geräte</string>
-    <string name="deviceList_scan">Nach Geräten suchen</string>
+    <string name="discovery_scanning">Suche läuft &#8230;</string>
+    <string name="discovery_select">Gerät auswählen</string>
+    <string name="discovery_noDevices">Kein Bluetooth-Gerät in der Nähe gefunden</string>
+    <string name="discovery_noPairedDevices">Kein Pairing-Gerät verfügbar</string>
+    <string name="discovery_pairedDevices">Pairing-Geräte</string>
+    <string name="discovery_devices">Verfügbare Geräte</string>
+    <string name="discovery_scan">Nach Geräten suchen</string>
 
     <!-- SettingsActivity -->
     
@@ -31,11 +31,17 @@
     <string name="settings_bluetoothDisabled">Bluetooth ist deaktiviert</string>
     <string name="settings_bluetoothEnabled">Bluetooth aktiv, aber nicht verbunden</string>
     <string name="settings_bluetoothConnected">Verbunden mit </string>
+    <string name="settings_bluetoothDisconnected">Verbindung getrennt</string>
     
     <string name="title_connecting">connecting...</string>
     <string name="title_connected_to">connected: </string>
     <string name="title_not_connected">not connected</string>
 
+    <string name="action_advanced_settings">Erweitere Einstellungen</string>
+
+    <string name="activity_main_title">E-App</string>
+    <string name="activity_settings_title">Einstellungen/Settings</string>
+    <string name="dialog_deviceList_title">Gerät auswählen</string>
     <string name="dialog_disconnect_title">Verbindung trennen</string>
     <string name="dialog_disconnect">Verbindung wirklich trennen?</string>
     <string name="dialog_yes">Ja</string>

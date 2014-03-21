@@ -1,19 +1,3 @@
-/*
- * Copyright (C) 2009 The Android Open Source Project
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 package de.dhbw.e_mobility.e_app.bluetooth;
 
 import java.io.BufferedReader;
@@ -26,21 +10,15 @@ import java.lang.reflect.Method;
 
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
-import android.os.Handler;
 import android.util.Log;
+import de.dhbw.e_mobility.e_app.ActivityHandler;
 
-/**
- * This class does all the work for setting up and managing Bluetooth
- * connections with other devices. It has a thread that listens for incoming
- * connections, a thread for connecting with a device, and a thread for
- * performing data transmissions when connected.
- */
-public class BluetoothChatService {
+public class BluetoothConnectionService {
 	// Debugging
-	private static final String TAG = "CHAT-SERVICE";
+	private static final String TAG = "CONNECTION-SERVICE";
 
 	// Member fields
-	private final Handler mHandler;
+	// private final Handler mHandler;
 	private ConnectThread mConnectThread;
 	private ConnectedThread mConnectedThread;
 	private HoldConnectionThread mHoldConnectionThread;
@@ -56,8 +34,10 @@ public class BluetoothChatService {
 	public static final int STATE_LOGIN = 3; // now loging in to a remote
 	public static final int STATE_LOGEDIN = 4; // now loged in to a remote
 
+	private ActivityHandler activityHandler = ActivityHandler.getInstance();
+
 	/**
-	 * Constructor. Prepares a new BluetoothChat session.
+	 * Constructor. Prepares a new BluetoothConnection session.
 	 * 
 	 * @param context
 	 *            The UI Activity Context
@@ -65,16 +45,17 @@ public class BluetoothChatService {
 	 *            A Handler to send messages back to the UI Activity
 	 * @param mBluetoothAdapter
 	 */
-	public BluetoothChatService(Handler theHandler, String thePassword) {
-		Log.d(TAG, "BluetoothChatService()");
+	// public BluetoothConnectionService(Handler theHandler, String thePassword) {
+	public BluetoothConnectionService(String thePassword) {
+		Log.d(TAG, "BluetoothConnectionService()");
 
 		mState = STATE_NONE;
-		mHandler = theHandler;
+		// mHandler = theHandler;
 		mPassword = thePassword;
 	}
 
 	/**
-	 * Set the current state of the chat connection
+	 * Set the current state of the connection
 	 * 
 	 * @param theState
 	 *            An integer defining the current connection state
@@ -152,7 +133,7 @@ public class BluetoothChatService {
 			return;
 		}
 		setState(STATE_LOGIN);
-		write((mPassword + "\r"));
+		write(mPassword);
 	}
 
 	/**
@@ -165,6 +146,7 @@ public class BluetoothChatService {
 	public void write(String out) {
 		Log.d(TAG, "write()");
 		Log.v(TAG, "> " + out);
+		out += "\r";
 
 		// Create temporary object
 		ConnectedThread tmpThread;
@@ -182,10 +164,13 @@ public class BluetoothChatService {
 	// This methode is doing some stuff
 	private void doSomeStuff() {
 		try {
-			write("at-?\r");
+			// Messwertausgabe
 			Thread.sleep(250);
-			// Enables tsv pushing
-			// write("at-push=1\r".getBytes());
+			// write("at-pushint=5");
+			// Thread.sleep(250);
+			// write("at-push=2");
+			// Thread.sleep(250);
+			write("at-?");
 		} catch (InterruptedException e) {
 			Log.e(TAG, "Fail sleep() during doSomeStuff()", e);
 		}
@@ -358,18 +343,22 @@ public class BluetoothChatService {
 			String line = "";
 			try {
 				while (line != null) {
-					if (BluetoothChatService.this.getState() == STATE_NONE) {
+					if (BluetoothConnectionService.this.getState() == STATE_NONE) {
 						break;
 					}
 					line = reader.readLine();
 					Log.v(TAG, line);
 					if (line.equals("error")) {
 					} else if (line.equals("ok")) {
-						if (BluetoothChatService.this.getState() == STATE_LOGIN) {
+						if (BluetoothConnectionService.this.getState() == STATE_LOGIN) {
 							setState(STATE_LOGEDIN);
+
 							// Start this thread to hold the connection
 							mHoldConnectionThread = new HoldConnectionThread();
 							mHoldConnectionThread.start();
+
+							activityHandler
+									.fireToHandler(ActivityHandler.UPDATE_BLUETOOTHINFO);
 
 							doSomeStuff();
 						}
@@ -405,8 +394,8 @@ public class BluetoothChatService {
 			Log.d(TAG, "ConnectedThread-cancel()");
 
 			try {
-				// mmOutStream.write("at-push=0\r".getBytes());
-				mConnectedOutStream.write("at-logout\r".getBytes());
+				// mmOutStream.write("at-push=0".getBytes());
+				mConnectedOutStream.write("at-logout".getBytes());
 
 				mConnectedDevice = null;
 				mConnectedInStream = null;
@@ -436,7 +425,7 @@ public class BluetoothChatService {
 			while (true) {
 				try {
 					Thread.sleep(60000);
-					write("at-0\r");
+					write("at-0");
 				} catch (InterruptedException e) {
 					Log.e(TAG, "Sleep during holding connection failed", e);
 				}

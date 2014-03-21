@@ -11,7 +11,6 @@
     <Preference
         android:id="@+id/settings_bluetooth"
         android:key="settings_bluetooth"
-        android:summary="TestDevice"
         android:title="@string/settings_bluetooth" />
 
     <!-- </PreferenceCategory> -->

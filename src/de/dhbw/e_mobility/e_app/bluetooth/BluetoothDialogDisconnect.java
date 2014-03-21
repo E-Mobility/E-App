@@ -1,14 +1,17 @@
 package de.dhbw.e_mobility.e_app.bluetooth;
 
-import de.dhbw.e_mobility.e_app.R;
 import android.app.Activity;
 import android.os.Bundle;
 import android.view.View;
-import android.view.Window;
 import android.view.View.OnClickListener;
+import android.view.Window;
 import android.widget.Button;
+import de.dhbw.e_mobility.e_app.ActivityHandler;
+import de.dhbw.e_mobility.e_app.R;
 
-public class BluetoothDisconnectDialog extends Activity {
+public class BluetoothDialogDisconnect extends Activity {
+
+	private ActivityHandler activityHandler = ActivityHandler.getInstance();
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -38,7 +41,20 @@ public class BluetoothDisconnectDialog extends Activity {
 	}
 
 	@Override
+	protected void onStart() {
+		super.onStart();
+		activityHandler.add(this);
+	}
+
+	@Override
+	protected void onStop() {
+		super.onStop();
+		activityHandler.del(this);
+	}
+
+	@Override
 	protected void onDestroy() {
 		super.onDestroy();
+		finish();
 	}
 }
