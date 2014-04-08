@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- TODO TODO TODO Unnötige Texte löschen und andere anpassen -->
 
     <string name="app_name">E-App</string>
     <string name="action_settings">Einstellungen</string>
@@ -19,6 +20,9 @@
     <string name="discovery_pairedDevices">Pairing-Geräte</string>
     <string name="discovery_devices">Verfügbare Geräte</string>
     <string name="discovery_scan">Nach Geräten suchen</string>
+ 
+    <string name="device_offline">Gerät ist nicht erreichbar</string>
+    <string name="device_not_paired">Gerät ist nicht gekoppelt</string>
 
     <!-- SettingsActivity -->
     
@@ -27,6 +31,7 @@
     <string name="bluetooth_bound_none">Entkoppelt</string>
 
     <string name="settings_bluetooth">Bluetooth</string>
+    <string name="settings_discovery_no_device">Es wurde kein Gerät ausgewält</string>
     <string name="settings_bluetoothNotAvailable">Bluetooth ist leider nicht möglich!</string>
     <string name="settings_bluetoothDisabled">Bluetooth ist deaktiviert</string>
     <string name="settings_bluetoothEnabled">Bluetooth aktiv, aber nicht verbunden</string>
@@ -46,5 +51,12 @@
     <string name="dialog_disconnect">Verbindung wirklich trennen?</string>
     <string name="dialog_yes">Ja</string>
     <string name="dialog_no">Nein</string>
+
+    
+    
+    <string name="bluetooth_info_enabled">Bluetooth aktiviert</string>
+    <string name="bluetooth_info_connected">Verbunden mit&#x00A0;</string>
+    <string name="bluetooth_info_loggedin">Eingeloggt bei&#x00A0;</string>
+    <string name="bluetooth_info_none">Bluetooth nicht verfügbar</string>
     
 </resources>

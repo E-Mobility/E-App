@@ -8,10 +8,56 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
+import android.widget.Toast;
 
 public class ActivityHandler {
 
-	private Handler activeHandler;
+	// TODO Handler von den einzelnen KLassen speichern und dann über
+	public static int HANDLLER_DEVICE_PROVIDER = 1;
+	public static int HANDLLER_SETTINGS = 2;
+	public static int HANDLLER_DISCOVERY = 3;
+
+	private Handler handlerDeviceProvider = null;
+	private Handler handlerSettings = null;
+	private Handler handlerDiscovery = null;
+
+	// Retruns the wanted handler
+	private Handler getHandler(int handlerID) {
+		if (HANDLLER_DEVICE_PROVIDER == handlerID) {
+			return handlerDeviceProvider;
+		} else if (HANDLLER_SETTINGS == handlerID) {
+			return handlerSettings;
+		} else if (HANDLLER_DISCOVERY == handlerID) {
+			return handlerDiscovery;
+		}
+		return null;
+	}
+
+	// Unsets the Handler
+	public void unsetHandler(int handlerID) {
+		if (HANDLLER_DEVICE_PROVIDER == handlerID) {
+			handlerDeviceProvider = null;
+		} else if (HANDLLER_SETTINGS == handlerID) {
+			handlerSettings = null;
+		} else if (HANDLLER_DISCOVERY == handlerID) {
+			handlerDiscovery = null;
+		}
+	}
+
+	// Sets the Handler
+	public void setHandler(int handlerID, Handler theHandler) {
+		if (HANDLLER_DEVICE_PROVIDER == handlerID) {
+			handlerDeviceProvider = theHandler;
+		} else if (HANDLLER_SETTINGS == handlerID) {
+			handlerSettings = theHandler;
+		} else if (HANDLLER_DISCOVERY == handlerID) {
+			handlerDiscovery = theHandler;
+		}
+	}
+
+	// erkennen und verwenden.. TODO
+
+	// private Handler activeHandler;
 	private Vector<Activity> activities;
 	private Context appContext;
 	private Context mainContext;
@@ -26,25 +72,25 @@ public class ActivityHandler {
 	}
 
 	private ActivityHandler() {
-		activeHandler = null;
+		// activeHandler = null;
 		activities = new Vector<Activity>();
 		appContext = null;
 		loogedIn = false;
 	}
 
-	public void add(Activity theActivity) {
-		add(theActivity, null);
-	}
+	// public void add(Activity theActivity) {
+	// add(theActivity, null);
+	// }
 
-	public void add(Activity theActivity, Handler theHandler) {
-		activeHandler = theHandler;
+	public void add(Activity theActivity) {// , Handler theHandler) {
+		// activeHandler = theHandler;
 		activities.add(theActivity);
 		appContext = theActivity.getApplicationContext();
 		manageLogin();
 	}
 
-	public void del(Activity activity) {
-		activities.remove(activity);
+	public void del(Activity theActivity) {
+		activities.remove(theActivity);
 		manageLogout();
 
 	}
@@ -56,7 +102,7 @@ public class ActivityHandler {
 	private void manageLogout() {
 		if (activities.size() == 0 && loogedIn) {
 			Log.d("AppHANDLER", "LOGOUT");
-			// TODO
+			// TODO deviceProvider.logout();
 			loogedIn = false;
 		}
 	}
@@ -64,7 +110,7 @@ public class ActivityHandler {
 	private void manageLogin() {
 		if (activities.size() > 0 && !loogedIn) {
 			Log.d("AppHANDLER", "LOGIN");
-			// TODO
+			// TODO deviceProvider.login();
 			loogedIn = true;
 		}
 	}
@@ -77,24 +123,50 @@ public class ActivityHandler {
 		return appContext;
 	}
 
-	public boolean fireToHandler(int what) {
-		if (activeHandler == null) {
+	// public boolean fireToHandler(Handler theHandler, int what) {
+	public boolean fireToHandler(int handlerID, int what) {
+		Handler handler = getHandler(handlerID);
+		if (handler == null) {
 			return false;
 		}
-		activeHandler.obtainMessage(what).sendToTarget();
+		handler.obtainMessage(what).sendToTarget();
 		return true;
 	}
 
-	public boolean fireToHandler(int what, String txt) {
-		if (activeHandler == null) {
+	// public boolean fireToHandler(Handler theHandler, int what, int resId,
+	// String txt) {
+	public boolean fireToHandler(int handlerID, int what, int resId, String txt) {
+		return fireToHandler(handlerID, what, getStr(resId) + txt);
+	}
+
+	// public boolean fireToHandler(Handler theHandler, int what, int resId) {
+	public boolean fireToHandler(int handlerID, int what, int resId) {
+		return fireToHandler(handlerID, what, getStr(resId));
+	}
+
+	// public boolean fireToHandler(Handler theHandler, int what, String txt) {
+	public boolean fireToHandler(int handlerID, int what, String txt) {
+		Bundle bundle = new Bundle();
+		bundle.putString(MESSAGE_TEXT, txt);
+		return fireToHandler(handlerID, what, bundle);
+	}
+
+	// Result Intent
+	public static final String BLUETOOTH_DEVICE_ADDRESS = "device_address";
+	public static final String BLUETOOTH_DEVICE_NAME = "device_name";
+	public static final String BLUETOOTH_DEVICE_UUID = "device_uuid";
+
+	// public boolean fireToHandler(Handler theHandler, int what, Bundle bundle)
+	// {
+	public boolean fireToHandler(int handlerID, int what, Bundle bundle) {
+		Handler handler = getHandler(handlerID);
+		if (handler == null) {
 			return false;
 		}
-		Bundle bundle = new Bundle();
-		bundle.putString(SettingsActivity.MESSAGE_TEXT, txt);
 		Message msg = new Message();
 		msg.what = what;
 		msg.setData(bundle);
-		activeHandler.sendMessage(msg);
+		handler.sendMessage(msg);
 		return true;
 	}
 
@@ -106,16 +178,34 @@ public class ActivityHandler {
 	public static final int MESSAGE_SHORT_TOAST = 6;
 	public static final int UPDATE_BLUETOOTHINFO = 7;
 
+	public static final String MESSAGE_TEXT = "handle_message";
+
+	public static final int ASK_FOR_BLUETOOTH = 10;
+	public static final int START_DISCOVERING_DEVICES = 11;
+
+	public static final int UPDATE_BT_INFO = 30;
+
+	// public void fireToast(Handler theHandler, int resId) {
 	public void fireToast(int resId) {
 		fireToast(resId, "");
 	}
 
+	// public void fireToast(Handler theHandler, int resId, String txt) {
 	public void fireToast(int resId, String txt) {
 		fireToast(getStr(resId) + txt);
 	}
 
+	// public void fireToast(Handler theHandler, String txt) {
 	public void fireToast(String txt) {
-		fireToHandler(MESSAGE_LONG_TOAST, txt);
+		// fireToHandler(theHandler, MESSAGE_LONG_TOAST, txt);
+		Toast.makeText(mainContext, txt, Toast.LENGTH_LONG).show();
+		// Toast.makeText(mainContext, txt, Toast.LENGTH_LONG).show(); // TODO
+		// TODO
+		// TODO
+		// TODO
+		// TODO
+		// TODO
+		// TODO toast with short message
 	}
 
 	public String getStr(int resId) {

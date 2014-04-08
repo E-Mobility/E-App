@@ -9,7 +9,6 @@ import android.preference.Preference;
 import android.preference.PreferenceActivity;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Toast;
 import de.dhbw.e_mobility.e_app.bluetooth.BluetoothDeviceProvider;
 import de.dhbw.e_mobility.e_app.bluetooth.BluetoothDialogDisconnect;
 import de.dhbw.e_mobility.e_app.bluetooth.BluetoothDialogDiscovery;
@@ -19,14 +18,6 @@ import de.dhbw.e_mobility.e_app.bluetooth.BluetoothDialogDiscovery;
  */
 public class SettingsActivity extends PreferenceActivity {
 
-	// Message types sent from the BluetoothConnectionService Handler
-	public static final int MESSAGE_STATE_CHANGE = 1;
-	public static final int MESSAGE_READ = 2;
-	public static final int MESSAGE_WRITE = 3;
-	public static final int MESSAGE_DEVICE_NAME = 4;
-	public static final int MESSAGE_LONG_TOAST = 5;
-	public static final int MESSAGE_SHORT_TOAST = 6;
-
 	// Intent Request Codes
 	private static final int BLUETOOTH_REQUEST_ENABLE = 1;
 	private static final int BLUETOOTH_REQUEST_DISCONNECT = 2;
@@ -34,26 +25,22 @@ public class SettingsActivity extends PreferenceActivity {
 
 	// Preferences Elements
 	private static final String SETTINGS_BLUETOOTH = "settings_bluetooth";
-	// TODO R.id.bluetooth
-	// Message parameter
-	public static final String MESSAGE_TEXT = "settings_bluetooth";
+	// TODO R.id.bluetooth (??)
 
-	//
+	// Get ActivityHandler object
 	private ActivityHandler activityHandler = ActivityHandler.getInstance();
+
+	// Get BluetoothDeviceProvider object
 	private BluetoothDeviceProvider deviceProvider = BluetoothDeviceProvider
 			.getInstance();
-
-	// private Handler mHandler;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		addPreferencesFromResource(R.layout.activity_settings);
 
-		// Setup own handler
-		// mHandler = setupHandler();
-		// deviceProvider = new BluetoothDeviceProvider(setupHandler(),
-		// getApplicationContext());
+		// Handler myHandler = getHandler();
+		// deviceProvider.setSettingsActivityHandler(myHandler);
 
 		// Get preference for bluetooth and initialize the click events
 		Preference pref_bluetooth = (Preference) findPreference(SETTINGS_BLUETOOTH);
@@ -61,26 +48,15 @@ public class SettingsActivity extends PreferenceActivity {
 				.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
 					@Override
 					public boolean onPreferenceClick(Preference preference) {
-						if (deviceProvider.isBluetoothDisabled()) {
-							startActivityForResult(
-									new Intent(deviceProvider
-											.getBluetoothEnableQuestion()),
-									BLUETOOTH_REQUEST_ENABLE);
-							return true;
-						}
-						if (deviceProvider.getConnectedDeviceName() != null) {
+						// If already loged in asking for logout
+						if (deviceProvider.isLogedin()) {
 							startActivityForResult(new Intent(
 									getApplicationContext(),
 									BluetoothDialogDisconnect.class),
 									BLUETOOTH_REQUEST_DISCONNECT);
 							return true;
 						}
-						// BluetoothDiscoveryDialog
-						// .setDeviceProvider(deviceProvider);
-						startActivityForResult(new Intent(
-								getApplicationContext(),
-								BluetoothDialogDiscovery.class),
-								BLUETOOTH_REQUEST_DISCOVERY);
+						deviceProvider.login();
 						return true;
 					}
 				});
@@ -89,24 +65,27 @@ public class SettingsActivity extends PreferenceActivity {
 	@Override
 	protected void onStart() {
 		super.onStart();
-		activityHandler.add(this, setupHandler());
+		activityHandler.add(this);
+		activityHandler.setHandler(ActivityHandler.HANDLLER_SETTINGS,
+				setupHandler());
 	}
 
 	@Override
 	protected void onStop() {
 		super.onStop();
 		activityHandler.del(this);
+		activityHandler.unsetHandler(ActivityHandler.HANDLLER_SETTINGS);
 	}
 
 	@Override
 	protected void onResume() {
 		super.onResume();
-		updateBluetoothInfo();
 	}
 
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
+		// deviceProvider.unsetSettingsActivityHandler();
 		finish();
 	}
 
@@ -126,42 +105,30 @@ public class SettingsActivity extends PreferenceActivity {
 		return true;
 	}
 
-	private Handler setupHandler() {
-		// TODO Anpassen -- evtl. nur Toasts ausgeben
-		// The Handler that gets information back from the BluetoothConnectionService
+	public Handler setupHandler() {
 		return new Handler() {
 			@Override
 			public void handleMessage(Message msg) {
-				if (msg.what == MESSAGE_LONG_TOAST) {
-					Toast.makeText(getApplicationContext(),
-							msg.getData().getString(MESSAGE_TEXT),
-							Toast.LENGTH_LONG).show();
-				} else if (msg.what == MESSAGE_SHORT_TOAST) {
-					Toast.makeText(getApplicationContext(),
-							msg.getData().getString(MESSAGE_TEXT),
-							Toast.LENGTH_SHORT).show();
 
-				} else if (msg.what == ActivityHandler.UPDATE_BLUETOOTHINFO) {
-					updateBluetoothInfo();
+				if (msg.what == ActivityHandler.ASK_FOR_BLUETOOTH) {
+					// ASKING FOR ENABLE THE BLUETOOTH ADAPTER
+					startActivityForResult(
+							new Intent(msg.getData().getString(
+									ActivityHandler.MESSAGE_TEXT)),
+							BLUETOOTH_REQUEST_ENABLE);
+				} else if (msg.what == ActivityHandler.START_DISCOVERING_DEVICES) {
+					// STARTING THE DISCOVERY DIALOG
+					startActivityForResult(new Intent(getApplicationContext(),
+							BluetoothDialogDiscovery.class),
+							BLUETOOTH_REQUEST_DISCOVERY);
+
+				} else if (msg.what == ActivityHandler.UPDATE_BT_INFO) {
+					((Preference) findPreference(SETTINGS_BLUETOOTH))
+							.setSummary(msg.getData().getString(
+									ActivityHandler.MESSAGE_TEXT));
 				}
 			}
 		};
-	}
-
-	// Updates the summary of the bluetooth preference
-	private void updateBluetoothInfo() {
-		Preference bluetooth_pref = (Preference) findPreference(SETTINGS_BLUETOOTH);
-		if (deviceProvider.isBluetoothDisabled()) {
-			bluetooth_pref.setSummary(R.string.settings_bluetoothDisabled);
-			return;
-		}
-		String tmpStr = deviceProvider.getConnectedDeviceName();
-		if (tmpStr != null) {
-			bluetooth_pref.setSummary(R.string.settings_bluetoothConnected
-					+ tmpStr);
-			return;
-		}
-		bluetooth_pref.setSummary(R.string.settings_bluetoothEnabled);
 	}
 
 	@Override
@@ -169,9 +136,13 @@ public class SettingsActivity extends PreferenceActivity {
 
 		if (resCode == BLUETOOTH_REQUEST_ENABLE) {
 			// If Enable-Bluetooth is true
-			if (reqCode != Activity.RESULT_OK) {
-				Toast.makeText(this, R.string.settings_bluetoothDisabled,
-						Toast.LENGTH_SHORT).show();
+			if (reqCode == Activity.RESULT_OK) {
+				// Do next step for login
+				deviceProvider.doOnResult();
+				// } else {
+				// // Bluetooth was not enabled
+				// Toast.makeText(this, R.string.settings_bluetoothDisabled,
+				// Toast.LENGTH_SHORT).show();
 			}
 		} else if (resCode == BLUETOOTH_REQUEST_DISCONNECT) {
 			// If Bluetooth-Deivce should disconnect
@@ -181,11 +152,17 @@ public class SettingsActivity extends PreferenceActivity {
 		} else if (resCode == BLUETOOTH_REQUEST_DISCOVERY) {
 			// If Bluetooth-Deivce was selected
 			if (reqCode == Activity.RESULT_OK) {
-				deviceProvider.connectDevice(data);
+				// Save selected device
+				deviceProvider.setDevice(data.getExtras().getString(
+						ActivityHandler.BLUETOOTH_DEVICE_ADDRESS));
+				// Do next step for login
+				deviceProvider.doOnResult();
+				// deviceProvider.connectDevice(data);
+				// } else {
+				// // No device was selected
+				// Toast.makeText(this, R.string.settings_discovery_no_device,
+				// Toast.LENGTH_SHORT).show();
 			}
 		}
-		// updateBluetoothInfo(); TODO reicht mit onResume() ((prüfen ob
-		// korrekt, ob onResume zu früh aufgerufen wird??
 	}
-
 }

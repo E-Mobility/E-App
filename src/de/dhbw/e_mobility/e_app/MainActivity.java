@@ -9,6 +9,7 @@ import de.dhbw.e_mobility.e_app.bluetooth.BluetoothDeviceProvider;
 
 public class MainActivity extends Activity {
 
+	// Get ActivityHandler object
 	private ActivityHandler activityHandler = ActivityHandler.getInstance();
 
 	@Override
