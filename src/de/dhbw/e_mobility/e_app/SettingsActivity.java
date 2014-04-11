@@ -30,6 +30,9 @@ public class SettingsActivity extends PreferenceActivity {
 	// Get ActivityHandler object
 	private ActivityHandler activityHandler = ActivityHandler.getInstance();
 
+	// Get SettingsProvider object
+	private SettingsProvider settingsProvider = SettingsProvider.getInstance();
+
 	// Get BluetoothDeviceProvider object
 	private BluetoothDeviceProvider deviceProvider = BluetoothDeviceProvider
 			.getInstance();
@@ -49,7 +52,7 @@ public class SettingsActivity extends PreferenceActivity {
 					@Override
 					public boolean onPreferenceClick(Preference preference) {
 						// If already loged in asking for logout
-						if (deviceProvider.isLogedin()) {
+						if (settingsProvider.isLoggedIn()) {
 							startActivityForResult(new Intent(
 									getApplicationContext(),
 									BluetoothDialogDisconnect.class),
@@ -68,6 +71,7 @@ public class SettingsActivity extends PreferenceActivity {
 		activityHandler.add(this);
 		activityHandler.setHandler(ActivityHandler.HANDLLER_SETTINGS,
 				setupHandler());
+		updateBluetoothInfo();
 	}
 
 	@Override
@@ -87,6 +91,12 @@ public class SettingsActivity extends PreferenceActivity {
 		super.onDestroy();
 		// deviceProvider.unsetSettingsActivityHandler();
 		finish();
+	}
+
+	// Updates the bluetooth info text
+	private void updateBluetoothInfo() {
+		((Preference) findPreference(SETTINGS_BLUETOOTH))
+				.setSummary(settingsProvider.getBluetoothState());
 	}
 
 	@Override
@@ -123,11 +133,14 @@ public class SettingsActivity extends PreferenceActivity {
 							BLUETOOTH_REQUEST_DISCOVERY);
 
 				} else if (msg.what == ActivityHandler.UPDATE_BT_INFO) {
-					((Preference) findPreference(SETTINGS_BLUETOOTH))
-							.setSummary(msg.getData().getString(
-									ActivityHandler.MESSAGE_TEXT));
+					updateBluetoothInfo();
+
+					// ((Preference) findPreference(SETTINGS_BLUETOOTH))
+					// .setSummary(msg.getData().getString(
+					// ActivityHandler.MESSAGE_TEXT));
 				}
 			}
+
 		};
 	}
 
@@ -147,7 +160,8 @@ public class SettingsActivity extends PreferenceActivity {
 		} else if (resCode == BLUETOOTH_REQUEST_DISCONNECT) {
 			// If Bluetooth-Deivce should disconnect
 			if (reqCode == Activity.RESULT_OK) {
-				deviceProvider.stopService();
+				deviceProvider.logout();
+//				deviceProvider.stopService();
 			}
 		} else if (resCode == BLUETOOTH_REQUEST_DISCOVERY) {
 			// If Bluetooth-Deivce was selected
@@ -165,4 +179,17 @@ public class SettingsActivity extends PreferenceActivity {
 			}
 		}
 	}
+	
+	// TODO
+	// Listenelemente
+	// # Bluetooth
+	// # Passwort
+	// # Automatischer Login (ein/aus)
+	// (# Gesamtstatistik zurücksetzten)
+	// (# Export / Import)
+	// # Geschwindigkeitsmaßeinheit (km/h | mph)
+	// # Erweiterte Bluetootheinstellungen
+	
+	// # Vollbild
+	// # Display an lassen
 }

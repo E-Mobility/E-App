@@ -1,7 +1,10 @@
 package de.dhbw.e_mobility.e_app;
 
+import java.util.HashMap;
 import java.util.Vector;
 
+import de.dhbw.e_mobility.e_app.bluetooth.BluetoothCommands;
+import de.dhbw.e_mobility.e_app.bluetooth.BluetoothInfoState;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
@@ -20,6 +23,8 @@ public class ActivityHandler {
 	private Handler handlerDeviceProvider = null;
 	private Handler handlerSettings = null;
 	private Handler handlerDiscovery = null;
+
+	private HashMap<String, BluetoothCommands> bluetooth_commands = null;
 
 	// Retruns the wanted handler
 	private Handler getHandler(int handlerID) {
@@ -76,6 +81,8 @@ public class ActivityHandler {
 		activities = new Vector<Activity>();
 		appContext = null;
 		loogedIn = false;
+
+		saveBluetoothCommands();
 	}
 
 	// public void add(Activity theActivity) {
@@ -121,6 +128,12 @@ public class ActivityHandler {
 
 	public Context getAppContext() {
 		return appContext;
+	}
+
+	public boolean fireToHandler(int handlerID, BluetoothInfoState infoState) {
+		Bundle bundle = new Bundle();
+		bundle.putInt(MESSAGE_NUMBER, infoState.ordinal());
+		return fireToHandler(handlerID, BLUETOOTH_INFO_STATE, bundle);
 	}
 
 	// public boolean fireToHandler(Handler theHandler, int what) {
@@ -177,8 +190,10 @@ public class ActivityHandler {
 	public static final int MESSAGE_LONG_TOAST = 5;
 	public static final int MESSAGE_SHORT_TOAST = 6;
 	public static final int UPDATE_BLUETOOTHINFO = 7;
+	public static final int BLUETOOTH_INFO_STATE = 8;
 
-	public static final String MESSAGE_TEXT = "handle_message";
+	public static final String MESSAGE_TEXT = "handle_text";
+	public static final String MESSAGE_NUMBER = "handle_number";
 
 	public static final int ASK_FOR_BLUETOOTH = 10;
 	public static final int START_DISCOVERING_DEVICES = 11;
@@ -219,4 +234,16 @@ public class ActivityHandler {
 	// # # # Beim verbinden prüfen ob gerät verfügbar
 	// # # # beim verbinden prüfen ob gerät gepaird (wenn nicht, dann mache)
 	// # # # # beim pairgen prüfen ob bluetooth an (wenn nicth, dann mach)
+
+	private void saveBluetoothCommands() {
+		// Prepare the commands
+		bluetooth_commands = new HashMap<String, BluetoothCommands>();
+		for (BluetoothCommands command : BluetoothCommands.values()) {
+			bluetooth_commands.put(command.getCommand(), command);
+		}
+	}
+
+	public HashMap<String, BluetoothCommands> getBluetoothCommands() {
+		return bluetooth_commands;
+	}
 }

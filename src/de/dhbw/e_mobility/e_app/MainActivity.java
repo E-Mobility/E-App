@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
 import de.dhbw.e_mobility.e_app.bluetooth.BluetoothDeviceProvider;
 
 public class MainActivity extends Activity {
@@ -32,6 +33,7 @@ public class MainActivity extends Activity {
 	protected void onStart() {
 		super.onStart();
 		activityHandler.add(this);
+
 	}
 
 	@Override
@@ -46,8 +48,8 @@ public class MainActivity extends Activity {
 		BluetoothDeviceProvider deviceProvider = BluetoothDeviceProvider
 				.getInstance();
 		if (deviceProvider != null) {
-			deviceProvider.stopService();
-			deviceProvider.unregisterReceiver(activityHandler.getMainContext());
+			deviceProvider.logout();
+			deviceProvider.unregisterReceiver();
 			deviceProvider = null;
 		}
 	}

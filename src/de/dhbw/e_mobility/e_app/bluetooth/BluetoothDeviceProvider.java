@@ -6,7 +6,6 @@ import java.util.Set;
 
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
-import android.content.Context;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.Handler;
@@ -15,29 +14,21 @@ import android.util.Log;
 import android.widget.ArrayAdapter;
 import de.dhbw.e_mobility.e_app.ActivityHandler;
 import de.dhbw.e_mobility.e_app.R;
+import de.dhbw.e_mobility.e_app.SettingsProvider;
 
 public class BluetoothDeviceProvider {
 
-	// TODO alles abhängigkeiten von settings in activityhandler verlegen..
-	// sonst kann das nicht laufen, wenn settings nicht aktiv..
+	private enum BluetoothState {
+		NONE, DISCONNECT, ON, DEVICE_ONLINE, PAIRED, CONNECTED, LOGGED_IN;
+	}
 
-	// State of connection/login
-	private static final int STATE_NONE = 0;
-	private static final int STATE_BLUETOOTH_NONE = 1;
-	// private static final int STATE_BLUETOOTH_OFF = 2;
-	private static final int STATE_BLUETOOTH_ON = 3;
-	private static final int STATE_DEVICE_ONLINE = 4;
-	private static final int STATE_PAIRED = 5;
-	private static final int STATE_CONNECTED = 6;
-	private static final int STATE_LOGEDIN = 7;
-	private int state = STATE_NONE;
+	private BluetoothState bluetoothState;
 
 	// Get ActivityHandler object
 	private ActivityHandler activityHandler = ActivityHandler.getInstance();
 
-	// Handler of other objects
-	// private Handler settingsHandler;
-	// private Handler dialogDiscoveryHandler;
+	// Get SettingsProvider object
+	private SettingsProvider settingsProvider = SettingsProvider.getInstance();
 
 	// Private objects
 	private BluetoothAdapter bluetoothAdapter = null;
@@ -66,90 +57,67 @@ public class BluetoothDeviceProvider {
 		// Give own Handler to ActivityHandler
 		activityHandler.setHandler(ActivityHandler.HANDLLER_DEVICE_PROVIDER,
 				setupHandler());
-		// activityHandler.unsetHandler(ActivityHandler.HANDLLER_DEVICE_PROVIDER);
-		// // TODO onRemove?
 
 		// Get local bluetooth adapter
 		bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
 		if (bluetoothAdapter == null) {
 			// No bluetooth adapter is available
-			setState(STATE_BLUETOOTH_NONE);
+			bluetoothState = BluetoothState.NONE;
 			activityHandler.fireToast(R.string.settings_bluetoothNotAvailable);
-			// activityHandler.fireToast(settingsHandler,
-			// R.string.settings_bluetoothNotAvailable);
 			return;
 		}
-
-		setState(STATE_NONE);
-
+		bluetoothState = BluetoothState.DISCONNECT;
 		String bluetoothPassword = "1234"; // TODO
+		BluetoothCommands.LOGIN.setValue(bluetoothPassword);
 		// bluetoothDevice is set by "setDevice(...)"
 
-		Handler myHandler = setupHandler();
-		// myBroadcastReceiver = new MyBroadcastReceiver(myHandler);
 		myBroadcastReceiver = new MyBroadcastReceiver();
-		bluetoothConnectionService = new BluetoothConnectionService(myHandler,
-				bluetoothPassword);
+		bluetoothConnectionService = new BluetoothConnectionService();
 
 		// Register actions for BluetoothDevice
-		Context theContext = activityHandler.getMainContext();
-		theContext.registerReceiver(myBroadcastReceiver, new IntentFilter(
-				BluetoothDevice.ACTION_ACL_CONNECTED));
-		theContext.registerReceiver(myBroadcastReceiver, new IntentFilter(
-				BluetoothDevice.ACTION_ACL_DISCONNECT_REQUESTED));
-		theContext.registerReceiver(myBroadcastReceiver, new IntentFilter(
-				BluetoothDevice.ACTION_ACL_DISCONNECTED));
-		theContext.registerReceiver(myBroadcastReceiver, new IntentFilter(
-				BluetoothDevice.ACTION_BOND_STATE_CHANGED));
-		theContext.registerReceiver(myBroadcastReceiver, new IntentFilter(
-				BluetoothDevice.ACTION_CLASS_CHANGED));
-		theContext.registerReceiver(myBroadcastReceiver, new IntentFilter(
-				BluetoothDevice.ACTION_FOUND));
-		theContext.registerReceiver(myBroadcastReceiver, new IntentFilter(
-				BluetoothDevice.ACTION_NAME_CHANGED));
+		activityHandler.getMainContext().registerReceiver(myBroadcastReceiver,
+				new IntentFilter(BluetoothDevice.ACTION_ACL_CONNECTED));
+		activityHandler.getMainContext().registerReceiver(
+				myBroadcastReceiver,
+				new IntentFilter(
+						BluetoothDevice.ACTION_ACL_DISCONNECT_REQUESTED));
+		activityHandler.getMainContext().registerReceiver(myBroadcastReceiver,
+				new IntentFilter(BluetoothDevice.ACTION_ACL_DISCONNECTED));
+		activityHandler.getMainContext().registerReceiver(myBroadcastReceiver,
+				new IntentFilter(BluetoothDevice.ACTION_BOND_STATE_CHANGED));
+		activityHandler.getMainContext().registerReceiver(myBroadcastReceiver,
+				new IntentFilter(BluetoothDevice.ACTION_CLASS_CHANGED));
+		activityHandler.getMainContext().registerReceiver(myBroadcastReceiver,
+				new IntentFilter(BluetoothDevice.ACTION_FOUND));
+		activityHandler.getMainContext().registerReceiver(myBroadcastReceiver,
+				new IntentFilter(BluetoothDevice.ACTION_NAME_CHANGED));
 
 		// Register actions for BluetoothAdapter
-		theContext.registerReceiver(myBroadcastReceiver, new IntentFilter(
-				"android.bluetooth.adapter.action.CONNECTION_STATE_CHANGED"));
-		theContext.registerReceiver(myBroadcastReceiver, new IntentFilter(
-				BluetoothAdapter.ACTION_DISCOVERY_FINISHED));
-		theContext.registerReceiver(myBroadcastReceiver, new IntentFilter(
-				BluetoothAdapter.ACTION_DISCOVERY_STARTED));
-		theContext.registerReceiver(myBroadcastReceiver, new IntentFilter(
-				BluetoothAdapter.ACTION_LOCAL_NAME_CHANGED));
-		theContext.registerReceiver(myBroadcastReceiver, new IntentFilter(
-				BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE));
-		theContext.registerReceiver(myBroadcastReceiver, new IntentFilter(
-				BluetoothAdapter.ACTION_REQUEST_ENABLE));
-		theContext.registerReceiver(myBroadcastReceiver, new IntentFilter(
-				BluetoothAdapter.ACTION_SCAN_MODE_CHANGED));
-		theContext.registerReceiver(myBroadcastReceiver, new IntentFilter(
-				BluetoothAdapter.ACTION_STATE_CHANGED));
+		activityHandler
+				.getMainContext()
+				.registerReceiver(
+						myBroadcastReceiver,
+						new IntentFilter(
+								"android.bluetooth.adapter.action.CONNECTION_STATE_CHANGED"));
+		activityHandler.getMainContext().registerReceiver(myBroadcastReceiver,
+				new IntentFilter(BluetoothAdapter.ACTION_DISCOVERY_FINISHED));
+		activityHandler.getMainContext().registerReceiver(myBroadcastReceiver,
+				new IntentFilter(BluetoothAdapter.ACTION_DISCOVERY_STARTED));
+		activityHandler.getMainContext().registerReceiver(myBroadcastReceiver,
+				new IntentFilter(BluetoothAdapter.ACTION_LOCAL_NAME_CHANGED));
+		activityHandler.getMainContext().registerReceiver(myBroadcastReceiver,
+				new IntentFilter(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE));
+		activityHandler.getMainContext().registerReceiver(myBroadcastReceiver,
+				new IntentFilter(BluetoothAdapter.ACTION_REQUEST_ENABLE));
+		activityHandler.getMainContext().registerReceiver(myBroadcastReceiver,
+				new IntentFilter(BluetoothAdapter.ACTION_SCAN_MODE_CHANGED));
+		activityHandler.getMainContext().registerReceiver(myBroadcastReceiver,
+				new IntentFilter(BluetoothAdapter.ACTION_STATE_CHANGED));
 
 		// Register hidden bluetooth actions
-		theContext.registerReceiver(myBroadcastReceiver, new IntentFilter(
-				"android.bleutooth.device.action.UUID"));
+		activityHandler.getMainContext().registerReceiver(myBroadcastReceiver,
+				new IntentFilter("android.bleutooth.device.action.UUID"));
 	}
-
-	// // Saves the activity handler from settings object
-	// public void setSettingsActivityHandler(Handler theHandler) {
-	// settingsHandler = theHandler;
-	// }
-	//
-	// // Unsets the activity handler from settings object
-	// public void unsetSettingsActivityHandler() {
-	// settingsHandler = null;
-	// }
-	//
-	// // Saves the activity handler from discovery dialog object
-	// public void setBluetoothDialogDiscoveryHandler(Handler theHandler) {
-	// dialogDiscoveryHandler = theHandler;
-	// }
-	//
-	// // Unsets the activity handler from discovery dialog object
-	// public void unsetBluetoothDialogDiscoveryHandler() {
-	// dialogDiscoveryHandler = null;
-	// }
 
 	// Sets the bluetooth device
 	public void setDevice(String address) {
@@ -157,19 +125,21 @@ public class BluetoothDeviceProvider {
 	}
 
 	// Unregister the BroadcastReceiver
-	public void unregisterReceiver(Context theContext) {
-		theContext.unregisterReceiver(myBroadcastReceiver);
+	public void unregisterReceiver() {
+		activityHandler.getMainContext()
+				.unregisterReceiver(myBroadcastReceiver);
 	}
 
-	// Sets the given state
-	private void setState(int theState) {
-		Log.d("DEVICE-PROVIDER", "setState() " + state + " -> " + theState);
-		state = theState;
-	}
-
-	// Returns the current state
-	private int getState() {
-		return state;
+	private void updateBluetoothInfo(BluetoothInfoState theState) {
+		if (theState == BluetoothInfoState.CONNECTED
+				|| theState == BluetoothInfoState.LOGGED_IN) {
+			settingsProvider.setBluetoothState(theState,
+					bluetoothDevice.getName());
+		} else {
+			settingsProvider.setBluetoothState(theState);
+		}
+		activityHandler.fireToHandler(ActivityHandler.HANDLLER_SETTINGS,
+				ActivityHandler.UPDATE_BT_INFO);
 	}
 
 	private Handler setupHandler() {
@@ -177,17 +147,24 @@ public class BluetoothDeviceProvider {
 
 			@Override
 			public void handleMessage(Message msg) {
-				if (msg.what == BluetoothConnectionService.STATE_CONNECTED) {
-					// // Device has a connection now
-					// setState(STATE_CONNECTED);
-					// doOnResult();
-				} else if (msg.what == BluetoothConnectionService.STATE_LOGEDIN) {
-					// Login was successful
-					setState(STATE_LOGEDIN);
-					doOnResult();
-				} else if (msg.what == BluetoothConnectionService.STATE_LOGEDOUT) {
-					// Logout was successful
-					setState(STATE_NONE);
+				if (msg.what == ActivityHandler.BLUETOOTH_INFO_STATE) {
+					BluetoothInfoState infoState = BluetoothInfoState.values()[msg
+							.getData().getInt(ActivityHandler.MESSAGE_NUMBER)];
+					if (infoState == BluetoothInfoState.LOGGED_IN) {
+						// Login was successful
+						Log.d("LOGIN", "Login was successful ("
+								+ bluetoothDevice.getName() + ")");
+						bluetoothState = BluetoothState.LOGGED_IN;
+						// TODO evtl. gleiche status..
+						Log.d("UPDATE", "Handler: LOGGED_IN");
+						updateBluetoothInfo(BluetoothInfoState.LOGGED_IN);
+						doOnResult();
+					} else if (infoState == BluetoothInfoState.NONE) {
+						// Logout was successful
+						bluetoothState = BluetoothState.DISCONNECT;
+						Log.d("UPDATE", "Handler: DISCONNECT");
+						updateBluetoothInfo(BluetoothInfoState.ON);
+					}
 				}
 
 				// BluetoothDevice-ACTIONS
@@ -196,12 +173,18 @@ public class BluetoothDeviceProvider {
 				} else if (msg.what == MyBroadcastReceiver.BT_ACTION_ACL_CONNECTED_BONDED) {
 					Log.d("BluetoothDevice-ACTIONS",
 							"BT_ACTION_ACL_CONNECTED_BONDED");
+					bluetoothState = BluetoothState.CONNECTED;
+					Log.d("UPDATE", "Handler: CONNECTED (ACL)");
+					updateBluetoothInfo(BluetoothInfoState.CONNECTED);
 				} else if (msg.what == MyBroadcastReceiver.BT_ACTION_ACL_DISCONNECT_REQUESTED) {
 					Log.d("BluetoothDevice-ACTIONS",
 							"BT_ACTION_ACL_DISCONNECT_REQUESTED");
 				} else if (msg.what == MyBroadcastReceiver.BT_ACTION_ACL_DISCONNECTED) {
 					Log.d("BluetoothDevice-ACTIONS",
 							"BT_ACTION_ACL_DISCONNECTED");
+					bluetoothState = BluetoothState.DISCONNECT;
+					Log.d("UPDATE", "Handler: DISCONNECT (ACL)");
+					updateBluetoothInfo(BluetoothInfoState.ON);
 				} else if (msg.what == MyBroadcastReceiver.BT_ACTION_BOND_STATE_CHANGED_BOND_BONDED) {
 					Log.d("BluetoothDevice-ACTIONS",
 							"BT_ACTION_BOND_STATE_CHANGED_BOND_BONDED");
@@ -285,16 +268,13 @@ public class BluetoothDeviceProvider {
 	// Checks if bluetooth is turned on
 	private void checkBluetooth() {
 		if (bluetoothAdapter.isEnabled()) {
-			setState(STATE_BLUETOOTH_ON);
+			bluetoothState = BluetoothState.ON;
 			doOnResult();
 		} else {
 			Log.d("LOGIN", "Bluetooth is not turened on");
 			activityHandler.fireToHandler(ActivityHandler.HANDLLER_SETTINGS,
 					ActivityHandler.ASK_FOR_BLUETOOTH,
 					BluetoothAdapter.ACTION_REQUEST_ENABLE);
-			// activityHandler.fireToHandler(settingsHandler,
-			// ActivityHandler.ASK_FOR_BLUETOOTH,
-			// BluetoothAdapter.ACTION_REQUEST_ENABLE);
 		}
 	}
 
@@ -303,7 +283,7 @@ public class BluetoothDeviceProvider {
 		if (bluetoothDevice != null) { // TODO DEL
 			// if(device.isOnline()) { //
 			// MyBroadcastReceiver.BLUETOOTH_ACTION_ACL_CONNECTED
-			setState(STATE_DEVICE_ONLINE);
+			bluetoothState = BluetoothState.DEVICE_ONLINE;
 			doOnResult();
 			// } TODO
 		} else {
@@ -311,8 +291,6 @@ public class BluetoothDeviceProvider {
 			Log.d("LOGIN", "No device available / Device is offline");
 			activityHandler.fireToHandler(ActivityHandler.HANDLLER_SETTINGS,
 					ActivityHandler.START_DISCOVERING_DEVICES);
-			// activityHandler.fireToHandler(settingsHandler,
-			// ActivityHandler.START_DISCOVERING_DEVICES);
 		}
 	}
 
@@ -323,13 +301,11 @@ public class BluetoothDeviceProvider {
 			// oder if
 			// (MyBroadcastReceiver.BLUETOOTH_ACTION_ACL_CONNECTED_BONDED == 0)
 			// {// TODO?
-			setState(STATE_PAIRED);
+			bluetoothState = BluetoothState.PAIRED;
 			doOnResult();
 		} else {
 			Log.d("LOGIN", "Device is not paired / Pairing unsuccessful");
 			activityHandler.fireToast(R.string.device_not_paired);
-			// activityHandler.fireToast(settingsHandler,
-			// R.string.device_not_paired);
 		}
 	}
 
@@ -338,91 +314,73 @@ public class BluetoothDeviceProvider {
 		bluetoothConnectionService.checkConnectionAndLogin(bluetoothDevice);
 	}
 
-	// TODO DEL
-	// // Do login to the controller
-	// private void doLogin() {
-	// bluetoothConnectionService.login();
-	// }
-
 	// Does the next step on login
 	public void doOnResult() {
-		if (getState() == STATE_NONE) {
+		if (bluetoothState == BluetoothState.DISCONNECT) {
 			checkBluetooth();
-		} else if (getState() == STATE_BLUETOOTH_ON) {
-			activityHandler.fireToHandler(ActivityHandler.HANDLLER_SETTINGS,
-					ActivityHandler.UPDATE_BT_INFO,
-					R.string.bluetooth_info_enabled);
-			// activityHandler.fireToHandler(settingsHandler,
-			// ActivityHandler.UPDATE_BT_INFO,
-			// R.string.bluetooth_info_enabled);
+		} else if (bluetoothState == BluetoothState.ON) {
+			Log.d("UPDATE", "onResult ON");
+			updateBluetoothInfo(BluetoothInfoState.ON);
 			checkDeviceIsOnline();
-		} else if (getState() == STATE_DEVICE_ONLINE) {
+		} else if (bluetoothState == BluetoothState.DEVICE_ONLINE) {
 			checkIsPaired();
-		} else if (getState() == STATE_PAIRED) {
+		} else if (bluetoothState == BluetoothState.PAIRED) {
 			checkConnectionAndLogin();
-		} else if (getState() == STATE_CONNECTED) {
-			// Log.d("LOGIN",
-			// "Connection successful with " + bluetoothDevice.getName());
-			// activityHandler.fireToHandler(settingsHandler,
-			// ActivityHandler.UPDATE_BT_INFO,
-			// R.string.bluetooth_info_connected,
-			// bluetoothDevice.getName());
-			// doLogin();
-		} else if (getState() == STATE_LOGEDIN) {
-			Log.d("LOGIN", "Login was successful (" + bluetoothDevice.getName()
-					+ ")");
-			activityHandler
-					.fireToHandler(ActivityHandler.HANDLLER_SETTINGS,
-							ActivityHandler.UPDATE_BT_INFO,
-							R.string.bluetooth_info_loggedin,
-							bluetoothDevice.getName());
-			// .fireToHandler(settingsHandler,
-			// ActivityHandler.UPDATE_BT_INFO,
-			// R.string.bluetooth_info_loggedin,
-			// bluetoothDevice.getName());
-		} else if (getState() == STATE_BLUETOOTH_NONE) {
+		} else if (bluetoothState == BluetoothState.CONNECTED) {
+		} else if (bluetoothState == BluetoothState.LOGGED_IN) {
+		} else if (bluetoothState == BluetoothState.NONE) {
 			// Es ist kein Bluetooth auf diesem Gerät möglich!
 			Log.d("LOGIN", "Bluetooth not available");
-			activityHandler.fireToHandler(ActivityHandler.HANDLLER_SETTINGS,
-					ActivityHandler.UPDATE_BT_INFO,
-					R.string.bluetooth_info_none);
-			// activityHandler.fireToHandler(settingsHandler,
-			// ActivityHandler.UPDATE_BT_INFO,
-			// R.string.bluetooth_info_none);
+			Log.d("UPDATE", "onResult NONE");
+			updateBluetoothInfo(BluetoothInfoState.NONE);
 		}
 	}
 
-	// Returns true if state is loged in
-	public boolean isLogedin() {
-		return (getState() == STATE_LOGEDIN);
-	}
+	// // Returns true if state is loged in
+	// public boolean isLogedin() {
+	// return (bluetoothState == BluetoothState.LOGGED_IN);
+	// }
+
+	// public String getBluetoothInfo() {
+	// if (bluetoothState == BluetoothState.LOGGED_IN) {
+	// return activityHandler.getStr(R.string.bluetooth_info_loggedin)
+	// + bluetoothDevice.getName();
+	// }
+	// if (bluetoothState == BluetoothState.ON) {
+	// return activityHandler.getStr(R.string.bluetooth_info_enabled);
+	// }
+	// return "";
+	// }
 
 	// Start login to controller
 	public void login() {
-		if (getState() == STATE_BLUETOOTH_NONE) {
+		if (bluetoothState == BluetoothState.NONE) {
 			Log.d("LOGIN", "Bluetooth is not available!");
 			return;
 		}
-		setState(STATE_NONE);
+		bluetoothState = BluetoothState.DISCONNECT;
 		doOnResult();
 	}
 
 	// Logout from controller
 	public void logout() {
-		if (getState() == STATE_BLUETOOTH_NONE) {
+		if (bluetoothState == BluetoothState.NONE) {
 			Log.d("LOGIN", "Bluetooth is not available!");
-			return;
+		} else if (bluetoothState == BluetoothState.LOGGED_IN) {
+			// bluetoothConnectionService.logout();
+			bluetoothConnectionService.stop();
+			
+			bluetoothDevice = null;
+			
 		}
-		// bluetoothConnectionService.logout();
-		bluetoothConnectionService.stop();
 	}
 
-	// Stop the bluetooth connection services
-	public void stopService() { // TODO wird zu logout??
-		if (bluetoothConnectionService != null) {
-			bluetoothConnectionService.stop();
-		}
-	}
+	// // Stop the bluetooth connection services
+	// public void stopService() { // TODO wird zu logout??
+	// if (bluetoothConnectionService != null) {
+	// bluetoothConnectionService.stop();
+	// }
+	// }
 
 	// Creates a bond between this devices
 	private boolean createBond() {
@@ -484,7 +442,7 @@ public class BluetoothDeviceProvider {
 		return discoveredDevicesArrayAdapter;
 	}
 
-	// Init the paired device list
+	// Initialize the paired device list
 	public boolean initPairedDevices() {
 		// Get a set of currently paired devices
 		Set<BluetoothDevice> pairedDevices = bluetoothAdapter
@@ -505,12 +463,12 @@ public class BluetoothDeviceProvider {
 		return false;
 	}
 
-	// Clears the list for the discoverd devices
+	// Clears the list for the discovered devices
 	public void clearDiscoveredDeviceList() {
 		discoveredDevicesArrayAdapter.clear();
 	}
 
-	// Updates the list for the discoverd devices
+	// Updates the list for the discovered devices
 	public void updateDiscoveredDeviceListState() {
 		if (discoveredDevicesArrayAdapter.getCount() == 0) {
 			clearDiscoveredDeviceList();
