@@ -70,9 +70,9 @@ public class BluetoothConnectionService {
 	// Starts the ConnectThread
 	private synchronized void connect(BluetoothDevice theDevice) {
 		// Cancel connect thread for reconnecting
-		if (serviceState == ServiceState.CONNECTING) {
-			cancelConnectThread();
-		}
+		// if (serviceState == ServiceState.CONNECTING) {
+		cancelConnectThread();
+		// }
 		// Cancel any thread currently running a connection
 		cancelConnectedThread();
 
@@ -132,7 +132,16 @@ public class BluetoothConnectionService {
 				Log.d("CONNECTION-SERVICE", "Connection sucessfull!");
 			} catch (IOException e) {
 				Log.e("CONNECTION-SERVICE", "Connection failed!", e);
-				init();
+
+//				activityHandler.fireToast("Keine Verbindung möglich!");
+				// activityHandler.fireToHandler(
+				// ActivityHandler.HANDLLER_DEVICE_PROVIDER,
+				// BluetoothInfoState.DISCONNECTED);
+				// TODO Meldung ausgeben...
+				serviceState = ServiceState.INIT;
+				bluetoothSocket = null;
+				
+//				init();
 				return;
 			}
 			// Start the connected thread
@@ -143,8 +152,8 @@ public class BluetoothConnectionService {
 			try {
 				bluetoothSocket.close();
 				bluetoothSocket = null;
-			} catch (IOException e1) {
-				Log.e("CONNECTION-SERVICE", "Closing socket failed", e1);
+			} catch (IOException e) {
+				Log.e("CONNECTION-SERVICE", "Closing socket failed", e);
 			}
 		}
 	}
@@ -156,7 +165,7 @@ public class BluetoothConnectionService {
 
 		// Start the thread to manage the connection and perform transmissions
 		connectedThread = new ConnectedThread(theSocket);
-		serviceState = ServiceState.CONNECTED;
+		// serviceState = ServiceState.CONNECTED;
 		connectedThread.start();
 	}
 
@@ -206,8 +215,8 @@ public class BluetoothConnectionService {
 					// - time));
 					if (!line.equals("")) {
 						if (lastCommand != null) {
-							Log.d("CONNECTION-SERVICE", "LASTCOM: "
-									+ lastCommand.toString());
+							// Log.d("CONNECTION-SERVICE", "LASTCOM: "
+							// + lastCommand.toString());
 						} else {
 							Log.d("CONNECTION-SERVICE", "LASTCOM: NULL");
 						}
@@ -244,8 +253,10 @@ public class BluetoothConnectionService {
 							serviceState = ServiceState.LOGIN;
 							write(BluetoothCommands.LOGIN);
 						} else if (isLastCommand(BluetoothCommands.AT_PARAM_LIST)) {
-							Log.d("SaveParamList", "Line: " + line);
+							// Log.d("SaveParamList", "Line: " + line);
 							saveParamList(line);
+						} else {
+							// Log.d("SavePush", "Line: " + line);
 						}
 					}
 				}
@@ -267,8 +278,8 @@ public class BluetoothConnectionService {
 
 		// Write a command
 		public void write(BluetoothCommands command) {
-			if(command != BluetoothCommands.AT_0) {
-			lastCommand = command;
+			if (command != BluetoothCommands.AT_0) {
+				lastCommand = command;
 			}
 			Log.v("CONNECTION-SERVICE", "> " + command.toString());
 			write((command.toString() + "\r").getBytes());
@@ -323,10 +334,6 @@ public class BluetoothConnectionService {
 					break;
 				}
 			}
-		}
-
-		private void init() {
-			Thread.currentThread().interrupt();
 		}
 	}
 
@@ -387,8 +394,8 @@ public class BluetoothConnectionService {
 	// Cancels the mConnectThread
 	private synchronized void cancelConnectThread() {
 		if (connectThread != null) {
-			connectThread.init();
 			connectThread.interrupt();
+			connectThread.init();
 			connectThread = null;
 		}
 	}
@@ -438,8 +445,13 @@ public class BluetoothConnectionService {
 			if (bluetooth_commands.containsKey(command_text)) {
 				bluetooth_commands.get(command_text).setValue(value);
 				// TODO prüfen ob wirklich gespeichert wird
-				System.out.println(bluetooth_commands);
+				// System.out.println(bluetooth_commands);
 			}
 		}
+	}
+
+	// Sends the wanted command
+	public void sendCommand(BluetoothCommands command) {
+		write(command);
 	}
 }

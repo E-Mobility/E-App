@@ -1,18 +1,97 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/settings_preferenceScreen"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".SettingsActivity_SAVE" >
-
-    <!-- <PreferenceCategory android:title="First Category" > -->
+    android:key="settings_screen"
+    android:id="@+id/settings_screen"
+    android:persistent="true"
+    android:title="@string/settings"
+    tools:context=".SettingsActivity" >
 
     <Preference
-        android:id="@+id/settings_bluetooth"
         android:key="settings_bluetooth"
         android:title="@string/settings_bluetooth" />
 
-    <!-- </PreferenceCategory> -->
+    <!-- // Um ein Passwort zu verstecken:
+         <EditTextPreference
+         android:inputType="textPassword"
+    -->
+    <EditTextPreference
+        android:key="settings_password"
+        android:summary="@string/settings_password_sum"
+        android:title="@string/settings_password" />
+
+    <CheckBoxPreference
+        android:defaultValue="true"
+        android:key="settings_autolog"
+        android:summary="@string/settings_autolog_sum"
+        android:title="@string/settings_autolog" />
+
+    <ListPreference
+        android:defaultValue="km/h"
+        android:entries="@array/settings_speed_entries"
+        android:entryValues="@array/settings_speed_values"
+        android:key="settings_speed"
+        android:title="@string/settings_speed" />
+
+    <CheckBoxPreference
+        android:defaultValue="false"
+        android:key="settings_advanced"
+        android:title="@string/settings_advanced" />
+
+    <PreferenceScreen
+        android:enabled="false"
+        android:id="@+id/settings_controller"
+        android:key="settings_controller"
+        android:persistent="false"
+        android:title="@string/settings_controller" >
+
+<EditTextPreference android:persistent="false" android:key="AT_UPWD_N" android:title="at-upwd" android:summary="Controller Passwort ändern" />
+<EditTextPreference android:persistent="false" android:key="AT_PUSH_N" android:title="at-push" android:summary="0: Aus, 1: Mechanische, 2: Plain-Text Ausgabe" />
+<EditTextPreference android:persistent="false" android:key="AT_PUSHINT_N" android:title="at-pushint" android:summary="Pushintervall setzten (in 100ms)" />
+<EditTextPreference android:persistent="false" android:key="AT_CALIBL_N" android:title="at-calibl" android:summary="Kalibrierung für unteren Strommessbereich" />
+<EditTextPreference android:persistent="false" android:key="AT_CALIBH_N" android:title="at-calibh" android:summary="Kalibrierung für oberen Strommessbereich" />
+<EditTextPreference android:persistent="false" android:key="AT_PP_N" android:title="at-pp" android:summary="Prozentsatz wie viel von 5V als Vollgas gelten" />
+<EditTextPreference android:persistent="false" android:key="AT_VL_N" android:title="at-vl" android:summary="Erste Alarmschwelle (in 1/10 V)" />
+<EditTextPreference android:persistent="false" android:key="AT_VLL_N" android:title="at-vll" android:summary="Zweite Alarmschwelle (in 1/10 V)" />
+<EditTextPreference android:persistent="false" android:key="AT_CL_N" android:title="at-cl" android:summary="Erste Alarmschwelle (in mAh)" />
+<EditTextPreference android:persistent="false" android:key="AT_CLL_N" android:title="at-cll" android:summary="Zweite Alarmschwelle (in mAh)" />
+<EditTextPreference android:persistent="false" android:key="AT_MM_N" android:title="at-mm" android:summary="Abstand zwischen zwei Tachoimpulsen (in mm)" />
+<EditTextPreference android:persistent="false" android:key="AT_KPC_N" android:title="at-kpc" android:summary="Proportionaler Faktor zu Gashebel (0-16)" />
+<EditTextPreference android:persistent="false" android:key="AT_KIC_N" android:title="at-kic" android:summary="Integraler Faktor zu Gashebel (0-16)" />
+<EditTextPreference android:persistent="false" android:key="AT_KPS_N" android:title="at-kps" android:summary="Proportionaler Faktor zur Geschwindigkeitsregulierung (0-16)" />
+<EditTextPreference android:persistent="false" android:key="AT_KIS_N" android:title="at-kis" android:summary="Integraler Faktor zur Geschwindigkeitsregulierung (0-16)" />
+<EditTextPreference android:persistent="false" android:key="AT_KK_N" android:title="at-kk" android:summary="Fixer Faktor zur Geschwindigkeitsregulierung (0-100)" />
+<EditTextPreference android:persistent="false" android:key="AT_LIGHT_N" android:title="at-light" android:summary="Licht aus/ein schalten (0-1)" />
+<EditTextPreference android:persistent="false" android:key="AT_LVL_N" android:title="at-lvl" android:summary="Lichtspannung einstellen (1-4 = 6V-9V)" />
+<EditTextPreference android:persistent="false" android:key="AT_CL1_0_N" android:title="at-cl1.0" android:summary="Anfahrstrom für Profil 0 (in mA)" />
+<EditTextPreference android:persistent="false" android:key="AT_CL1_1_N" android:title="at-cl1.1" android:summary="Anfahrstrom für Profil 1 (in mA)" />
+<EditTextPreference android:persistent="false" android:key="AT_CL2_0_N" android:title="at-cl2.0" android:summary="Dauerfahrstrom für Profil 0 (in mA)" />
+<EditTextPreference android:persistent="false" android:key="AT_CL2_1_N" android:title="at-cl2.1" android:summary="Dauerfahrstrom für Profil 1 (in mA)" />
+<EditTextPreference android:persistent="false" android:key="AT_SL1_0_N" android:title="at-sl1.0" android:summary="Max.-Geschwindigkeit Anfahhilfe für Profil 0 (in 1/10 km/h)" />
+<EditTextPreference android:persistent="false" android:key="AT_SL1_1_N" android:title="at-sl1.1" android:summary="Max.-Geschwindigkeit Anfahhilfe für Profil 1 (in 1/10 km/h)" />
+<EditTextPreference android:persistent="false" android:key="AT_SL2_0_N" android:title="at-sl2.0" android:summary="Max.-Geschwindigkeit für Profil 0 (in 1/10 km/h)" />
+<EditTextPreference android:persistent="false" android:key="AT_SL2_1_N" android:title="at-sl2.1" android:summary="Max.-Geschwindigkeit für Profil 1 (in 1/10 km/h)" />
+<EditTextPreference android:persistent="false" android:key="AT_CLT_0_N" android:title="at-clt.0" android:summary="Timer regelt von cl2 auf cl1 zurück für Profil 0 (in s)" />
+<EditTextPreference android:persistent="false" android:key="AT_CLT_1_N" android:title="at-clt.1" android:summary="Timer regelt von cl2 auf cl1 zurück für Profil 1 (in s)" />
+<EditTextPreference android:persistent="false" android:key="AT_PEDAL_N" android:title="at-pedal" android:summary="Pedaliererkennung (0: Gashebel, 1: ohne, 2: mit Richtung)" />
+<EditTextPreference android:persistent="false" android:key="AT_OTO_N" android:title="at-oto" android:summary="Timout für Autologout setzten (in s)" />
+<EditTextPreference android:persistent="false" android:key="AT_CCM_N" android:title="at-ccm" android:summary="Cruse-Control-Mode setzten (0: aus, 1: ein)" />
+<EditTextPreference android:persistent="false" android:key="AT_THM_N" android:title="at-thm" android:summary="Gashebelmodus setzten (0: Transparent, 1: Linear, 2: Sensibel)" />
+<EditTextPreference android:persistent="false" android:key="AT_PR_N" android:title="at-pr" android:summary="Profil auswählen (0-1: Profil, 2: Cruse-Control)" />
+<EditTextPreference android:persistent="false" android:key="AT_PTIME_N" android:title="at-ptime" android:summary="Reaktionszeit der Pedaliererkennung (in 100ms)" />
+<EditTextPreference android:persistent="false" android:key="AT_VA_N" android:title="at-va" android:summary="Korrekturwert für Spannungsanzeige (-30...30 in 1/10 V)" />
+
+<Preference android:key="AT_0_" android:title="at-0" android:summary="Attention without response" />
+<Preference android:key="AT_DFLT_" android:title="at-dflt" android:summary="Auf Werkseinstellungen zurücksetzten" />
+<Preference android:key="AT_LOGOUT_" android:title="at-logout" android:summary="Abmelden" />
+<Preference android:key="AT_CCAP_" android:title="at-ccap" android:summary="Akkukapazitätszähler zurücksetzten" />
+<Preference android:key="AT_CDIST_" android:title="at-cdist" android:summary="Tachoimpulszähler zurücksetzten" />
+<Preference android:key="AT_EON_" android:title="at-eon" android:summary="Motor einschalten" />
+<Preference android:key="AT_EOFF_" android:title="at-eoff" android:summary="Motor ausschalten" />
+<Preference android:key="AT_PARAM_LIST_" android:title="at-?" android:summary="Parameterliste ausgeben" />
+<Preference android:key="AT_LOGIN_" android:title="login" android:summary="Einloggen" />
+    </PreferenceScreen>
 
 </PreferenceScreen>

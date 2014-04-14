@@ -1,5 +1,7 @@
 package de.dhbw.e_mobility.e_app.bluetooth;
 
+import de.dhbw.e_mobility.e_app.ActivityHandler;
+
 public enum BluetoothCommands {
 	AT("at"), // Attetion
 	AT_0("at-0"), // Attention without response
@@ -77,6 +79,12 @@ public enum BluetoothCommands {
 
 	public void setValue(String txt) {
 		value = txt;
+//		if (!this.equals(LOGIN)) {
+//			SharedPreferences sharedPreferences = PreferenceManager
+//					.getDefaultSharedPreferences(ActivityHandler.getInstance().getMainContext());
+//			sharedPreferences.edit().putString(command, txt).commit();
+//			Log.v("SHAREDPREFERENCES", command + "=" + txt);
+//		}
 	}
 
 	public void clearValue() {
@@ -93,7 +101,12 @@ public enum BluetoothCommands {
 
 	@Override
 	public String toString() {
-		if(command == null) {
+		if (command == null) {
+			if (this.equals(LOGIN) && value.isEmpty()) {
+				ActivityHandler.getInstance().fireToast(
+						"Standardpasswort (1234) wurde verwendet!");
+				return "1234";
+			}
 			return value;
 		} else if (value != null) {
 			return command + "=" + value;

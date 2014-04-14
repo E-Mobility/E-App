@@ -30,7 +30,21 @@
     <string name="bluetooth_bound_bounding">Kopplung läuft &#8230;</string>
     <string name="bluetooth_bound_none">Entkoppelt</string>
 
+    
+    <string name="settings_con_">blabla</string>
+    <string name="settings_controller">Controller Konfiguration...</string>
+    <string name="dialog_really_title">Achtung!</string>
+    <string name="dialog_advanced_settings_title">Achtung!</string>
+    <string name="dialog_advanced_settings">Vorsicht mit der Experten Ansicht!\n\rÄnderungen wirken sich direkt auf den Controller aus.\n\rDurch manche Änderungen ist die Verkehrszulassung nicht mehr gewährleistet.\n\r\n\rMöchten Sie die Experten Ansicht wirklich aktivieren?</string>
+    <string name="settings_advanced">Experten Ansicht</string>
+    <string name="settings_password_sum">Gespeichertes Passwort ändern</string>
+    <string name="settings_password">Passwort</string>
+    <string name="settings_speed">Geschwindigkeitsmaßeinheit</string>
+    <string name="settings_autolog_sum">Beim Start automatisch mit Controller verbinden</string>
+    <string name="settings_autolog">Auto Login</string>
     <string name="settings_bluetooth">Bluetooth</string>
+    <string name="settings">Einstellungen</string>
+    
     <string name="settings_discovery_no_device">Es wurde kein Gerät ausgewält</string>
     <string name="settings_bluetoothNotAvailable">Bluetooth ist leider nicht möglich!</string>
     <string name="settings_bluetoothDisabled">Bluetooth ist deaktiviert</string>

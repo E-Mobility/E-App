@@ -3,8 +3,6 @@ package de.dhbw.e_mobility.e_app;
 import java.util.HashMap;
 import java.util.Vector;
 
-import de.dhbw.e_mobility.e_app.bluetooth.BluetoothCommands;
-import de.dhbw.e_mobility.e_app.bluetooth.BluetoothInfoState;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
@@ -12,6 +10,9 @@ import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
 import android.widget.Toast;
+import de.dhbw.e_mobility.e_app.bluetooth.BluetoothCommands;
+import de.dhbw.e_mobility.e_app.bluetooth.BluetoothDeviceProvider;
+import de.dhbw.e_mobility.e_app.bluetooth.BluetoothInfoState;
 
 public class ActivityHandler {
 
@@ -109,7 +110,11 @@ public class ActivityHandler {
 	private void manageLogout() {
 		if (activities.size() == 0 && loogedIn) {
 			Log.d("AppHANDLER", "LOGOUT");
-			// TODO deviceProvider.logout();
+			BluetoothDeviceProvider deviceProvider = BluetoothDeviceProvider
+					.getInstance();
+			if (deviceProvider != null) {
+				deviceProvider.logout();
+			}
 			loogedIn = false;
 		}
 	}
@@ -117,7 +122,11 @@ public class ActivityHandler {
 	private void manageLogin() {
 		if (activities.size() > 0 && !loogedIn) {
 			Log.d("AppHANDLER", "LOGIN");
-			// TODO deviceProvider.login();
+			BluetoothDeviceProvider deviceProvider = BluetoothDeviceProvider
+					.getInstance();
+			if (deviceProvider != null) {
+				deviceProvider.login();
+			}
 			loogedIn = true;
 		}
 	}

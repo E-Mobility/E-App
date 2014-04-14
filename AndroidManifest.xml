@@ -30,7 +30,8 @@
         <activity
             android:name="de.dhbw.e_mobility.e_app.SettingsActivity"
             android:configChanges="orientation|keyboardHidden"
-            android:label="@string/activity_settings_title" >
+            android:label="@string/activity_settings_title"
+            android:theme="@android:style/Theme.Light" >
         </activity>
         <activity
             android:name="de.dhbw.e_mobility.e_app.bluetooth.BluetoothDialogDiscovery"
@@ -41,6 +42,16 @@
             android:name="de.dhbw.e_mobility.e_app.bluetooth.BluetoothDialogDisconnect"
             android:configChanges="orientation|keyboardHidden"
             android:label="@string/dialog_disconnect_title"
+            android:theme="@android:style/Theme.Dialog" />
+        <activity
+            android:name="de.dhbw.e_mobility.e_app.SettingsAdvancedDialog"
+            android:configChanges="orientation|keyboardHidden"
+            android:label="@string/dialog_advanced_settings_title"
+            android:theme="@android:style/Theme.Dialog" />
+        <activity
+            android:name="de.dhbw.e_mobility.e_app.ReallyDialog"
+            android:configChanges="orientation|keyboardHidden"
+            android:label="@string/dialog_really_title"
             android:theme="@android:style/Theme.Dialog" />
     </application>
 

@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.TextView;
 import de.dhbw.e_mobility.e_app.bluetooth.BluetoothDeviceProvider;
 
 public class MainActivity extends Activity {
@@ -48,8 +47,9 @@ public class MainActivity extends Activity {
 		BluetoothDeviceProvider deviceProvider = BluetoothDeviceProvider
 				.getInstance();
 		if (deviceProvider != null) {
-			deviceProvider.logout();
-			deviceProvider.unregisterReceiver();
+			// deviceProvider.logout(); // TODO wird im ActivityHandler gemacht
+			// deviceProvider.unregisterReceiver(); // TODO wird im
+			// ActivityHandler benötigt..
 			deviceProvider = null;
 		}
 	}

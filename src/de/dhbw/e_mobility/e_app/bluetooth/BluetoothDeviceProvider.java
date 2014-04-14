@@ -117,6 +117,10 @@ public class BluetoothDeviceProvider {
 		// Register hidden bluetooth actions
 		activityHandler.getMainContext().registerReceiver(myBroadcastReceiver,
 				new IntentFilter("android.bleutooth.device.action.UUID"));
+
+		// TODO TODO
+		// Test zum werte setzten/speichern
+		BluetoothCommands.AT_VLL_N.setValue("Test wert");
 	}
 
 	// Sets the bluetooth device
@@ -369,10 +373,13 @@ public class BluetoothDeviceProvider {
 		} else if (bluetoothState == BluetoothState.LOGGED_IN) {
 			// bluetoothConnectionService.logout();
 			bluetoothConnectionService.stop();
-			
-			bluetoothDevice = null;
-			
 		}
+	}
+
+	// Logout and reset the saved device
+	public void logoutAndResetDevice() {
+		logout();
+		bluetoothDevice = null;
 	}
 
 	// // Stop the bluetooth connection services
@@ -476,4 +483,26 @@ public class BluetoothDeviceProvider {
 					.getStr(R.string.discovery_noDevices));
 		}
 	}
+
+	// Saves the values and run the command
+	public void saveCommandValue(BluetoothCommands command, String newValue) {
+		command.setValue(newValue);
+		// TODO evtl. zwischenspeichern und erst bei erfolg festspeichern
+		bluetoothConnectionService.sendCommand(command);
+	}
+
+	// Run the given command
+	public void sendCommand(BluetoothCommands command) {
+		if (command == BluetoothCommands.LOGIN) {
+			login();
+		} else if (command == BluetoothCommands.AT_LOGOUT) {
+			logout();
+		} else {
+			bluetoothConnectionService.sendCommand(command);
+		}
+	}
+	
+	// TODO device in sharedPref speichern
+	// TODO autologin check/unchecked ...
+	// TODO defaultpassword
 }
