@@ -11,6 +11,8 @@ public class MainActivity extends Activity {
 
 	// Get ActivityHandler object
 	private ActivityHandler activityHandler = ActivityHandler.getInstance();
+	private BluetoothDeviceProvider deviceProvider = BluetoothDeviceProvider
+			.getInstance();
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -18,6 +20,7 @@ public class MainActivity extends Activity {
 		setContentView(R.layout.activity_main);
 
 		activityHandler.setMainContext(this);
+		deviceProvider.init();
 
 		// requestWindowFeature(Window.FEATURE_CUSTOM_TITLE);
 		// setContentView(R.layout.main_screen);
@@ -44,12 +47,8 @@ public class MainActivity extends Activity {
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
-		BluetoothDeviceProvider deviceProvider = BluetoothDeviceProvider
-				.getInstance();
 		if (deviceProvider != null) {
-			// deviceProvider.logout(); // TODO wird im ActivityHandler gemacht
-			// deviceProvider.unregisterReceiver(); // TODO wird im
-			// ActivityHandler benötigt..
+			deviceProvider.unregisterReceiver();
 			deviceProvider = null;
 		}
 	}

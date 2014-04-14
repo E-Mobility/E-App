@@ -66,6 +66,10 @@ public class BluetoothDeviceProvider {
 			activityHandler.fireToast(R.string.settings_bluetoothNotAvailable);
 			return;
 		}
+	}
+
+	// Initializes all
+	public void init() {
 		bluetoothState = BluetoothState.DISCONNECT;
 		String bluetoothPassword = "1234"; // TODO
 		BluetoothCommands.LOGIN.setValue(bluetoothPassword);
@@ -119,8 +123,6 @@ public class BluetoothDeviceProvider {
 				new IntentFilter("android.bleutooth.device.action.UUID"));
 
 		// TODO TODO
-		// Test zum werte setzten/speichern
-		BluetoothCommands.AT_VLL_N.setValue("Test wert");
 	}
 
 	// Sets the bluetooth device

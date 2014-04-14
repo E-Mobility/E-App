@@ -133,15 +133,15 @@ public class BluetoothConnectionService {
 			} catch (IOException e) {
 				Log.e("CONNECTION-SERVICE", "Connection failed!", e);
 
-//				activityHandler.fireToast("Keine Verbindung möglich!");
+				// activityHandler.fireToast("Keine Verbindung möglich!");
 				// activityHandler.fireToHandler(
 				// ActivityHandler.HANDLLER_DEVICE_PROVIDER,
 				// BluetoothInfoState.DISCONNECTED);
 				// TODO Meldung ausgeben...
 				serviceState = ServiceState.INIT;
 				bluetoothSocket = null;
-				
-//				init();
+
+				// init();
 				return;
 			}
 			// Start the connected thread
@@ -150,8 +150,10 @@ public class BluetoothConnectionService {
 
 		private void init() {
 			try {
-				bluetoothSocket.close();
-				bluetoothSocket = null;
+				if (bluetoothSocket != null) {
+					bluetoothSocket.close();
+					bluetoothSocket = null;
+				}
 			} catch (IOException e) {
 				Log.e("CONNECTION-SERVICE", "Closing socket failed", e);
 			}
@@ -360,7 +362,9 @@ public class BluetoothConnectionService {
 		// }
 		// // Perform the write unsynchronized
 		// tmpThread.write(txt);
-		connectedThread.write(command);
+		if (connectedThread != null) {
+			connectedThread.write(command);
+		}
 	}
 
 	// This method is doing some stuff

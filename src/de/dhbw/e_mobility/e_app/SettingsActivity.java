@@ -50,62 +50,64 @@ public class SettingsActivity extends PreferenceActivity implements
 		ADVANCED("settings_advanced"), //
 		CONTROLLER("settings_controller"), //
 
-		AT_0("AT_0_", BluetoothCommands.AT_0), //
-		AT_DFLT("AT_DFLT_", BluetoothCommands.AT_DFLT), //
-		AT_LOGOUT("AT_LOGOUT_", BluetoothCommands.AT_LOGOUT), //
-		AT_CCAP("AT_CCAP_", BluetoothCommands.AT_CCAP), //
-		AT_CDIST("AT_CDIST_", BluetoothCommands.AT_CDIST), //
-		AT_EON("AT_EON_", BluetoothCommands.AT_EON), //
-		AT_EOFF("AT_EOFF_", BluetoothCommands.AT_EOFF), //
-		AT_PARAM_LIST("AT_PARAM_LIST_", BluetoothCommands.AT_PARAM_LIST), //
-		LOGIN("AT_LOGIN_", BluetoothCommands.LOGIN), //
+		AT_0("AT_0_", BluetoothCommands.AT_0, "Attention without response"), //
+		AT_DFLT("AT_DFLT_", BluetoothCommands.AT_DFLT, "Auf Werkseinstellungen zurücksetzten"), //
+		AT_LOGOUT("AT_LOGOUT_", BluetoothCommands.AT_LOGOUT, "Abmelden"), //
+		AT_CCAP("AT_CCAP_", BluetoothCommands.AT_CCAP, "Akkukapazitätszähler zurücksetzten"), //
+		AT_CDIST("AT_CDIST_", BluetoothCommands.AT_CDIST, "Tachoimpulszähler zurücksetzten"), //
+		AT_EON("AT_EON_", BluetoothCommands.AT_EON, "Motor einschalten"), //
+		AT_EOFF("AT_EOFF_", BluetoothCommands.AT_EOFF, "Motor ausschalten"), //
+		AT_PARAM_LIST("AT_PARAM_LIST_", BluetoothCommands.AT_PARAM_LIST, "Parameterliste ausgeben"), //
+		LOGIN("AT_LOGIN_", BluetoothCommands.LOGIN, "Anmelden"), //
 
-		AT_UPWD_N("AT_UPWD_N", BluetoothCommands.AT_UPWD_N), //
-		AT_PUSH_N("AT_PUSH_N", BluetoothCommands.AT_PUSH_N), //
-		AT_PUSHINT_N("AT_PUSHINT_N", BluetoothCommands.AT_PUSHINT_N), //
-		AT_CALIBL_N("AT_CALIBL_N", BluetoothCommands.AT_CALIBL_N), //
-		AT_CALIBH_N("AT_CALIBH_N", BluetoothCommands.AT_CALIBH_N), //
-		AT_PP_N("AT_PP_N", BluetoothCommands.AT_PP_N), //
-		AT_VL_N("AT_VL_N", BluetoothCommands.AT_VL_N), //
-		AT_VLL_N("AT_VLL_N", BluetoothCommands.AT_VLL_N), //
-		AT_CL_N("AT_CL_N", BluetoothCommands.AT_CL_N), //
-		AT_CLL_N("AT_CLL_N", BluetoothCommands.AT_CLL_N), //
-		AT_MM_N("AT_MM_N", BluetoothCommands.AT_MM_N), //
-		AT_KPC_N("AT_KPC_N", BluetoothCommands.AT_KPC_N), //
-		AT_KIC_N("AT_KIC_N", BluetoothCommands.AT_KIC_N), //
-		AT_KPS_N("AT_KPS_N", BluetoothCommands.AT_KPS_N), //
-		AT_KIS_N("AT_KIS_N", BluetoothCommands.AT_KIS_N), //
-		AT_KK_N("AT_KK_N", BluetoothCommands.AT_KK_N), //
-		AT_LIGHT_N("AT_LIGHT_N", BluetoothCommands.AT_LIGHT_N), //
-		AT_LVl_N("AT_LVL_N", BluetoothCommands.AT_LVL_N), //
-		AT_CL1_0_N("AT_CL1_0_N", BluetoothCommands.AT_CL1_0_N), //
-		AT_CL1_1_N("AT_CL1_1_N", BluetoothCommands.AT_CL1_1_N), //
-		AT_CL2_0_N("AT_CL2_0_N", BluetoothCommands.AT_CL2_0_N), //
-		AT_CL2_1_N("AT_CL2_1_N", BluetoothCommands.AT_CL2_1_N), //
-		AT_SL1_0_N("AT_SL1_0_N", BluetoothCommands.AT_SL1_0_N), //
-		AT_SL1_1_N("AT_SL1_1_N", BluetoothCommands.AT_SL1_1_N), //
-		AT_SL2_0_N("AT_SL2_0_N", BluetoothCommands.AT_SL2_0_N), //
-		AT_SL2_1_N("AT_SL2_1_N", BluetoothCommands.AT_SL2_1_N), //
-		AT_CLT_0_N("AT_CLT_0_N", BluetoothCommands.AT_CLT_0_N), //
-		AT_CLT_1_N("AT_CLT_1_N", BluetoothCommands.AT_CLT_1_N), //
-		AT_PEDAL_N("AT_PEDAL_N", BluetoothCommands.AT_pedal_N), //
-		AT_OTO_N("AT_OTO_N", BluetoothCommands.AT_OTO_N), //
-		AT_CCM_N("AT_CCM_N", BluetoothCommands.AT_CCM_N), //
-		AT_THM_N("AT_THM_N", BluetoothCommands.AT_THM_N), //
-		AT_PR_N("AT_PR_N", BluetoothCommands.AT_PR_N), //
-		AT_PTIME_N("AT_PTIME_N", BluetoothCommands.AT_PTIME_N), //
-		AT_VA_N("AT_VA_N", BluetoothCommands.AT_VA_N); //
+		AT_UPWD_N("AT_UPWD_N", BluetoothCommands.AT_UPWD_N, "Controller Passwort ändern"), //
+		AT_PUSH_N("AT_PUSH_N", BluetoothCommands.AT_PUSH_N, "0: Aus, 1: Mechanische, 2: Plain-Text Ausgabe"), //
+		AT_PUSHINT_N("AT_PUSHINT_N", BluetoothCommands.AT_PUSHINT_N, "Pushintervall setzten (in 100ms)"), //
+		AT_CALIBL_N("AT_CALIBL_N", BluetoothCommands.AT_CALIBL_N, "Kalibrierung für unteren Strommessbereich"), //
+		AT_CALIBH_N("AT_CALIBH_N", BluetoothCommands.AT_CALIBH_N, "Kalibrierung für oberen Strommessbereich"), //
+		AT_PP_N("AT_PP_N", BluetoothCommands.AT_PP_N, "Prozentsatz wie viel von 5V als Vollgas gelten"), //
+		AT_VL_N("AT_VL_N", BluetoothCommands.AT_VL_N, "Erste Alarmschwelle (in 1/10 V)"), //
+		AT_VLL_N("AT_VLL_N", BluetoothCommands.AT_VLL_N, "Zweite Alarmschwelle (in 1/10 V)"), //
+		AT_CL_N("AT_CL_N", BluetoothCommands.AT_CL_N, "Erste Alarmschwelle (in mAh)"), //
+		AT_CLL_N("AT_CLL_N", BluetoothCommands.AT_CLL_N, "Zweite Alarmschwelle (in mAh)"), //
+		AT_MM_N("AT_MM_N", BluetoothCommands.AT_MM_N, "Abstand zwischen zwei Tachoimpulsen (in mm)"), //
+		AT_KPC_N("AT_KPC_N", BluetoothCommands.AT_KPC_N, "Proportionaler Faktor zu Gashebel (0-16)"), //
+		AT_KIC_N("AT_KIC_N", BluetoothCommands.AT_KIC_N, "Integraler Faktor zu Gashebel (0-16)"), //
+		AT_KPS_N("AT_KPS_N", BluetoothCommands.AT_KPS_N, "Proportionaler Faktor zur Geschwindigkeitsregulierung (0-16)"), //
+		AT_KIS_N("AT_KIS_N", BluetoothCommands.AT_KIS_N, "Integraler Faktor zur Geschwindigkeitsregulierung (0-16)"), //
+		AT_KK_N("AT_KK_N", BluetoothCommands.AT_KK_N, "Fixer Faktor zur Geschwindigkeitsregulierung (0-100)"), //
+		AT_LIGHT_N("AT_LIGHT_N", BluetoothCommands.AT_LIGHT_N, "Licht aus/ein schalten (0-1)"), //
+		AT_LVl_N("AT_LVL_N", BluetoothCommands.AT_LVL_N, "Lichtspannung einstellen (1-4 = 6V-9V)"), //
+		AT_CL1_0_N("AT_CL1_0_N", BluetoothCommands.AT_CL1_0_N, "Anfahrstrom für Profil 0 (in mA)"), //
+		AT_CL1_1_N("AT_CL1_1_N", BluetoothCommands.AT_CL1_1_N, "Anfahrstrom für Profil 1 (in mA)"), //
+		AT_CL2_0_N("AT_CL2_0_N", BluetoothCommands.AT_CL2_0_N, "Dauerfahrstrom für Profil 0 (in mA)"), //
+		AT_CL2_1_N("AT_CL2_1_N", BluetoothCommands.AT_CL2_1_N, "Dauerfahrstrom für Profil 1 (in mA)"), //
+		AT_SL1_0_N("AT_SL1_0_N", BluetoothCommands.AT_SL1_0_N, "Max.-Geschwindigkeit Anfahhilfe für Profil 0 (in 1/10 km/h)"), //
+		AT_SL1_1_N("AT_SL1_1_N", BluetoothCommands.AT_SL1_1_N, "Max.-Geschwindigkeit Anfahhilfe für Profil 1 (in 1/10 km/h)"), //
+		AT_SL2_0_N("AT_SL2_0_N", BluetoothCommands.AT_SL2_0_N, "Max.-Geschwindigkeit für Profil 0 (in 1/10 km/h)"), //
+		AT_SL2_1_N("AT_SL2_1_N", BluetoothCommands.AT_SL2_1_N, "Max.-Geschwindigkeit für Profil 1 (in 1/10 km/h)"), //
+		AT_CLT_0_N("AT_CLT_0_N", BluetoothCommands.AT_CLT_0_N, "Timer regelt von cl2 auf cl1 zurück für Profil 0 (in s)"), //
+		AT_CLT_1_N("AT_CLT_1_N", BluetoothCommands.AT_CLT_1_N, "Timer regelt von cl2 auf cl1 zurück für Profil 1 (in s)"), //
+		AT_PEDAL_N("AT_PEDAL_N", BluetoothCommands.AT_pedal_N, "Pedaliererkennung (0: Gashebel, 1: ohne, 2: mit Richtung)"), //
+		AT_OTO_N("AT_OTO_N", BluetoothCommands.AT_OTO_N, "Timout für Autologout setzten (in s)"), //
+		AT_CCM_N("AT_CCM_N", BluetoothCommands.AT_CCM_N, "Cruse-Control-Mode setzten (0: aus, 1: ein)"), //
+		AT_THM_N("AT_THM_N", BluetoothCommands.AT_THM_N, "Gashebelmodus setzten (0: Transparent, 1: Linear, 2: Sensibel)"), //
+		AT_PR_N("AT_PR_N", BluetoothCommands.AT_PR_N, "Profil auswählen (0-1: Profil, 2: Cruse-Control)"), //
+		AT_PTIME_N("AT_PTIME_N", BluetoothCommands.AT_PTIME_N, "Reaktionszeit der Pedaliererkennung (in 100ms)"), //
+		AT_VA_N("AT_VA_N", BluetoothCommands.AT_VA_N, "Korrekturwert für Spannungsanzeige (-30...30 in 1/10 V)"); //
 
 		private String key;
 		private BluetoothCommands command;
+		private String summary;
 
 		SettingsElements(String val) {
-			this(val, null);
+			this(val, null, null);
 		}
 
-		SettingsElements(String val, BluetoothCommands theCommand) {
+		SettingsElements(String val, BluetoothCommands theCommand, String theSummary) {
 			key = val;
 			command = theCommand;
+			summary = theSummary;
 		}
 
 		public BluetoothCommands getCommand() {
@@ -115,10 +117,15 @@ public class SettingsActivity extends PreferenceActivity implements
 		public String getKey() {
 			return key;
 		}
-
+		
+		public String getSummary() {
+			return summary;
+		}
+		
 		@Override
+		@Deprecated
 		public String toString() {
-			return key;
+			return null;
 		}
 	}
 
@@ -268,20 +275,39 @@ public class SettingsActivity extends PreferenceActivity implements
 
 	// Initialize values of all command elements
 	private void initAdvancedCommands() {
-		String tmpKey, tmpValue;
-		BluetoothCommands tmpCommand;
-		for (SettingsElements element : SettingsElements.values()) {
+		String tmpKey;
+		for (final SettingsElements element : SettingsElements.values()) {
 			tmpKey = element.getKey();
 			if (tmpKey.endsWith("_N")) {
 				// Set title and text of the element with the current value
 				EditTextPreference tmpPref = (EditTextPreference) getPreference(element);
 				if (tmpPref != null) {
-					tmpCommand = element.getCommand();
-					tmpValue = tmpCommand.getValue();
-					tmpPref.setTitle(tmpKey + " (" + tmpValue + ")");
+					tmpPref.setSummary(element.getSummary());
+					BluetoothCommands tmpCommand = element.getCommand();
+					tmpPref.setPersistent(false);
+					String tmpValue = tmpCommand.getValue();
+					tmpPref.setTitle(tmpCommand.getCommand() + "(" + tmpValue
+							+ ")");
 					tmpPref.setText(tmpValue);
-					Log.d("Command-init", tmpKey + "=" + tmpValue);
+					Log.d("Command-init", tmpCommand.getCommand() + "="
+							+ tmpCommand.getValue());
 				}
+			} else if (tmpKey.endsWith("_")) {
+				// Set title of the element
+				Preference tmpPref = getPreference(element);
+				if (tmpPref != null) {
+					tmpPref.setSummary(element.getSummary());
+					BluetoothCommands tmpCommand = element.getCommand();
+					String tmpTitle = tmpCommand.getCommand();
+					if (tmpCommand == BluetoothCommands.LOGIN) {
+						tmpTitle = "at-login";
+					} else if (tmpTitle == null) {
+						tmpTitle = "???";
+					}
+					tmpPref.setTitle(tmpTitle);
+					Log.d("Command-init", tmpTitle);
+				}
+
 			}
 		}
 	}
@@ -425,9 +451,9 @@ public class SettingsActivity extends PreferenceActivity implements
 
 	// Finds and returns the wanted preference element
 	private Preference getPreference(SettingsElements element) {
-		Preference tmpPref = (Preference) findPreference(element.toString());
+		Preference tmpPref = (Preference) findPreference(element.getKey());
 		if (tmpPref == null) {
-			Log.e("Settings", "Preference not found! (" + element.toString()
+			Log.e("Settings", "Preference not found! (" + element.getKey()
 					+ ")");
 		}
 		return tmpPref;
@@ -435,9 +461,9 @@ public class SettingsActivity extends PreferenceActivity implements
 
 	private void updatePreference(SharedPreferences sharedPreferences,
 			String key) {
-		if (key.equals(SettingsElements.AUTOLOG.toString())) {
+		if (key.equals(SettingsElements.AUTOLOG.getKey())) {
 			// TODO
-		} else if (key.equals(SettingsElements.ADVANCED.toString())) {
+		} else if (key.equals(SettingsElements.ADVANCED.getKey())) {
 			PreferenceScreen controllerPref = (PreferenceScreen) getPreference(SettingsElements.CONTROLLER);
 			if (controllerPref != null) {
 				boolean value = sharedPreferences.getBoolean(key, false);
@@ -448,7 +474,7 @@ public class SettingsActivity extends PreferenceActivity implements
 					advancedPref.setChecked(value);
 				}
 			}
-		} else if (key.equals(SettingsElements.PASSWORD.toString())) {
+		} else if (key.equals(SettingsElements.PASSWORD.getKey())) {
 			EditTextPreference tmpPref = (EditTextPreference) findPreference(key);
 			if (tmpPref == null) {
 				Log.e("Settings", "Preference not found! (" + key + ")");
@@ -474,7 +500,7 @@ public class SettingsActivity extends PreferenceActivity implements
 
 	private void initPreference(SharedPreferences sharedPreferences,
 			SettingsElements element) {
-		updatePreference(sharedPreferences, element.toString());
+		updatePreference(sharedPreferences, element.getKey());
 	}
 
 	// TODO
