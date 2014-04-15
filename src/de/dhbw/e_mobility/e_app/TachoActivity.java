@@ -7,20 +7,17 @@ import android.view.Menu;
 import android.view.MenuItem;
 import de.dhbw.e_mobility.e_app.bluetooth.BluetoothDeviceProvider;
 
-public class MainActivity extends Activity {
+public class TachoActivity extends Activity {
 
 	// Get ActivityHandler object
 	private ActivityHandler activityHandler = ActivityHandler.getInstance();
-	private BluetoothDeviceProvider deviceProvider = BluetoothDeviceProvider
-			.getInstance();
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_main);
+		setContentView(R.layout.tacho_hoch);
 
 		activityHandler.setMainContext(this);
-		deviceProvider.init();
 
 		// requestWindowFeature(Window.FEATURE_CUSTOM_TITLE);
 		// setContentView(R.layout.main_screen);
@@ -35,7 +32,6 @@ public class MainActivity extends Activity {
 	protected void onStart() {
 		super.onStart();
 		activityHandler.add(this);
-
 	}
 
 	@Override
@@ -44,29 +40,5 @@ public class MainActivity extends Activity {
 		activityHandler.del(this);
 	}
 
-	@Override
-	protected void onDestroy() {
-		super.onDestroy();
-		if (deviceProvider != null) {
-			deviceProvider.unregisterReceiver();
-			deviceProvider = null;
-		}
-	}
-
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		getMenuInflater().inflate(R.menu.menu_main, menu);
-		return true;
-	}
-
-	public boolean onOptionsItemSelected(MenuItem item) {
-		if (item.getItemId() == R.id.action_settings) {
-			startActivity(new Intent(this, SettingsActivity.class));
-		} else	if (item.getItemId() == R.id.action_tacho) {
-				startActivity(new Intent(this, TachoActivity.class));
-		} else {
-			return super.onOptionsItemSelected(item);
-		}
-		return true;
-	}
+	
 }

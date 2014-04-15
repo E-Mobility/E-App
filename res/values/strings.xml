@@ -4,6 +4,7 @@
 
     <string name="app_name">E-App</string>
     <string name="action_settings">Einstellungen</string>
+    <string name="action_tacho">Tacho</string>
     <string name="action_main">Home</string>
     <string name="action_about">Über</string>
     <string name="action_speedo">Tacho</string>
@@ -59,6 +60,7 @@
     <string name="action_advanced_settings">Erweitere Einstellungen</string>
 
     <string name="activity_main_title">E-App</string>
+    <string name="activity_tacho_title">Tacho</string>
     <string name="activity_settings_title">Einstellungen/Settings</string>
     <string name="dialog_deviceList_title">Gerät auswählen</string>
     <string name="dialog_disconnect_title">Verbindung trennen</string>
@@ -72,5 +74,8 @@
     <string name="bluetooth_info_connected">Verbunden mit&#x00A0;</string>
     <string name="bluetooth_info_loggedin">Eingeloggt bei&#x00A0;</string>
     <string name="bluetooth_info_none">Bluetooth nicht verfügbar</string>
+
+    
+    <string name="digitalclock">Digitaluhr</string>
     
 </resources>

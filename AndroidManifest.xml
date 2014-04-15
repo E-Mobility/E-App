@@ -34,6 +34,12 @@
             android:theme="@android:style/Theme.Light" >
         </activity>
         <activity
+            android:name="de.dhbw.e_mobility.e_app.TachoActivity"
+            android:configChanges="orientation|keyboardHidden"
+            android:label="@string/activity_tacho_title"
+            android:theme="@android:style/Theme.Light.NoTitleBar.Fullscreen" >
+        </activity>
+        <activity
             android:name="de.dhbw.e_mobility.e_app.bluetooth.BluetoothDialogDiscovery"
             android:configChanges="orientation|keyboardHidden"
             android:label="@string/dialog_deviceList_title"

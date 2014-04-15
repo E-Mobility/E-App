@@ -5,4 +5,9 @@
         android:title="@string/action_settings">
     </item>
 
+    <item
+        android:id="@+id/action_tacho"
+        android:title="@string/action_tacho">
+    </item>
+
 </menu>
