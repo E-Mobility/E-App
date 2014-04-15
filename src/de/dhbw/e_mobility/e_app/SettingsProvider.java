@@ -14,29 +14,12 @@ public class SettingsProvider {
 	}
 
 	private SettingsProvider() {
-		advancedSettings = false;
 		bluetoothState = null;
 		deviceName = "";
 	}
 
-	private boolean advancedSettings;
 	private BluetoothInfoState bluetoothState;
 	private String deviceName;
-
-	/**
-	 * @return the advancedSettings
-	 */
-	public boolean isAdvancedSettings() {
-		return advancedSettings;
-	}
-
-	/**
-	 * @param advancedSettings
-	 *            the advancedSettings to set
-	 */
-	public void setAdvancedSettings(boolean advancedSettings) {
-		this.advancedSettings = advancedSettings;
-	}
 
 	/**
 	 * @param bluetoothState

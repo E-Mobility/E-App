@@ -69,7 +69,7 @@ public class SettingsActivity extends PreferenceActivity implements
 		super.onCreate(savedInstanceState);
 		addPreferencesFromResource(R.layout.activity_settings);
 		setTheme(android.R.style.Theme_Black);
-		
+
 		// Handler myHandler = getHandler();
 		// deviceProvider.setSettingsActivityHandler(myHandler);
 
@@ -99,9 +99,12 @@ public class SettingsActivity extends PreferenceActivity implements
 					.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
 						@Override
 						public boolean onPreferenceClick(Preference preference) {
-							Log.d("ADVANCED SETTINGS?", (settingsProvider
-									.isAdvancedSettings() ? "true" : "false"));
-							if (settingsProvider.isAdvancedSettings()) {
+							CheckBoxPreference tmpPref = (CheckBoxPreference) preference;
+							boolean tmpChecked = tmpPref.isChecked();
+							Log.d("ADVANCED SETTINGS?", (tmpChecked ? "true"
+									: "false"));
+							enableAdvancedSettings(false, tmpPref);
+							if (tmpChecked) {
 								startActivityForResult(new Intent(
 										getApplicationContext(),
 										SettingsAdvancedDialog.class),
@@ -110,6 +113,11 @@ public class SettingsActivity extends PreferenceActivity implements
 							return true;
 						}
 					});
+			// Initialize advanced settings
+			enableAdvancedSettings(
+					PreferenceManager.getDefaultSharedPreferences(this)
+							.getBoolean(SettingsElements.ADVANCED.getKey(),
+									false), pref_advanced);
 		}
 		PreferenceScreen pref_controller = (PreferenceScreen) getPreference(SettingsElements.CONTROLLER);
 		if (pref_controller != null) {
@@ -129,7 +137,6 @@ public class SettingsActivity extends PreferenceActivity implements
 		initPreference(sharedPreferences, SettingsElements.PASSWORD);
 		initPreference(sharedPreferences, SettingsElements.AUTOLOG);
 		initPreference(sharedPreferences, SettingsElements.SPEED);
-		initPreference(sharedPreferences, SettingsElements.ADVANCED);
 
 		String tmpKey;
 		for (final SettingsElements element : SettingsElements.values()) {
@@ -184,6 +191,18 @@ public class SettingsActivity extends PreferenceActivity implements
 		}
 
 		// TODO
+	}
+
+	// Enables or disables the advanced settings
+	private void enableAdvancedSettings(boolean value,
+			CheckBoxPreference advancedPref) {
+		if (advancedPref != null) {
+			advancedPref.setChecked(value);
+		}
+		PreferenceScreen controllerPref = (PreferenceScreen) getPreference(SettingsElements.CONTROLLER);
+		if (controllerPref != null) {
+			controllerPref.setEnabled(value);
+		}
 	}
 
 	// Initialize values of all command elements
@@ -337,17 +356,10 @@ public class SettingsActivity extends PreferenceActivity implements
 				deviceProvider.doOnResult();
 			}
 		} else if (resCode == SETTINGS_REQUEST_ADVANCED) {
+			CheckBoxPreference advancedPref = (CheckBoxPreference) getPreference(SettingsElements.ADVANCED);
 			// If message is confirmed
 			if (reqCode == Activity.RESULT_OK) {
-				PreferenceScreen controllerPref = (PreferenceScreen) getPreference(SettingsElements.CONTROLLER);
-				if (controllerPref != null) {
-					controllerPref.setEnabled(true);
-				}
-			} else {
-				CheckBoxPreference advancedPref = (CheckBoxPreference) getPreference(SettingsElements.ADVANCED);
-				if (advancedPref != null) {
-					advancedPref.setChecked(false);
-				}
+				enableAdvancedSettings(true, advancedPref);
 			}
 		} else if (resCode == SETTINGS_REQUEST_COMMAND) {
 			// TODO bessere lösung für zwischenspeicherung finden..
@@ -379,16 +391,6 @@ public class SettingsActivity extends PreferenceActivity implements
 		if (key.equals(SettingsElements.AUTOLOG.getKey())) {
 			// TODO
 		} else if (key.equals(SettingsElements.ADVANCED.getKey())) {
-			PreferenceScreen controllerPref = (PreferenceScreen) getPreference(SettingsElements.CONTROLLER);
-			if (controllerPref != null) {
-				boolean value = sharedPreferences.getBoolean(key, false);
-				settingsProvider.setAdvancedSettings(value);
-				controllerPref.setEnabled(value);
-				CheckBoxPreference advancedPref = (CheckBoxPreference) getPreference(SettingsElements.ADVANCED);
-				if (advancedPref != null) {
-					advancedPref.setChecked(value);
-				}
-			}
 		} else if (key.equals(SettingsElements.PASSWORD.getKey())) {
 			EditTextPreference tmpPref = (EditTextPreference) findPreference(key);
 			if (tmpPref == null) {
