@@ -156,6 +156,7 @@ public class SettingsActivity extends PreferenceActivity implements
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		addPreferencesFromResource(R.layout.activity_settings);
+		setTheme(android.R.style.Theme_Black);
 
 		// Handler myHandler = getHandler();
 		// deviceProvider.setSettingsActivityHandler(myHandler);

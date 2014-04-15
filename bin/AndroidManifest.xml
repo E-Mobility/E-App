@@ -15,12 +15,12 @@
         android:allowBackup="true"
         android:debuggable="true"
         android:icon="@drawable/ic_launcher"
-        android:label="@string/app_name"
-        android:theme="@android:style/Theme.Light.NoTitleBar.Fullscreen" >
+        android:label="@string/app_name" >
         <activity
-            android:name="de.dhbw.e_mobility.e_app.MainActivity"
+            android:name="de.dhbw.e_mobility.e_app.MainTabhost"
             android:configChanges="orientation|keyboardHidden"
-            android:label="@string/activity_main_title" >
+            android:label="@string/activity_main_title"
+            android:theme="@android:style/Theme.Light.NoTitleBar.Fullscreen" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -28,16 +28,36 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="de.dhbw.e_mobility.e_app.SettingsActivity"
-            android:configChanges="orientation|keyboardHidden"
-            android:label="@string/activity_settings_title"
-            android:theme="@android:style/Theme.Light" >
-        </activity>
-        <activity
-            android:name="de.dhbw.e_mobility.e_app.TachoActivity"
-            android:configChanges="orientation|keyboardHidden"
+            android:name="de.dhbw.e_mobility.e_app.TachoHochActivity"
             android:label="@string/activity_tacho_title"
             android:theme="@android:style/Theme.Light.NoTitleBar.Fullscreen" >
+        </activity>
+        <activity
+            android:name="de.dhbw.e_mobility.e_app.TachoQuerActivity"
+            android:label="@string/activity_tacho_title"
+            android:theme="@android:style/Theme.Light.NoTitleBar.Fullscreen" >
+        </activity>
+        <activity
+            android:name="de.dhbw.e_mobility.e_app.StatusTourActivity"
+            android:label="@string/activity_status_tour_title"
+            android:theme="@android:style/Theme.Light.NoTitleBar.Fullscreen" >
+        </activity>
+        <activity
+            android:name="de.dhbw.e_mobility.e_app.StatusTotalActivity"
+            android:label="@string/activity_status_total_title"
+            android:theme="@android:style/Theme.Light.NoTitleBar.Fullscreen" >
+        </activity>
+        <activity
+            android:name="de.dhbw.e_mobility.e_app.SettingsActivity"
+            android:label="@string/activity_settings_title"
+            android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen" >
+        </activity>
+        
+        <activity
+            android:name="de.dhbw.e_mobility.e_app.MainActivity"
+            android:configChanges="orientation|keyboardHidden"
+            android:label="@string/activity_main_title"
+            android:theme="@android:style/Theme.Light" >
         </activity>
         <activity
             android:name="de.dhbw.e_mobility.e_app.bluetooth.BluetoothDialogDiscovery"

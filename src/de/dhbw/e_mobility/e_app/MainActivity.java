@@ -63,7 +63,7 @@ public class MainActivity extends Activity {
 		if (item.getItemId() == R.id.action_settings) {
 			startActivity(new Intent(this, SettingsActivity.class));
 		} else	if (item.getItemId() == R.id.action_tacho) {
-				startActivity(new Intent(this, TachoActivity.class));
+				startActivity(new Intent(this, TachoHochActivity.class));
 		} else {
 			return super.onOptionsItemSelected(item);
 		}

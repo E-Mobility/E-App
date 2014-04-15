@@ -61,6 +61,8 @@
 
     <string name="activity_main_title">E-App</string>
     <string name="activity_tacho_title">Tacho</string>
+    <string name="activity_status_tour_title">Tour Statistik</string>
+    <string name="activity_status_total_title">Gesamt Statistik</string>
     <string name="activity_settings_title">Einstellungen/Settings</string>
     <string name="dialog_deviceList_title">Gerät auswählen</string>
     <string name="dialog_disconnect_title">Verbindung trennen</string>
