@@ -98,7 +98,7 @@ public class BluetoothDialogDiscovery extends Activity {
 	@Override
 	protected void onStart() {
 		super.onStart();
-		activityHandler.add(this);
+//		activityHandler.add(this);
 		activityHandler.setHandler(ActivityHandler.HANDLLER_DISCOVERY,
 				setupHandler());
 	}
@@ -106,7 +106,7 @@ public class BluetoothDialogDiscovery extends Activity {
 	@Override
 	protected void onStop() {
 		super.onStop();
-		activityHandler.del(this);
+//		activityHandler.del(this);
 		activityHandler.unsetHandler(ActivityHandler.HANDLLER_DISCOVERY);
 	}
 

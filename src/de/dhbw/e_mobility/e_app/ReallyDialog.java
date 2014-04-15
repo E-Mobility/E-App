@@ -9,8 +9,6 @@ import android.widget.Button;
 
 public class ReallyDialog extends Activity {
 
-	private ActivityHandler activityHandler = ActivityHandler.getInstance();
-
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -36,18 +34,6 @@ public class ReallyDialog extends Activity {
 				finish();
 			}
 		});
-	}
-
-	@Override
-	protected void onStart() {
-		super.onStart();
-		activityHandler.add(this);
-	}
-
-	@Override
-	protected void onStop() {
-		super.onStop();
-		activityHandler.del(this);
 	}
 
 	@Override

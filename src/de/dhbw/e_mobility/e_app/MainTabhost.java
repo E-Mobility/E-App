@@ -25,6 +25,9 @@ public class MainTabhost extends ActivityGroup {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main_tabs);
 
+		activityHandler.setMainContext(this);
+		deviceProvider.init();
+
 		TabHost tabHost = (TabHost) findViewById(android.R.id.tabhost);
 		tabHost.setup(this.getLocalActivityManager());
 
@@ -51,9 +54,6 @@ public class MainTabhost extends ActivityGroup {
 		tabHost.addTab(tourTab);
 		tabHost.addTab(totalTab);
 		tabHost.addTab(settingsTab);
-
-		activityHandler.setMainContext(this);
-		deviceProvider.init();
 	}
 
 	@Override
@@ -102,4 +102,7 @@ public class MainTabhost extends ActivityGroup {
 
 	// TODO Controller Konfiguration Layout lässt sich nicht in Manifest
 	// einstellen??
+
+	// TODO Vollbild habe ich entfernt, weil sonst z.b. die Pairinganfrage im
+	// Hintergrund bleibt
 }

@@ -70,10 +70,9 @@ public class BluetoothDeviceProvider {
 
 	// Initializes all
 	public void init() {
+		setDevice(activityHandler.getDeviceAddress());
+
 		bluetoothState = BluetoothState.DISCONNECT;
-		String bluetoothPassword = "1234"; // TODO
-		BluetoothCommands.LOGIN.setValue(bluetoothPassword);
-		// bluetoothDevice is set by "setDevice(...)"
 
 		myBroadcastReceiver = new MyBroadcastReceiver();
 		bluetoothConnectionService = new BluetoothConnectionService();
@@ -127,7 +126,9 @@ public class BluetoothDeviceProvider {
 
 	// Sets the bluetooth device
 	public void setDevice(String address) {
-		bluetoothDevice = bluetoothAdapter.getRemoteDevice(address);
+		if (address != null) {
+			bluetoothDevice = bluetoothAdapter.getRemoteDevice(address);
+		}
 	}
 
 	// Unregister the BroadcastReceiver
@@ -317,7 +318,12 @@ public class BluetoothDeviceProvider {
 
 	// Checks connection and login state to controller
 	private void checkConnectionAndLogin() {
+		// Update password
+		BluetoothCommands.LOGIN.setValue(activityHandler.getPassword());
+
 		bluetoothConnectionService.checkConnectionAndLogin(bluetoothDevice);
+		// TODO Meldung ausgeben wenn Passwort falsch
+		// z.B. Warte 5 Sekunden, wenn kein login erfoglreich, dann meldung
 	}
 
 	// Does the next step on login
@@ -382,6 +388,7 @@ public class BluetoothDeviceProvider {
 	public void logoutAndResetDevice() {
 		logout();
 		bluetoothDevice = null;
+		activityHandler.saveDeviceAddress(null);
 	}
 
 	// // Stop the bluetooth connection services
@@ -503,7 +510,7 @@ public class BluetoothDeviceProvider {
 			bluetoothConnectionService.sendCommand(command);
 		}
 	}
-	
+
 	// TODO device in sharedPref speichern
 	// TODO autologin check/unchecked ...
 	// TODO defaultpassword

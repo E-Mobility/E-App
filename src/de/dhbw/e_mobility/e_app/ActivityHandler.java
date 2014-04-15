@@ -5,6 +5,7 @@ import java.util.Vector;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -15,6 +16,8 @@ import de.dhbw.e_mobility.e_app.bluetooth.BluetoothDeviceProvider;
 import de.dhbw.e_mobility.e_app.bluetooth.BluetoothInfoState;
 
 public class ActivityHandler {
+
+	// TODO aufräumen
 
 	// TODO Handler von den einzelnen KLassen speichern und dann über
 	public static int HANDLLER_DEVICE_PROVIDER = 1;
@@ -65,7 +68,6 @@ public class ActivityHandler {
 
 	// private Handler activeHandler;
 	private Vector<Activity> activities;
-	private Context appContext;
 	private Context mainContext;
 	private static ActivityHandler instance;
 	private boolean loogedIn;
@@ -80,9 +82,7 @@ public class ActivityHandler {
 	private ActivityHandler() {
 		// activeHandler = null;
 		activities = new Vector<Activity>();
-		appContext = null;
 		loogedIn = false;
-
 		saveBluetoothCommands();
 	}
 
@@ -93,7 +93,6 @@ public class ActivityHandler {
 	public void add(Activity theActivity) {// , Handler theHandler) {
 		// activeHandler = theHandler;
 		activities.add(theActivity);
-		appContext = theActivity.getApplicationContext();
 		manageLogin();
 	}
 
@@ -105,6 +104,15 @@ public class ActivityHandler {
 
 	public void setMainContext(Context theContext) {
 		mainContext = theContext;
+	}
+
+	private SharedPreferences getSharedPref() {
+		if (mainContext != null) {
+			return mainContext.getSharedPreferences(
+					mainContext.getPackageName() + "_preferences",
+					Context.MODE_PRIVATE);
+		}
+		return null;
 	}
 
 	private void manageLogout() {
@@ -124,7 +132,7 @@ public class ActivityHandler {
 			Log.d("AppHANDLER", "LOGIN");
 			BluetoothDeviceProvider deviceProvider = BluetoothDeviceProvider
 					.getInstance();
-			if (deviceProvider != null) {
+			if (deviceProvider != null && isAutologin()) {
 				deviceProvider.login();
 			}
 			loogedIn = true;
@@ -133,10 +141,6 @@ public class ActivityHandler {
 
 	public Context getMainContext() {
 		return mainContext;
-	}
-
-	public Context getAppContext() {
-		return appContext;
 	}
 
 	public boolean fireToHandler(int handlerID, BluetoothInfoState infoState) {
@@ -254,5 +258,53 @@ public class ActivityHandler {
 
 	public HashMap<String, BluetoothCommands> getBluetoothCommands() {
 		return bluetooth_commands;
+	}
+
+	// Returns true if auto login is active
+	private boolean isAutologin() {
+		SharedPreferences tmpPref = getSharedPref();
+		if (tmpPref != null) {
+			return tmpPref.getBoolean(SettingsElements.AUTOLOG.getKey(), false);
+		}
+		return false;
+	}
+
+	// Checks the saved speed settings
+	public float getSpeedFactor() {
+		SharedPreferences tmpPref = getSharedPref();
+		if (tmpPref != null) {
+			if (tmpPref.getString(SettingsElements.SPEED.getKey(), "").equals(
+					"mph")) {
+				return (float) 0.625;
+			}
+		}
+		return 1;
+	}
+
+	// Returns the saved password
+	public String getPassword() {
+		SharedPreferences tmpPref = getSharedPref();
+		if (tmpPref != null) {
+			return tmpPref.getString(SettingsElements.PASSWORD.getKey(), null);
+		}
+		return null;
+	}
+
+	// Saves the device address
+	public void saveDeviceAddress(String address) {
+		SharedPreferences tmpPref = getSharedPref();
+		if (tmpPref != null) {
+			tmpPref.edit().putString(SettingsElements.DEVICE.getKey(), address)
+					.apply();
+		}
+	}
+
+	// Returns the device address
+	public String getDeviceAddress() {
+		SharedPreferences tmpPref = getSharedPref();
+		if (tmpPref != null) {
+			return tmpPref.getString(SettingsElements.DEVICE.getKey(), null);
+		}
+		return null;
 	}
 }
