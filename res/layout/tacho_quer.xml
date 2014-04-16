@@ -31,6 +31,7 @@
               android:id="@+id/textView12"
               android:layout_width="wrap_content"
               android:layout_height="wrap_content"
+              android:layout_weight="0.42"
               android:text="%"
               android:textAppearance="?android:attr/textAppearanceMedium"
               android:textSize="20sp" />
@@ -40,7 +41,7 @@
               style="?android:attr/progressBarStyleHorizontal"
               android:layout_width="wrap_content"
               android:layout_height="wrap_content"
-              android:layout_weight="1"
+              android:layout_weight="1.39"
               android:progress="50" />
           
           <TextView
@@ -96,22 +97,32 @@
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:textSize="120sp" />
 
-        <TextView
-            android:id="@+id/textView4"
+        <LinearLayout
             android:layout_width="wrap_content"
-            android:layout_height="96dp"
-            android:layout_gravity="center"
-            android:layout_weight="0.78"
-            android:gravity="bottom"
-            android:text="km/h"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:textSize="30sp" />
+            android:layout_height="match_parent"
+            android:layout_weight="0.29"
+            android:orientation="vertical" >
 
-        <Spinner
-            android:id="@+id/spinner1"
-            android:layout_width="165dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="right|center" />
+            <Spinner
+                android:id="@+id/spinner1"
+                android:layout_width="150dp"
+                android:layout_height="15dp"
+                android:layout_gravity="right"
+                android:layout_marginBottom="30dp"
+                android:layout_weight="0.25" />
+
+            <TextView
+                android:id="@+id/textView4"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_weight="0.21"
+                android:gravity="top|left"
+                android:text="km/h"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textSize="30sp" />
+
+        </LinearLayout>
     </LinearLayout>
 
 </LinearLayout>
