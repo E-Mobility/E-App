@@ -17,9 +17,9 @@ import de.dhbw.e_mobility.e_app.bluetooth.BluetoothInfoState;
 
 public class ActivityHandler {
 
-	// TODO aufräumen
+	// TODO aufrï¿½umen
 
-	// TODO Handler von den einzelnen KLassen speichern und dann über
+	// TODO Handler von den einzelnen KLassen speichern und dann ï¿½ber
 	public static int HANDLLER_DEVICE_PROVIDER = 1;
 	public static int HANDLLER_SETTINGS = 2;
 	public static int HANDLLER_DISCOVERY = 3;
@@ -241,12 +241,12 @@ public class ActivityHandler {
 	}
 
 	// TODO
-	// # Logout immer wenn jemand Anwendung verlässt (onPause oder so)
+	// # Logout immer wenn jemand Anwendung verlï¿½sst (onPause oder so)
 	// # Login immer bei (onResume)
-	// # # (Bei Loginversuch vorher prüfen ob verbunden, wenn nicht verbinden)
-	// # # # Beim verbinden prüfen ob gerät verfügbar
-	// # # # beim verbinden prüfen ob gerät gepaird (wenn nicht, dann mache)
-	// # # # # beim pairgen prüfen ob bluetooth an (wenn nicth, dann mach)
+	// # # (Bei Loginversuch vorher prï¿½fen ob verbunden, wenn nicht verbinden)
+	// # # # Beim verbinden prï¿½fen ob gerï¿½t verfï¿½gbar
+	// # # # beim verbinden prï¿½fen ob gerï¿½t gepaird (wenn nicht, dann mache)
+	// # # # # beim pairgen prï¿½fen ob bluetooth an (wenn nicth, dann mach)
 
 	private void saveBluetoothCommands() {
 		// Prepare the commands

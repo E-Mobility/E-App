@@ -15,7 +15,7 @@
             android:background="@android:color/darker_gray" >
 
             <TextView
-                android:id="@+id/textView3"
+                android:id="@+id/hoch_geschwindigkeit"
                 android:layout_width="318dp"
                 android:layout_height="wrap_content"
                 android:gravity="center"
@@ -28,7 +28,7 @@
                 android:layout_gravity="center_horizontal" >
 
                 <TextView
-                    android:id="@+id/textView5"
+                    android:id="@+id/hoch_geschwindigkeit_zahl"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
@@ -39,7 +39,7 @@
                     android:textSize="60sp" />
 
                 <TextView
-                    android:id="@+id/textView4"
+                    android:id="@+id/hoch_geschwindigkeit_einheit"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
@@ -51,7 +51,7 @@
             </LinearLayout>
 
             <Spinner
-                android:id="@+id/spinner1"
+                android:id="@+id/hoch_modus"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
 
@@ -61,7 +61,7 @@
                 android:paddingTop="10dp" >
 
                 <TextView
-                    android:id="@+id/textView6"
+                    android:id="@+id/hoch_tour"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -70,7 +70,7 @@
                     android:textAppearance="?android:attr/textAppearanceLarge" />
 
                 <Button
-                    android:id="@+id/Button01"
+                    android:id="@+id/hoch_tour_reset"
                     style="?android:attr/buttonStyleSmall"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -83,7 +83,7 @@
                 android:layout_height="wrap_content" >
 
                 <TextView
-                    android:id="@+id/textView7"
+                    android:id="@+id/hoch_tour_distanz"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -92,8 +92,8 @@
                     android:textAppearance="?android:attr/textAppearanceMedium" />
 
                 <TextView
-                    android:id="@+id/textView8"
-                    android:layout_width="wrap_content"
+                    android:id="@+id/hoch_tour_dauer"
+                    android:layout_width="hoch_tour_dauer"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:gravity="center"
@@ -107,7 +107,7 @@
                 android:layout_height="wrap_content" >
 
                 <TextView
-                    android:id="@+id/textView9"
+                    android:id="@+id/hoch_tour_distanz_zahl"
                     android:layout_width="65dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -117,7 +117,7 @@
                     android:textSize="20sp" />
 
                 <TextView
-                    android:id="@+id/textView1"
+                    android:id="@+id/hoch_tour_distanz_einheit"
                     android:layout_width="66dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -126,7 +126,7 @@
                     android:textAppearance="?android:attr/textAppearanceLarge" />
 
                 <Chronometer
-                    android:id="@+id/chronometer1"
+                    android:id="@+id/hoch_tour_dauer_zahl"
                     android:layout_width="65dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -135,7 +135,7 @@
                     android:textSize="20sp" />
 
                 <TextView
-                    android:id="@+id/textView2"
+                    android:id="@+id/hoch_tour_dauer_einheit"
                     android:layout_width="65dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -156,7 +156,7 @@
                     android:orientation="vertical" >
 
                     <TextView
-                        android:id="@+id/textView10"
+                        android:id="@+id/hoch_akkustand"
                         android:layout_width="130dp"
                         android:layout_height="54dp"
                         android:layout_gravity="center"
@@ -170,7 +170,7 @@
                         android:layout_weight="1" >
 
                         <TextView
-                            android:id="@+id/textView11"
+                            android:id="@+id/hoch_akkustand_zahl"
                             android:layout_width="89dp"
                             android:layout_height="wrap_content"
                             android:gravity="right|center"
@@ -179,7 +179,7 @@
                             android:textSize="20sp" />
 
                         <TextView
-                            android:id="@+id/textView12"
+                            android:id="@+id/hoch_akkustand_einheit"
                             android:layout_width="84dp"
                             android:layout_height="wrap_content"
                             android:text="%"
@@ -189,7 +189,7 @@
                     </LinearLayout>
 
                     <ImageView
-                        android:id="@+id/imageView1"
+                        android:id="@+id/hoch_akkustand_anzeige"
                         android:layout_width="136dp"
                         android:layout_height="42dp"
                         android:layout_gravity="center"
@@ -204,7 +204,7 @@
                     android:orientation="vertical" >
 
                     <TextView
-                        android:id="@+id/textView13"
+                        android:id="@+id/hoch_unterstuetzung"
                         android:layout_width="wrap_content"
                         android:layout_height="54dp"
                         android:gravity="center"
@@ -216,7 +216,7 @@
                         android:layout_height="wrap_content" >
 
                         <TextView
-                            android:id="@+id/textView14"
+                            android:id="@+id/hoch_unterstuetzung_einheit"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
@@ -226,7 +226,7 @@
                             android:textSize="20sp" />
 
                         <TextView
-                            android:id="@+id/textView15"
+                            android:id="@+id/hoch_unterstuetzung_zahl"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
@@ -236,7 +236,7 @@
                     </LinearLayout>
 
                     <ImageView
-                        android:id="@+id/ImageView01"
+                        android:id="@+id/hoch_unterstuetzung_anzeige"
                         android:layout_width="136dp"
                         android:layout_height="42dp"
                         android:layout_weight="1"
