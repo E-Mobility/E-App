@@ -1,12 +1,16 @@
 package de.dhbw.e_mobility.e_app;
 
 import android.app.ActivityGroup;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.widget.TabHost;
 import android.widget.TabHost.TabSpec;
+import android.widget.TextView;
+import android.widget.ViewFlipper;
+
 import de.dhbw.e_mobility.e_app.bluetooth.BluetoothDeviceProvider;
 
 public class MainTabhost extends ActivityGroup {
@@ -23,7 +27,8 @@ public class MainTabhost extends ActivityGroup {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.main_tabs);
+        setContentView(R.layout.main_tabs);
+        // TODO changeContentView();
 
 		activityHandler.setMainContext(this);
 		deviceProvider.init();
@@ -54,7 +59,7 @@ public class MainTabhost extends ActivityGroup {
 		tabHost.addTab(tourTab);
 		tabHost.addTab(totalTab);
 		tabHost.addTab(settingsTab);
-	}
+    }
 
 	@Override
 	protected void onStart() {
@@ -80,7 +85,11 @@ public class MainTabhost extends ActivityGroup {
 	@Override
 	public void onConfigurationChanged(Configuration newConfig) {
 		super.onConfigurationChanged(newConfig);
-		TabHost tabHost = (TabHost) findViewById(android.R.id.tabhost);
+
+        // changeContentView();
+
+		// TODO wirft fehler?! TabHost tabHost = (TabHost) findViewById(R.id.main_tabhost);
+		 TabHost tabHost = (TabHost) findViewById(android.R.id.tabhost);
 		boolean tachoIsCurrent = (tabHost.getCurrentTab() == 0);
 		if (tachoIsCurrent) {
 			tabHost.setCurrentTab(1);
@@ -89,18 +98,36 @@ public class MainTabhost extends ActivityGroup {
 		if (newConfig.orientation == ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
 				|| newConfig.orientation == ActivityInfo.SCREEN_ORIENTATION_REVERSE_LANDSCAPE
 				|| newConfig.orientation == ActivityInfo.SCREEN_ORIENTATION_USER) {
-			tachoTab.setContent(tachoQuer);
-		} else {
-			tachoTab.setContent(tachoHoch);
-		}
+            tachoTab.setContent(tachoQuer);
+        } else {
+            tachoTab.setContent(tachoHoch);
+        }
+
 		if (tachoIsCurrent) {
 			tabHost.setCurrentTab(0);
-			// TODO CurrentTab-Workaround ändern
+			// TODO CurrentTab-Workaround ï¿½ndern
 			// (damit Intent nicht "einfriert")
 		}
 	}
 
-	// TODO Controller Konfiguration Layout lässt sich nicht in Manifest
+    /*
+    private void changeContentView() {
+        System.out.println("CHANGE");
+        int orientation = getResources().getConfiguration().orientation;
+
+        if (orientation == ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
+                || orientation == ActivityInfo.SCREEN_ORIENTATION_REVERSE_LANDSCAPE
+                || orientation == ActivityInfo.SCREEN_ORIENTATION_USER) {
+            //setContentView(R.layout.tacho_quer);
+            setContentView(findViewById(R.id.tacho_hoch));
+        } else {
+            // setContentView(R.layout.main_tabs);
+            setContentView(findViewById(R.id.tabhost));
+        }
+    }
+    */
+
+	// TODO Controller Konfiguration Layout lï¿½sst sich nicht in Manifest
 	// einstellen??
 
 	// TODO Vollbild habe ich entfernt, weil sonst z.b. die Pairinganfrage im

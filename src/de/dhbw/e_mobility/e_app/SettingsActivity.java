@@ -88,6 +88,7 @@ public class SettingsActivity extends PreferenceActivity implements
 										BLUETOOTH_REQUEST_DISCONNECT);
 								return true;
 							}
+                            // TODO wenn auto login aus ist, funktioniert der login nicht mehr?!
 							deviceProvider.login();
 							return true;
 						}
@@ -362,7 +363,7 @@ public class SettingsActivity extends PreferenceActivity implements
 				enableAdvancedSettings(true, advancedPref);
 			}
 		} else if (resCode == SETTINGS_REQUEST_COMMAND) {
-			// TODO bessere lösung für zwischenspeicherung finden..
+			// TODO bessere lï¿½sung fï¿½r zwischenspeicherung finden..
 			if (reqCode == Activity.RESULT_OK) {
 				deviceProvider.sendCommand(clickedCommand);
 			}
@@ -425,9 +426,9 @@ public class SettingsActivity extends PreferenceActivity implements
 	// # Bluetooth
 	// # Passwort
 	// # Automatischer Login (ein/aus)
-	// (# Gesamtstatistik zurücksetzten)
+	// (# Gesamtstatistik zurï¿½cksetzten)
 	// (# Export / Import)
-	// # Geschwindigkeitsmaßeinheit (km/h | mph)
+	// # Geschwindigkeitsmaï¿½einheit (km/h | mph)
 	// # Erweiterte Bluetootheinstellungen
 
 	// # Vollbild
