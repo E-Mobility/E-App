@@ -16,7 +16,8 @@
     <!--
          // Um ein Passwort zu verstecken:
          <EditTextPreference
-         android:inputType="textPassword"    -->
+         android:inputType="textPassword"
+    -->
 
     <EditTextPreference
         android:key="settings_password"
@@ -30,7 +31,7 @@
         android:title="@string/settings_autolog" />
 
     <ListPreference
-        android:defaultValue="km/h"
+        android:defaultValue="Einheit: km/h"
         android:entries="@array/settings_speed_entries"
         android:entryValues="@array/settings_speed_values"
         android:key="settings_speed"

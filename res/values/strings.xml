@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- TODO TODO TODO Unnötige Texte löschen und andere anpassen -->
+    <!-- TODO alle texte in den layouts in strings.xml einpflegen -->
 
     <string name="app_name">E-App</string>
     <string name="action_settings">Einstellungen</string>
@@ -12,6 +13,11 @@
     <string name="bluetooth">Bluetooth Verbindung</string>
     <string name="refresh">Neu laden</string>
     <string name="passwort">Passwort</string>
+
+    <string name="mainTab_speedo">Tacho</string>
+    <string name="mainTab_tour">Tour Status</string>
+    <string name="mainTab_total">Gesamt Status</string>
+    <string name="mainTab_settings">Einstellungen</string>
 
     <!-- DeviceListActivity -->
     <string name="discovery_scanning">Suche läuft &#8230;</string>
@@ -35,12 +41,13 @@
     <string name="settings_con_">blabla</string>
     <string name="settings_controller">Controller Konfiguration...</string>
     <string name="dialog_really_title">Achtung!</string>
+    <string name="dialog_really_text">Möchten Sie die Aktion wirklich durchführen?</string>
     <string name="dialog_advanced_settings_title">Achtung!</string>
     <string name="dialog_advanced_settings">Vorsicht mit der Experten Ansicht!\n\rÄnderungen wirken sich direkt auf den Controller aus.\n\rDurch manche Änderungen ist die Verkehrszulassung nicht mehr gewährleistet.\n\r\n\rMöchten Sie die Experten Ansicht wirklich aktivieren?</string>
     <string name="settings_advanced">Experten Ansicht</string>
     <string name="settings_password_sum">Gespeichertes Passwort ändern</string>
     <string name="settings_password">Passwort</string>
-    <string name="settings_speed">Geschwindigkeitsmaßeinheit</string>
+    <string name="settings_speed">Geschwindigkeit</string>
     <string name="settings_autolog_sum">Beim Start automatisch mit Controller verbinden</string>
     <string name="settings_autolog">Auto Login</string>
     <string name="settings_bluetooth">Bluetooth</string>

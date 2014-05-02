@@ -1,0 +1,256 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/tacho_hoch"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@android:color/darker_gray"
+    tools:context=".MainTabhost">
+
+
+    <TextView
+        android:id="@+id/hoch_geschwindigkeit"
+        android:layout_width="318dp"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:textSize="@dimen/medium_text_size"
+        android:text="Geschwidigkeit:"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal">
+
+        <TextView
+            android:id="@+id/hoch_geschwindigkeit_zahl"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_weight="0.01"
+            android:gravity="center"
+            android:text="16,7"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textSize="@dimen/large_text_size" />
+
+        <TextView
+            android:id="@+id/hoch_geschwindigkeit_einheit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_weight="0.02"
+            android:text="km/h"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textSize="@dimen/medium_large_text_size" />
+
+    </LinearLayout>
+
+    <Spinner
+        android:id="@+id/hoch_modus"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="10dp">
+
+        <TextView
+            android:id="@+id/hoch_tour"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:layout_weight="1"
+            android:textSize="@dimen/medium_large_text_size"
+            android:gravity="center"
+            android:text="Aktuelle Tour:"
+            android:textAppearance="?android:attr/textAppearanceLarge" />
+
+        <Button
+            android:id="@+id/hoch_tour_reset"
+            style="?android:attr/buttonStyleSmall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textSize="@dimen/medium_small_text_size"
+            android:text="Tour Reset" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/hoch_tour_distanz"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:textSize="@dimen/medium_text_size"
+            android:text="Distanz"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+
+        <TextView
+            android:id="@+id/hoch_tour_dauer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:textSize="@dimen/medium_text_size"
+            android:text="Dauer"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/hoch_tour_distanz_zahl"
+            android:layout_width="65dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="right"
+            android:text="25,6"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textSize="@dimen/medium_text_size" />
+
+        <TextView
+            android:id="@+id/hoch_tour_distanz_einheit"
+            android:layout_width="66dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:textSize="@dimen/medium_text_size"
+            android:text="km"
+            android:textAppearance="?android:attr/textAppearanceLarge" />
+
+        <Chronometer
+            android:id="@+id/hoch_tour_dauer_zahl"
+            android:layout_width="65dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="right"
+            android:text="Chronometer"
+            android:textSize="@dimen/medium_text_size" />
+
+        <TextView
+            android:id="@+id/hoch_tour_dauer_einheit"
+            android:layout_width="65dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textSize="@dimen/medium_text_size"
+            android:gravity="center"
+            android:text="h"
+            android:textAppearance="?android:attr/textAppearanceLarge" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/hoch_akkustand"
+                android:layout_width="130dp"
+                android:layout_height="54dp"
+                android:layout_gravity="center"
+                android:textSize="@dimen/medium_text_size"
+                android:gravity="center"
+                android:text="Akkustand"
+                android:textAppearance="?android:attr/textAppearanceLarge" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="1">
+
+                <TextView
+                    android:id="@+id/hoch_akkustand_zahl"
+                    android:layout_width="89dp"
+                    android:layout_height="wrap_content"
+                    android:gravity="right|center"
+                    android:text="50"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:textSize="@dimen/medium_text_size" />
+
+                <TextView
+                    android:id="@+id/hoch_akkustand_einheit"
+                    android:layout_width="84dp"
+                    android:layout_height="wrap_content"
+                    android:text="%"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:textSize="@dimen/medium_text_size" />
+
+            </LinearLayout>
+
+            <ImageView
+                android:id="@+id/hoch_akkustand_anzeige"
+                android:layout_width="136dp"
+                android:layout_height="42dp"
+                android:layout_gravity="center"
+                android:src="@android:drawable/button_onoff_indicator_on" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/hoch_unterstuetzung"
+                android:layout_width="wrap_content"
+                android:layout_height="54dp"
+                android:gravity="center"
+                android:textSize="@dimen/medium_text_size"
+                android:text="Unterstützung"
+                android:textAppearance="?android:attr/textAppearanceLarge" />
+
+            <LinearLayout
+                android:layout_width="140dp"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/hoch_unterstuetzung_einheit"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="Stufe"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:textSize="@dimen/medium_text_size" />
+
+                <TextView
+                    android:id="@+id/hoch_unterstuetzung_zahl"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="1"
+                    android:textSize="@dimen/medium_text_size"
+                    android:textAppearance="?android:attr/textAppearanceMedium" />
+
+            </LinearLayout>
+
+            <ImageView
+                android:id="@+id/hoch_unterstuetzung_anzeige"
+                android:layout_width="136dp"
+                android:layout_height="42dp"
+                android:layout_weight="1"
+                android:src="@android:drawable/button_onoff_indicator_on" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</LinearLayout>

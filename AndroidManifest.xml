@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="de.dhbw.e_mobility.e_app"
     android:versionCode="1"
-    android:versionName="1.0" >
+    android:versionName="1.0">
 
     <uses-sdk
         android:minSdkVersion="10"
@@ -13,14 +13,13 @@
 
     <application
         android:allowBackup="true"
-        android:debuggable="true"
         android:icon="@drawable/ic_launcher"
-        android:label="@string/app_name" >
+        android:label="@string/app_name">
         <activity
             android:name="de.dhbw.e_mobility.e_app.MainTabhost"
             android:configChanges="orientation|keyboardHidden"
             android:label="@string/activity_main_title"
-            android:theme="@android:style/Theme.NoTitleBar" >
+            android:theme="@style/AppTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -28,51 +27,47 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="de.dhbw.e_mobility.e_app.TachoHochActivity"
+            android:name=".SpeedoPortraitActivity"
             android:label="@string/activity_tacho_title"
-            android:theme="@android:style/Theme.NoTitleBar" >
-        </activity>
+            android:theme="@style/AppTheme" />
         <activity
-            android:name="de.dhbw.e_mobility.e_app.TachoQuerActivity"
+            android:name=".SpeedoLandscapeActivity"
             android:label="@string/activity_tacho_title"
-            android:theme="@android:style/Theme.NoTitleBar" >
-        </activity>
+            android:theme="@style/AppTheme" />
         <activity
-            android:name="de.dhbw.e_mobility.e_app.StatusTourActivity"
+            android:name=".StateTourActivity"
             android:label="@string/activity_status_tour_title"
-            android:theme="@android:style/Theme.NoTitleBar" >
-        </activity>
+            android:theme="@style/AppTheme" />
         <activity
-            android:name="de.dhbw.e_mobility.e_app.StatusTotalActivity"
+            android:name=".StateTotalActivity"
             android:label="@string/activity_status_total_title"
-            android:theme="@android:style/Theme.NoTitleBar" >
-        </activity>
+            android:theme="@style/AppTheme" />
         <activity
             android:name="de.dhbw.e_mobility.e_app.SettingsActivity"
             android:label="@string/activity_settings_title"
-            android:theme="@android:style/Theme.NoTitleBar" >
-        </activity>
-        
+            android:theme="@style/AppTheme" />
+
         <activity
             android:name="de.dhbw.e_mobility.e_app.bluetooth.BluetoothDialogDiscovery"
             android:configChanges="orientation|keyboardHidden"
             android:label="@string/dialog_deviceList_title"
-            android:theme="@android:style/Theme.Dialog" />
+            android:theme="@style/AppDialog" />
         <activity
             android:name="de.dhbw.e_mobility.e_app.bluetooth.BluetoothDialogDisconnect"
             android:configChanges="orientation|keyboardHidden"
             android:label="@string/dialog_disconnect_title"
-            android:theme="@android:style/Theme.Dialog" />
+            android:theme="@style/AppDialog" />
         <activity
             android:name="de.dhbw.e_mobility.e_app.SettingsAdvancedDialog"
             android:configChanges="orientation|keyboardHidden"
             android:label="@string/dialog_advanced_settings_title"
-            android:theme="@android:style/Theme.Dialog" />
+            android:theme="@style/AppDialog" />
         <activity
             android:name="de.dhbw.e_mobility.e_app.ReallyDialog"
             android:configChanges="orientation|keyboardHidden"
             android:label="@string/dialog_really_title"
-            android:theme="@android:style/Theme.Dialog" />
+            android:theme="@style/AppDialog" />
     </application>
-
+    <!-- TODO Bildschirmstandby verhindern -->
+    <!-- TODO Kein Vollbild, weil sonst z.B. die Pairinganfrage im Hintergrund unentdeckt bleibt -->
 </manifest>

@@ -5,7 +5,7 @@
         <item>mph</item>
     </string-array>
     <string-array name="settings_speed_values">
-        <item>km/h</item>
-        <item>mph</item>
-    </string-array>      
+        <item>Einheit: km/h</item>
+        <item>Einheit: mph</item>
+    </string-array>
 </resources>

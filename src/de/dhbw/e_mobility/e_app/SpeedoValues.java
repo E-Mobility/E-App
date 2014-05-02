@@ -1,10 +1,5 @@
 package de.dhbw.e_mobility.e_app;
 
-import android.util.Log;
-
-/**
- * Created by Benny on 30.04.2014.
- */
 public enum SpeedoValues {
     U("U"), // (V) Spannung / voltage
     I("I"), // (A) Stromstärke / amperage
@@ -18,28 +13,30 @@ public enum SpeedoValues {
     private float value;
     private String command;
 
+    // Constructor
     SpeedoValues(String theCommand) {
         value = 0;
         command = theCommand;
     }
 
-    public void setValue(float theValue) {
-        value = theValue;
-
-        Log.d("SPEEDO-VALUES", command + ": " + theValue);
-    }
-
+    // Returns the appendent command
     public String getCommand() {
         return command;
     }
 
+    // Returns the appendent value
     public float getValue() {
         return value;
     }
 
+    // Saves the value
+    public void setValue(float theValue) {
+        value = theValue;
+    }
 
     @Override
+    @Deprecated
     public String toString() {
-        return "";
+        return null;
     }
 }
