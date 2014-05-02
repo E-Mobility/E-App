@@ -1,4 +1,6 @@
-package de.dhbw.e_mobility.e_app;
+package de.dhbw.e_mobility.e_app.speedo;
+
+import de.dhbw.e_mobility.e_app.R;
 
 public enum SpeedoElements {
     GESCHWINDIGKEIT(R.id.hoch_geschwindigkeit), GESCHWINDIGKEIT_ZAHL(R.id.hoch_geschwindigkeit_zahl),

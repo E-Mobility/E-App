@@ -8,7 +8,13 @@ import android.os.Bundle;
 import android.widget.TabHost;
 import android.widget.TabHost.TabSpec;
 
-import de.dhbw.e_mobility.e_app.bluetooth.BluetoothDeviceProvider;
+import de.dhbw.e_mobility.e_app.bluetooth.DeviceProvider;
+import de.dhbw.e_mobility.e_app.common.ActivityHandler;
+import de.dhbw.e_mobility.e_app.settings.SettingsActivity;
+import de.dhbw.e_mobility.e_app.speedo.SpeedoLandscapeActivity;
+import de.dhbw.e_mobility.e_app.speedo.SpeedoPortraitActivity;
+import de.dhbw.e_mobility.e_app.total_stats.StatsTotalActivity;
+import de.dhbw.e_mobility.e_app.tour_stats.StatsTourActivity;
 
 public class MainTabhost extends ActivityGroup {
 
@@ -19,7 +25,7 @@ public class MainTabhost extends ActivityGroup {
     // Get ActivityHandler object
     private ActivityHandler activityHandler = ActivityHandler.getInstance();
     // Get DeviceProvider object
-    private BluetoothDeviceProvider deviceProvider = BluetoothDeviceProvider
+    private DeviceProvider deviceProvider = DeviceProvider
             .getInstance();
     private TabSpec speedoTab;
     private Intent speedoLandscape;
@@ -46,11 +52,11 @@ public class MainTabhost extends ActivityGroup {
 
         TabSpec tourTab = tabHost.newTabSpec(specTour);
         tourTab.setIndicator(activityHandler.getStr(R.string.mainTab_tour));
-        tourTab.setContent(new Intent(this, StateTourActivity.class));
+        tourTab.setContent(new Intent(this, StatsTourActivity.class));
 
         TabSpec totalTab = tabHost.newTabSpec(specTotal);
         totalTab.setIndicator(activityHandler.getStr(R.string.mainTab_total));
-        totalTab.setContent(new Intent(this, StateTotalActivity.class));
+        totalTab.setContent(new Intent(this, StatsTotalActivity.class));
 
         TabSpec settingsTab = tabHost.newTabSpec(specSettings);
         settingsTab.setIndicator(activityHandler.getStr(R.string.mainTab_settings));

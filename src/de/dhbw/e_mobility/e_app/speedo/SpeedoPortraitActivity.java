@@ -1,4 +1,4 @@
-package de.dhbw.e_mobility.e_app;
+package de.dhbw.e_mobility.e_app.speedo;
 
 import android.app.Activity;
 import android.content.res.Resources;
@@ -6,6 +6,9 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
+
+import de.dhbw.e_mobility.e_app.common.ActivityHandler;
+import de.dhbw.e_mobility.e_app.R;
 
 public class SpeedoPortraitActivity extends Activity {
 

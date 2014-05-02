@@ -8,8 +8,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 
-import de.dhbw.e_mobility.e_app.ActivityHandler;
-import de.dhbw.e_mobility.e_app.IntentKeys;
+import de.dhbw.e_mobility.e_app.common.ActivityHandler;
+import de.dhbw.e_mobility.e_app.common.IntentKeys;
 
 public class MyBroadcastReceiver extends BroadcastReceiver {
 

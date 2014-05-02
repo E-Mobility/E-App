@@ -13,17 +13,17 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 
-import de.dhbw.e_mobility.e_app.ActivityHandler;
-import de.dhbw.e_mobility.e_app.IntentKeys;
-import de.dhbw.e_mobility.e_app.SpeedoValues;
+import de.dhbw.e_mobility.e_app.common.ActivityHandler;
+import de.dhbw.e_mobility.e_app.common.IntentKeys;
+import de.dhbw.e_mobility.e_app.speedo.SpeedoValues;
 
-public class BluetoothConnectionService {
+public class ConnectionService {
 
     // Current ServiceState
     private ServiceState serviceState;
 
     // Attributes to save the things before
-    private BluetoothCommands lastCommand;
+    private Commands lastCommand;
     private String lastPush;
 
     // Get ActivityHandler object
@@ -35,7 +35,7 @@ public class BluetoothConnectionService {
     private HoldConnectionThread holdConnectionThread;
 
     // Constructor
-    public BluetoothConnectionService() {
+    public ConnectionService() {
         serviceState = ServiceState.INIT;
         lastCommand = null;
         connectThread = null;
@@ -94,7 +94,7 @@ public class BluetoothConnectionService {
     }
 
     // Sends a command to the controller
-    private void write(BluetoothCommands command) {
+    private void write(Commands command) {
         if (serviceState != ServiceState.LOGGED_IN
                 && serviceState != ServiceState.LOGIN) {
             return;
@@ -131,7 +131,7 @@ public class BluetoothConnectionService {
 
     // Saves the pushed values
     private void savePushValues(String pushValues) {
-        String typ = BluetoothCommands.AT_PUSH_N.getValue();
+        String typ = Commands.AT_PUSH_N.getValue();
         if (typ != null) {
             if (typ.equals("1")) {
                 String tmp[];
@@ -173,7 +173,7 @@ public class BluetoothConnectionService {
     // Saves the received parameter list
     private void saveParamList(String paramList) {
         // Prepare the commands
-        HashMap<String, BluetoothCommands> bluetooth_commands = activityHandler
+        HashMap<String, Commands> bluetooth_commands = activityHandler
                 .getBluetoothCommands();
 
         // Read the parameter list
@@ -194,7 +194,7 @@ public class BluetoothConnectionService {
     }
 
     // Sends the wanted command
-    public void sendCommand(BluetoothCommands command) {
+    public void sendCommand(Commands command) {
         write(command);
     }
 
@@ -333,7 +333,7 @@ public class BluetoothConnectionService {
                         if (line.startsWith("error")) {
                             // TODO reaction of error (unimportant)
                         } else if (line.startsWith("ok")) {
-                            if (isLastCommand(BluetoothCommands.LOGIN)) {
+                            if (isLastCommand(Commands.LOGIN)) {
                                 serviceState = ServiceState.LOGGED_IN;
 
                                 // Start the HoldConnectionThread
@@ -345,8 +345,8 @@ public class BluetoothConnectionService {
                                                 BluetoothInfoState.LOGGED_IN);
 
                                 // Asking for parameter list
-                                write(BluetoothCommands.AT_PARAM_LIST);
-                            } else if (isLastCommand(BluetoothCommands.AT_LOGOUT)) {
+                                write(Commands.AT_PARAM_LIST);
+                            } else if (isLastCommand(Commands.AT_LOGOUT)) {
                                 serviceState = ServiceState.INIT;
                                 init();
                                 activityHandler
@@ -357,9 +357,9 @@ public class BluetoothConnectionService {
                             }
                         } else if (line.equals("login >")) {
                             serviceState = ServiceState.LOGIN;
-                            write(BluetoothCommands.LOGIN);
-                        } else if (isLastCommand(BluetoothCommands.AT_PARAM_LIST)) {
-                            if (line.startsWith(BluetoothCommands.AT_CALIBH_N.getCommand())) {
+                            write(Commands.LOGIN);
+                        } else if (isLastCommand(Commands.AT_PARAM_LIST)) {
+                            if (line.startsWith(Commands.AT_CALIBH_N.getCommand())) {
                                 // Last element in parameter list
                                 lastCommand = null;
                                 Log.d("CONNECTION-SERVICE", "End of Param-List");
@@ -370,10 +370,10 @@ public class BluetoothConnectionService {
                         }
 
                         // Start push after last command is finished
-                        if (lastCommand != BluetoothCommands.AT_PUSH_N) {
+                        if (lastCommand != Commands.AT_PUSH_N) {
                             // TODO pruefen ob das korrekt ist
-                            BluetoothCommands.AT_PUSH_N.setValue(lastPush);
-                            write(BluetoothCommands.AT_PUSH_N);
+                            Commands.AT_PUSH_N.setValue(lastPush);
+                            write(Commands.AT_PUSH_N);
                         }
                     }
                 }
@@ -383,9 +383,9 @@ public class BluetoothConnectionService {
         }
 
         // Checks if the last command is the given on
-        private boolean isLastCommand(BluetoothCommands command) {
+        private boolean isLastCommand(Commands command) {
             if (command == lastCommand) {
-                if (command != BluetoothCommands.AT_PARAM_LIST) {
+                if (command != Commands.AT_PARAM_LIST) {
                     lastCommand = null;
                 }
                 return true;
@@ -394,17 +394,17 @@ public class BluetoothConnectionService {
         }
 
         // Write a command
-        private void write(BluetoothCommands command) {
-            if (command != BluetoothCommands.AT_0) {
+        private void write(Commands command) {
+            if (command != Commands.AT_0) {
                 // Save as last send command
                 lastCommand = command;
 
                 // Hold pushing data
-                if (command != BluetoothCommands.AT_PUSH_N) {
+                if (command != Commands.AT_PUSH_N) {
                     // TODO pruefen ob das korrekt ist
-                    lastPush = BluetoothCommands.AT_PUSH_N.getValue();
-                    BluetoothCommands.AT_PUSH_N.setValue("0");
-                    write(BluetoothCommands.AT_PUSH_N);
+                    lastPush = Commands.AT_PUSH_N.getValue();
+                    Commands.AT_PUSH_N.setValue("0");
+                    write(Commands.AT_PUSH_N);
 
                 }
             }
@@ -428,7 +428,7 @@ public class BluetoothConnectionService {
         }
 
         private void cancel() {
-            write(BluetoothCommands.AT_LOGOUT);
+            write(Commands.AT_LOGOUT);
         }
     }
 
@@ -440,7 +440,7 @@ public class BluetoothConnectionService {
             while (true) {
                 try {
                     Thread.sleep(60000);
-                    write(BluetoothCommands.AT_0);
+                    write(Commands.AT_0);
                 } catch (InterruptedException e) {
                     Log.d("CONNECTION-SERVICE", "Sleep was interrupted");
                     break;

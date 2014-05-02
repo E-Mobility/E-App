@@ -1,4 +1,4 @@
-package de.dhbw.e_mobility.e_app;
+package de.dhbw.e_mobility.e_app.dialog;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -7,6 +7,8 @@ import android.view.View.OnClickListener;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.TextView;
+
+import de.dhbw.e_mobility.e_app.R;
 
 public abstract class YesNoDialog extends Activity {
 

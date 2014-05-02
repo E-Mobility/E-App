@@ -1,4 +1,4 @@
-package de.dhbw.e_mobility.e_app;
+package de.dhbw.e_mobility.e_app.common;
 
 public enum IntentKeys {
     DEVICE_ADDRESS("device_address"), DEVICE_NAME("device_name"), MESSAGE_TEXT("message_text"), MESSAGE_NUMBER("message_number"),

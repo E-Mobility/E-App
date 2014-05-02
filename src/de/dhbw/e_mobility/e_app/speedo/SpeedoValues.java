@@ -1,4 +1,4 @@
-package de.dhbw.e_mobility.e_app;
+package de.dhbw.e_mobility.e_app.speedo;
 
 public enum SpeedoValues {
     U("U"), // (V) Spannung / voltage

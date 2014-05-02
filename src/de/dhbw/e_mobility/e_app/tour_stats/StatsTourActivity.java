@@ -1,9 +1,11 @@
-package de.dhbw.e_mobility.e_app;
+package de.dhbw.e_mobility.e_app.tour_stats;
 
 import android.app.Activity;
 import android.os.Bundle;
 
-public class StateTourActivity extends Activity {
+import de.dhbw.e_mobility.e_app.R;
+
+public class StatsTourActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

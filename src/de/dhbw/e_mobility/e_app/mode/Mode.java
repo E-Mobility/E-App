@@ -1,17 +1,17 @@
 package de.dhbw.e_mobility.e_app.mode;
 
-import de.dhbw.e_mobility.e_app.bluetooth.BluetoothCommands;
-import de.dhbw.e_mobility.e_app.bluetooth.BluetoothDeviceProvider;
+import de.dhbw.e_mobility.e_app.bluetooth.Commands;
+import de.dhbw.e_mobility.e_app.bluetooth.DeviceProvider;
 
 public abstract class Mode {
 
-    private BluetoothDeviceProvider deviceProvider;
+    private DeviceProvider deviceProvider;
 
     public Mode() {
-        deviceProvider = BluetoothDeviceProvider.getInstance();
+        deviceProvider = DeviceProvider.getInstance();
     }
 
-    void sendCommand(BluetoothCommands theCommand, String theValue) {
+    void sendCommand(Commands theCommand, String theValue) {
         theCommand.setValue(theValue);
         deviceProvider.sendCommand(theCommand);
     }

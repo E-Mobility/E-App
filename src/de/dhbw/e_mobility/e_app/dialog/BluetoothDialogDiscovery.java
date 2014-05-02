@@ -1,4 +1,4 @@
-package de.dhbw.e_mobility.e_app.bluetooth;
+package de.dhbw.e_mobility.e_app.dialog;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -15,16 +15,17 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import de.dhbw.e_mobility.e_app.ActivityHandler;
-import de.dhbw.e_mobility.e_app.IntentKeys;
+import de.dhbw.e_mobility.e_app.bluetooth.DeviceProvider;
+import de.dhbw.e_mobility.e_app.common.ActivityHandler;
+import de.dhbw.e_mobility.e_app.common.IntentKeys;
 import de.dhbw.e_mobility.e_app.R;
 
 public class BluetoothDialogDiscovery extends Activity {
 
     // Results for Handler
     public static final int BT_DISCOVERY_FINISHED = 10;
-    // Get BluetoothDeviceProvider object
-    private static BluetoothDeviceProvider deviceProvider = BluetoothDeviceProvider
+    // Get DeviceProvider object
+    private static DeviceProvider deviceProvider = DeviceProvider
             .getInstance();
     // Get ActivityHandler object
     private ActivityHandler activityHandler = ActivityHandler.getInstance();

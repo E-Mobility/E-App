@@ -27,43 +27,43 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".SpeedoPortraitActivity"
+            android:name=".speedo.SpeedoPortraitActivity"
             android:label="@string/activity_tacho_title"
             android:theme="@style/AppTheme" />
         <activity
-            android:name=".SpeedoLandscapeActivity"
+            android:name=".speedo.SpeedoLandscapeActivity"
             android:label="@string/activity_tacho_title"
             android:theme="@style/AppTheme" />
         <activity
-            android:name=".StateTourActivity"
+            android:name=".tour_stats.StatsTourActivity"
             android:label="@string/activity_status_tour_title"
             android:theme="@style/AppTheme" />
         <activity
-            android:name=".StateTotalActivity"
+            android:name=".total_stats.StatsTotalActivity"
             android:label="@string/activity_status_total_title"
             android:theme="@style/AppTheme" />
         <activity
-            android:name="de.dhbw.e_mobility.e_app.SettingsActivity"
+            android:name=".settings.SettingsActivity"
             android:label="@string/activity_settings_title"
             android:theme="@style/AppTheme" />
 
         <activity
-            android:name="de.dhbw.e_mobility.e_app.bluetooth.BluetoothDialogDiscovery"
+            android:name=".dialog.BluetoothDialogDiscovery"
             android:configChanges="orientation|keyboardHidden"
             android:label="@string/dialog_deviceList_title"
             android:theme="@style/AppDialog" />
         <activity
-            android:name="de.dhbw.e_mobility.e_app.bluetooth.BluetoothDialogDisconnect"
+            android:name=".dialog.BluetoothDialogDisconnect"
             android:configChanges="orientation|keyboardHidden"
             android:label="@string/dialog_disconnect_title"
             android:theme="@style/AppDialog" />
         <activity
-            android:name="de.dhbw.e_mobility.e_app.SettingsAdvancedDialog"
+            android:name=".settings.SettingsAdvancedDialog"
             android:configChanges="orientation|keyboardHidden"
             android:label="@string/dialog_advanced_settings_title"
             android:theme="@style/AppDialog" />
         <activity
-            android:name="de.dhbw.e_mobility.e_app.ReallyDialog"
+            android:name=".dialog.ReallyDialog"
             android:configChanges="orientation|keyboardHidden"
             android:label="@string/dialog_really_title"
             android:theme="@style/AppDialog" />

@@ -1,4 +1,4 @@
-package de.dhbw.e_mobility.e_app;
+package de.dhbw.e_mobility.e_app.settings;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -19,10 +19,14 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import de.dhbw.e_mobility.e_app.bluetooth.BluetoothCommands;
-import de.dhbw.e_mobility.e_app.bluetooth.BluetoothDeviceProvider;
-import de.dhbw.e_mobility.e_app.bluetooth.BluetoothDialogDisconnect;
-import de.dhbw.e_mobility.e_app.bluetooth.BluetoothDialogDiscovery;
+import de.dhbw.e_mobility.e_app.bluetooth.Commands;
+import de.dhbw.e_mobility.e_app.bluetooth.DeviceProvider;
+import de.dhbw.e_mobility.e_app.common.ActivityHandler;
+import de.dhbw.e_mobility.e_app.common.IntentKeys;
+import de.dhbw.e_mobility.e_app.R;
+import de.dhbw.e_mobility.e_app.dialog.ReallyDialog;
+import de.dhbw.e_mobility.e_app.dialog.BluetoothDialogDisconnect;
+import de.dhbw.e_mobility.e_app.dialog.BluetoothDialogDiscovery;
 
 /**
  * This is the main Activity that displays the current connection session.
@@ -40,7 +44,7 @@ public class SettingsActivity extends PreferenceActivity implements
     private static final int SETTINGS_REQUEST_ADVANCED = 4;
     private static final int SETTINGS_REQUEST_COMMAND = 5;
 
-    private BluetoothCommands clickedCommand;
+    private Commands clickedCommand;
 
     // Get ActivityHandler object
     private ActivityHandler activityHandler = ActivityHandler.getInstance();
@@ -48,8 +52,8 @@ public class SettingsActivity extends PreferenceActivity implements
     // Get SettingsProvider object
     private SettingsProvider settingsProvider = SettingsProvider.getInstance();
 
-    // Get BluetoothDeviceProvider object
-    private BluetoothDeviceProvider deviceProvider = BluetoothDeviceProvider
+    // Get DeviceProvider object
+    private DeviceProvider deviceProvider = DeviceProvider
             .getInstance();
 
     @Override
@@ -130,7 +134,7 @@ public class SettingsActivity extends PreferenceActivity implements
         initPreference(sharedPreferences, SettingsElements.SPEED);
 
         String tmpKey;
-        final BluetoothCommands[] tmpCommand = new BluetoothCommands[1];
+        final Commands[] tmpCommand = new Commands[1];
         for (final SettingsElements element : SettingsElements.values()) {
             tmpKey = element.getKey();
             if (tmpKey.endsWith("_N")) {
@@ -206,7 +210,7 @@ public class SettingsActivity extends PreferenceActivity implements
                 EditTextPreference tmpPref = (EditTextPreference) getPreference(element);
                 if (tmpPref != null) {
                     tmpPref.setSummary(element.getSummary());
-                    BluetoothCommands tmpCommand = element.getCommand();
+                    Commands tmpCommand = element.getCommand();
                     tmpPref.setPersistent(false);
                     String tmpValue = tmpCommand.getValue();
                     tmpPref.setTitle(tmpCommand.getCommand() + "(" + tmpValue
@@ -220,9 +224,9 @@ public class SettingsActivity extends PreferenceActivity implements
                 Preference tmpPref = getPreference(element);
                 if (tmpPref != null) {
                     tmpPref.setSummary(element.getSummary());
-                    BluetoothCommands tmpCommand = element.getCommand();
+                    Commands tmpCommand = element.getCommand();
                     String tmpTitle = tmpCommand.getCommand();
-                    if (tmpCommand == BluetoothCommands.LOGIN) {
+                    if (tmpCommand == Commands.LOGIN) {
                         tmpTitle = "at-login";
                     } else if (tmpTitle == null) {
                         tmpTitle = "???";

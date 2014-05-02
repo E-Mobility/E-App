@@ -1,7 +1,9 @@
-package de.dhbw.e_mobility.e_app;
+package de.dhbw.e_mobility.e_app.speedo;
 
 import android.app.Activity;
 import android.os.Bundle;
+
+import de.dhbw.e_mobility.e_app.R;
 
 public class SpeedoLandscapeActivity extends Activity {
 
