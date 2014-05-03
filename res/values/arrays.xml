@@ -1,11 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string-array name="settings_speed_entries">
+    <string-array name="settings_distance_long">
+        <item>Kilometer</item>
+        <item>Miles</item>
+    </string-array>
+    <string-array name="settings_distance_unit">
+        <item>km</item>
+        <item>miles</item>
+    </string-array>
+    <string-array name="settings_speed_unit">
         <item>km/h</item>
         <item>mph</item>
-    </string-array>
-    <string-array name="settings_speed_values">
-        <item>Einheit: km/h</item>
-        <item>Einheit: mph</item>
     </string-array>
 </resources>

@@ -2,21 +2,21 @@
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/tacho_hoch"
+    android:id="@+id/speedo_portrait"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="@android:color/darker_gray"
-    tools:context=".MainTabhost">
+    tools:context=".SpeedoPortraitActivity">
 
 
     <TextView
-        android:id="@+id/hoch_geschwindigkeit"
+        android:id="@+id/portrait_speed_title"
         android:layout_width="318dp"
         android:layout_height="wrap_content"
         android:gravity="center"
         android:textSize="@dimen/medium_text_size"
-        android:text="Geschwidigkeit:"
+        android:text="@string/speed"
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
     <LinearLayout
@@ -25,30 +25,28 @@
         android:layout_gravity="center_horizontal">
 
         <TextView
-            android:id="@+id/hoch_geschwindigkeit_zahl"
+            android:id="@+id/portrait_speed"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_weight="0.01"
             android:gravity="center"
-            android:text="16,7"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:textSize="@dimen/large_text_size" />
 
         <TextView
-            android:id="@+id/hoch_geschwindigkeit_einheit"
+            android:id="@+id/portrait_speed_unit"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_weight="0.02"
-            android:text="km/h"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:textSize="@dimen/medium_large_text_size" />
 
     </LinearLayout>
 
     <Spinner
-        android:id="@+id/hoch_modus"
+        android:id="@+id/portrait_mode"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
@@ -58,24 +56,24 @@
         android:paddingTop="10dp">
 
         <TextView
-            android:id="@+id/hoch_tour"
+            android:id="@+id/portrait_tour_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="10dp"
             android:layout_weight="1"
             android:textSize="@dimen/medium_large_text_size"
             android:gravity="center"
-            android:text="Aktuelle Tour:"
+            android:text="@string/current_tour"
             android:textAppearance="?android:attr/textAppearanceLarge" />
 
         <Button
-            android:id="@+id/hoch_tour_reset"
+            android:id="@+id/portrait_tour_reset"
             style="?android:attr/buttonStyleSmall"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:textSize="@dimen/medium_small_text_size"
-            android:text="Tour Reset" />
+            android:text="@string/tour_reset" />
     </LinearLayout>
 
     <LinearLayout
@@ -83,23 +81,23 @@
         android:layout_height="wrap_content">
 
         <TextView
-            android:id="@+id/hoch_tour_distanz"
+            android:id="@+id/portrait_distance_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center"
             android:textSize="@dimen/medium_text_size"
-            android:text="Distanz"
+            android:text="@string/distance"
             android:textAppearance="?android:attr/textAppearanceMedium" />
 
         <TextView
-            android:id="@+id/hoch_tour_dauer"
+            android:id="@+id/portrait_duration_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center"
             android:textSize="@dimen/medium_text_size"
-            android:text="Dauer"
+            android:text="@string/duration"
             android:textAppearance="?android:attr/textAppearanceMedium" />
 
     </LinearLayout>
@@ -109,36 +107,34 @@
         android:layout_height="wrap_content">
 
         <TextView
-            android:id="@+id/hoch_tour_distanz_zahl"
+            android:id="@+id/portrait_distance"
             android:layout_width="65dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="right"
-            android:text="25,6"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:textSize="@dimen/medium_text_size" />
 
         <TextView
-            android:id="@+id/hoch_tour_distanz_einheit"
+            android:id="@+id/portrait_distance_unit"
             android:layout_width="66dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center"
             android:textSize="@dimen/medium_text_size"
-            android:text="km"
             android:textAppearance="?android:attr/textAppearanceLarge" />
 
-        <Chronometer
-            android:id="@+id/hoch_tour_dauer_zahl"
+        <TextView
+            android:id="@+id/portrait_duration"
             android:layout_width="65dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="right"
-            android:text="Chronometer"
+            android:textAppearance="?android:attr/textAppearanceMedium"
             android:textSize="@dimen/medium_text_size" />
 
         <TextView
-            android:id="@+id/hoch_tour_dauer_einheit"
+            android:id="@+id/portrait_duration_unit"
             android:layout_width="65dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -160,13 +156,13 @@
             android:orientation="vertical">
 
             <TextView
-                android:id="@+id/hoch_akkustand"
+                android:id="@+id/portrait_battery_title"
                 android:layout_width="130dp"
                 android:layout_height="54dp"
                 android:layout_gravity="center"
                 android:textSize="@dimen/medium_text_size"
                 android:gravity="center"
-                android:text="Akkustand"
+                android:text="@string/battery"
                 android:textAppearance="?android:attr/textAppearanceLarge" />
 
             <LinearLayout
@@ -175,7 +171,7 @@
                 android:layout_weight="1">
 
                 <TextView
-                    android:id="@+id/hoch_akkustand_zahl"
+                    android:id="@+id/portrait_battery"
                     android:layout_width="89dp"
                     android:layout_height="wrap_content"
                     android:gravity="right|center"
@@ -184,7 +180,7 @@
                     android:textSize="@dimen/medium_text_size" />
 
                 <TextView
-                    android:id="@+id/hoch_akkustand_einheit"
+                    android:id="@+id/portrait_battery_unit"
                     android:layout_width="84dp"
                     android:layout_height="wrap_content"
                     android:text="%"
@@ -194,7 +190,7 @@
             </LinearLayout>
 
             <ImageView
-                android:id="@+id/hoch_akkustand_anzeige"
+                android:id="@+id/portrait_battery_image"
                 android:layout_width="136dp"
                 android:layout_height="42dp"
                 android:layout_gravity="center"
@@ -209,12 +205,12 @@
             android:orientation="vertical">
 
             <TextView
-                android:id="@+id/hoch_unterstuetzung"
+                android:id="@+id/portrait_assistance_title"
                 android:layout_width="wrap_content"
                 android:layout_height="54dp"
                 android:gravity="center"
                 android:textSize="@dimen/medium_text_size"
-                android:text="Unterstützung"
+                android:text="@string/assistance"
                 android:textAppearance="?android:attr/textAppearanceLarge" />
 
             <LinearLayout
@@ -222,7 +218,7 @@
                 android:layout_height="wrap_content">
 
                 <TextView
-                    android:id="@+id/hoch_unterstuetzung_einheit"
+                    android:id="@+id/portrait_assistance_unit"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -232,7 +228,7 @@
                     android:textSize="@dimen/medium_text_size" />
 
                 <TextView
-                    android:id="@+id/hoch_unterstuetzung_zahl"
+                    android:id="@+id/portrait_assistance"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -243,7 +239,7 @@
             </LinearLayout>
 
             <ImageView
-                android:id="@+id/hoch_unterstuetzung_anzeige"
+                android:id="@+id/portrait_assistance_image"
                 android:layout_width="136dp"
                 android:layout_height="42dp"
                 android:layout_weight="1"

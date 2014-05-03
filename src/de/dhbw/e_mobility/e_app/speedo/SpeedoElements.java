@@ -3,24 +3,37 @@ package de.dhbw.e_mobility.e_app.speedo;
 import de.dhbw.e_mobility.e_app.R;
 
 public enum SpeedoElements {
-    GESCHWINDIGKEIT(R.id.hoch_geschwindigkeit), GESCHWINDIGKEIT_ZAHL(R.id.hoch_geschwindigkeit_zahl),
-    GESCHWINDIGKEIT_EINHEIT(R.id.hoch_geschwindigkeit_einheit), MODUS(R.id.hoch_modus),
-    TOUR(R.id.hoch_tour), TOUR_RESET(R.id.hoch_tour_reset), TOUR_DISTANZ(R.id.hoch_tour_distanz),
-    TOUR_DISTANZ_ZAHL(R.id.hoch_tour_distanz_zahl), TOUR_DISTANZ_EINHEIT(R.id.hoch_tour_distanz_einheit),
-    TOUR_DAUER(R.id.hoch_tour_dauer), TOUR_DAUER_ZAHL(R.id.hoch_tour_dauer_zahl), TOUR_DAUER_EINHEIT(R.id.hoch_tour_dauer_einheit),
-    AKKUSTAND(R.id.hoch_akkustand), AKKUSTAND_ZAHL(R.id.hoch_akkustand_zahl), AKKUSTAND_EINHEIT(R.id.hoch_akkustand_einheit), AKKUSTAND_ANZEIGE(R.id.hoch_akkustand_anzeige),
-    UNTERSTUETZUNG(R.id.hoch_unterstuetzung), UNTERSTUETZUNG_ZAHL(R.id.hoch_unterstuetzung_zahl), UNTERSTUETZUNG_EINHEIT(R.id.hoch_unterstuetzung_einheit), UNTERSTUETZUNG_ANZEIGE(R.id.hoch_unterstuetzung_anzeige);
+    BLUETOOTH_ICON(R.id.tab_bluetooth_icon, R.id.landscape_bluetooth_icon), CLOCK(R.id.tab_clock, R.id.landscape_clock),
+    SPEED_TITLE(R.id.portrait_speed_title), SPEED(R.id.portrait_speed, R.id.landscape_speed), SPEED_UNIT(R.id.portrait_speed_unit, R.id.landscape_speed_unit),
+    MODE(R.id.portrait_mode, R.id.landscape_mode),
+    TOUR_TITLE(R.id.portrait_tour_title), TOUR_RESET(R.id.portrait_tour_reset),
+    DISTANCE_TITLE(R.id.portrait_distance_title), DISTANCE(R.id.portrait_distance), DISTANCE_UNIT(R.id.portrait_distance_unit),
+    DURATION_TITLE(R.id.portrait_duration_title), DURATION(R.id.portrait_duration), DURATION_UNIT(R.id.portrait_duration_unit),
+    BATTERY_TITLE(R.id.portrait_battery_title), BATTERY(R.id.portrait_battery, R.id.landscape_battery), BATTERY_UNIT(R.id.portrait_battery_unit, R.id.landscape_battery_unit), BATTERY_IMAGE(R.id.portrait_battery_image, R.id.landscape_battery_image),
+    ASSISTANCE_TITLE(R.id.portrait_assistance_title), ASSISTANCE(R.id.portrait_assistance, R.id.landscape_assistance), ASSISTANCE_UNIT(R.id.portrait_assistance_unit, R.id.landscape_assistance_unit), ASSISTANCE_IMAGE(R.id.portrait_assistance_image, R.id.landscape_assistance_image);
 
-    private int value;
+    private int portrait;
+    private int landscape;
 
     // Constructor
-    SpeedoElements(int theValue) {
-        value = theValue;
+    SpeedoElements(int thePortrait, int theLandscape) {
+        portrait = thePortrait;
+        landscape = theLandscape;
     }
 
-    // Returns the value
-    public int getValue() {
-        return value;
+    // Constructor
+    SpeedoElements(int thePortrait) {
+        this(thePortrait, 0);
+    }
+
+    // Returns the portrait element
+    public int getPortrait() {
+        return portrait;
+    }
+
+    // Returns the landscape element
+    public int getLandscape() {
+        return landscape;
     }
 
     @Override

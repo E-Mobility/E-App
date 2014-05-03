@@ -8,10 +8,16 @@ public enum SpeedoValues {
     T("T"), // (%) Gasgriffstellung / accelerator throttle position
     M("M"), // (A) Aktueller max. Strom / current max amperage
     D("D"), // (multiple of 50x speedometer impulse) Distanz / distnace
-    P("P"); // Aktuelles Profil / current profile
+    P("P"), // Aktuelles Profil / current profile
+    DISTANCE, DURATION;
 
     private float value;
     private String command;
+
+    // Constructor
+    SpeedoValues() {
+        this(null);
+    }
 
     // Constructor
     SpeedoValues(String theCommand) {
@@ -22,6 +28,11 @@ public enum SpeedoValues {
     // Returns the appendent command
     public String getCommand() {
         return command;
+    }
+
+    // Saves a string
+    public void saveString(String theString) {
+        command = theString;
     }
 
     // Returns the appendent value

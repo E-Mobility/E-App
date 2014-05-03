@@ -131,7 +131,7 @@ public class SettingsActivity extends PreferenceActivity implements
         SharedPreferences sharedPreferences = PreferenceManager
                 .getDefaultSharedPreferences(this);
         initPreference(sharedPreferences, SettingsElements.PASSWORD);
-        initPreference(sharedPreferences, SettingsElements.SPEED);
+        initPreference(sharedPreferences, SettingsElements.DISTANCE);
 
         String tmpKey;
         final Commands[] tmpCommand = new Commands[1];

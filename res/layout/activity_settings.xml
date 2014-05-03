@@ -31,11 +31,11 @@
         android:title="@string/settings_autolog" />
 
     <ListPreference
-        android:defaultValue="Einheit: km/h"
-        android:entries="@array/settings_speed_entries"
-        android:entryValues="@array/settings_speed_values"
-        android:key="settings_speed"
-        android:title="@string/settings_speed" />
+        android:defaultValue="km"
+        android:entries="@array/settings_distance_long"
+        android:entryValues="@array/settings_distance_unit"
+        android:key="settings_distance"
+        android:title="@string/settings_distance" />
 
     <CheckBoxPreference
         android:defaultValue="false"

@@ -38,7 +38,7 @@
     <string name="bluetooth_bound_none">Entkoppelt</string>
 
 
-    <string name="speed">Speed</string>
+    <string name="speed">Geschwindigkeit</string>
     <string name="current_tour">Aktuelle Tour</string>
     <string name="tour_reset">Tour Reset</string>
     <string name="distance">Distanz</string>

@@ -7,16 +7,18 @@ import android.content.res.Resources;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.os.SystemClock;
 import android.util.Log;
 import android.widget.Toast;
 
 import java.util.HashMap;
 import java.util.Vector;
+import java.util.concurrent.TimeUnit;
 
 import de.dhbw.e_mobility.e_app.R;
+import de.dhbw.e_mobility.e_app.bluetooth.BluetoothInfoState;
 import de.dhbw.e_mobility.e_app.bluetooth.Commands;
 import de.dhbw.e_mobility.e_app.bluetooth.DeviceProvider;
-import de.dhbw.e_mobility.e_app.bluetooth.BluetoothInfoState;
 import de.dhbw.e_mobility.e_app.settings.SettingsElements;
 import de.dhbw.e_mobility.e_app.speedo.SpeedoValues;
 
@@ -36,6 +38,8 @@ public class ActivityHandler {
     private Context mainContext;
     // Others
     private boolean loggedIn;
+    private long duration_start;
+    private long duration;
 
     // Constructor
     private ActivityHandler() {
@@ -145,6 +149,7 @@ public class ActivityHandler {
     // Saves the main context
     public void setMainContext(Context theContext) {
         mainContext = theContext;
+        initChronometer();
     }
 
     // Fires a BluetoothInfoState to one of the handlers
@@ -250,23 +255,23 @@ public class ActivityHandler {
         return tmpPref != null && tmpPref.getBoolean(SettingsElements.AUTOLOG.getKey(), false);
     }
 
-    // Checks the saved speed settings
-    public float getSpeedFactor() {
-        if (!isKmh()) {
-            return (float) 0.625;
+    // Checks the saved unit factor settings
+    public float getUnitFactor() {
+        if (!isKm()) {
+            return (float) 0.621371192;
         }
         return 1;
     }
 
-    // Checks if the current speed unit is km/h
-    public boolean isKmh() {
+    // Checks if the current speed unit is km
+    public boolean isKm() {
         SharedPreferences tmpPref = getSharedPref();
         if (tmpPref != null) {
             Resources res = mainContext.getResources();
-            String[] speedUnits = res.getStringArray(R.array.settings_speed_values);
-            if (speedUnits.length > 1) {
-                if (!tmpPref.getString(SettingsElements.SPEED.getKey(), "").equals(
-                        speedUnits[1])) {
+            String[] distanceUnits = res.getStringArray(R.array.settings_distance_unit);
+            if (distanceUnits.length > 1) {
+                if (!tmpPref.getString(SettingsElements.DISTANCE.getKey(), "").equals(
+                        distanceUnits[1])) {
                     return true;
                 }
             }
@@ -299,5 +304,39 @@ public class ActivityHandler {
             return tmpPref.getString(SettingsElements.DEVICE.getKey(), null);
         }
         return null;
+    }
+
+    // Initialize the chronometer
+    private void initChronometer() {
+        duration = 0;
+        duration_start = -1;
+    }
+
+    // Returns the current value of the chronometer
+    public String getChronometerVal() {
+        long millis = duration;
+        if (duration_start != -1) {
+            millis = SystemClock.elapsedRealtime() - duration_start + duration;
+        }
+        // Format milliseconds to output text
+        String tmp_duration = String.format("%02d:%02d:%02d", TimeUnit.MILLISECONDS.toHours(millis),
+                TimeUnit.MILLISECONDS.toMinutes(millis) - TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(millis)),
+                TimeUnit.MILLISECONDS.toSeconds(millis) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(millis)));
+        SpeedoValues.DURATION.saveString(tmp_duration);
+        return tmp_duration;
+    }
+
+    // Starts the chronometer
+    public void startChronometer() {
+        if (duration_start == -1) {
+            duration_start = SystemClock.elapsedRealtime();
+        }
+    }
+
+    // Stops the chronometer
+    public void stopChronometer() {
+        long millis = SystemClock.elapsedRealtime() - duration_start;
+        duration += millis;
+        duration_start = -1;
     }
 }

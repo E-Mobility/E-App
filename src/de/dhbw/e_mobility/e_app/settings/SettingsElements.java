@@ -7,7 +7,7 @@ public enum SettingsElements {
     BLUETOOTH("settings_bluetooth"), //
     PASSWORD("settings_password"), //
     AUTOLOG("settings_autolog"), //
-    SPEED("settings_speed"), //
+    DISTANCE("settings_distance"), //
     ADVANCED("settings_advanced"), //
     CONTROLLER("settings_controller"), //
     DEVICE("settings_device"), //

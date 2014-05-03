@@ -4,91 +4,90 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".TachoQuerActivity" >
+    tools:context=".TachoQuerActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
+        android:layout_height="wrap_content">
 
         <ImageView
-            android:id="@+id/imageView1"
+            android:id="@+id/landscape_bluetooth_icon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="left"
             android:layout_weight="1.02"
             android:src="@android:drawable/stat_sys_data_bluetooth" />
 
-         <TextView
-             android:id="@+id/textView11"
-             android:layout_width="82dp"
-             android:layout_height="wrap_content"
-             android:gravity="right|center"
-             android:text="50"
-             android:textAppearance="?android:attr/textAppearanceMedium"
-             android:textSize="@dimen/medium_text_size" />
+        <TextView
+            android:id="@+id/landscape_battery"
+            android:layout_width="82dp"
+            android:layout_height="wrap_content"
+            android:gravity="right|center"
+            android:text="50"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textSize="@dimen/medium_text_size" />
 
-          <TextView
-              android:id="@+id/textView12"
-              android:layout_width="wrap_content"
-              android:layout_height="wrap_content"
-              android:layout_weight="0.42"
-              android:text="%"
-              android:textAppearance="?android:attr/textAppearanceMedium"
-              android:textSize="@dimen/medium_text_size" />
+        <TextView
+            android:id="@+id/landscape_battery_unit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.42"
+            android:text="%"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textSize="@dimen/medium_text_size" />
 
-          <ProgressBar
-              android:id="@+id/progressBar1"
-              style="?android:attr/progressBarStyleHorizontal"
-              android:layout_width="wrap_content"
-              android:layout_height="wrap_content"
-              android:layout_weight="1.39"
-              android:progress="50" />
-          
-          <TextView
-              android:id="@+id/textView14"
-              android:layout_width="wrap_content"
-              android:layout_height="wrap_content"
-              android:layout_weight="1"
-              android:gravity="right"
-              android:text="Stufe"
-              android:textAppearance="?android:attr/textAppearanceMedium"
-              android:textSize="@dimen/medium_text_size" />
+        <ProgressBar
+            android:id="@+id/landscape_battery_image"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1.39"
+            android:progress="50" />
 
-                        <TextView
-                            android:id="@+id/textView15"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="0.33"
-                            android:gravity="center"
-                            android:textSize="@dimen/medium_text_size"
-                            android:text="1"
-                            android:textAppearance="?android:attr/textAppearanceMedium" />
+        <TextView
+            android:id="@+id/landscape_assistance_unit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="right"
+            android:text="Stufe"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textSize="@dimen/medium_text_size" />
 
-                        <ImageView
-                            android:id="@+id/ImageView01"
-                            android:layout_width="40dp"
-                            android:layout_height="match_parent"
-                            android:layout_weight="1"
-                            android:src="@android:drawable/button_onoff_indicator_on" />
-        
+        <TextView
+            android:id="@+id/landscape_assistance"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.33"
+            android:gravity="center"
+            android:textSize="@dimen/medium_text_size"
+            android:text="1"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+
+        <ImageView
+            android:id="@+id/landscape_assistance_image"
+            android:layout_width="40dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:src="@android:drawable/button_onoff_indicator_on" />
+
         <DigitalClock
-            android:id="@+id/digitalClock1"
+            android:id="@+id/landscape_clock"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="right"
             android:layout_weight="1"
             android:gravity="right"
-            android:text="DigitalClock"
             android:textSize="@dimen/medium_text_size" />
 
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent" >
+        android:layout_height="match_parent">
 
         <TextView
-            android:id="@+id/textView5"
+            android:id="@+id/landscape_speed"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
@@ -102,10 +101,10 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_weight="0.29"
-            android:orientation="vertical" >
+            android:orientation="vertical">
 
             <Spinner
-                android:id="@+id/spinner1"
+                android:id="@+id/landscape_mode"
                 android:layout_width="150dp"
                 android:layout_height="15dp"
                 android:layout_gravity="right"
@@ -113,13 +112,12 @@
                 android:layout_weight="0.25" />
 
             <TextView
-                android:id="@+id/textView4"
+                android:id="@+id/landscape_speed_unit"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_weight="0.21"
                 android:gravity="top|left"
-                android:text="km/h"
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:textSize="@dimen/medium_large_text_size" />
 
