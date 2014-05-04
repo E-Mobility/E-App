@@ -87,7 +87,7 @@ public class MainTabhost extends ActivityGroup {
             deviceProvider.unregisterReceiver();
             deviceProvider = null;
         }
-        activityHandler.stopChronometer();
+        activityHandler.stopDurationTimer();
     }
 
     @Override

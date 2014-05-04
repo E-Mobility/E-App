@@ -149,7 +149,8 @@ public class ActivityHandler {
     // Saves the main context
     public void setMainContext(Context theContext) {
         mainContext = theContext;
-        initChronometer();
+        duration = 0;
+        duration_start = -1;
     }
 
     // Fires a BluetoothInfoState to one of the handlers
@@ -306,14 +307,8 @@ public class ActivityHandler {
         return null;
     }
 
-    // Initialize the chronometer
-    private void initChronometer() {
-        duration = 0;
-        duration_start = -1;
-    }
-
-    // Returns the current value of the chronometer
-    public String getChronometerVal() {
+    // Returns the current value of the duration timer
+    public String getDuration() {
         long millis = duration;
         if (duration_start != -1) {
             millis = SystemClock.elapsedRealtime() - duration_start + duration;
@@ -326,15 +321,15 @@ public class ActivityHandler {
         return tmp_duration;
     }
 
-    // Starts the chronometer
-    public void startChronometer() {
+    // Starts the duration timer
+    public void startDurationTimer() {
         if (duration_start == -1) {
             duration_start = SystemClock.elapsedRealtime();
         }
     }
 
-    // Stops the chronometer
-    public void stopChronometer() {
+    // Stops the duration timer
+    public void stopDurationTimer() {
         long millis = SystemClock.elapsedRealtime() - duration_start;
         duration += millis;
         duration_start = -1;

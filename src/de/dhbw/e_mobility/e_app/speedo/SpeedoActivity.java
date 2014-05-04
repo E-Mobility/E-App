@@ -51,7 +51,7 @@ public abstract class SpeedoActivity extends Activity {
         distanceNumberFormat.setMinimumFractionDigits(distanceDecimalPlace);
         distanceNumberFormat.setMaximumFractionDigits(distanceDecimalPlace);
 
-        activityHandler.startChronometer();
+        activityHandler.startDurationTimer();
     }
 
     // Testmetohd TODO del?
@@ -128,7 +128,7 @@ public abstract class SpeedoActivity extends Activity {
                 // Update duration
                 TextView duration_view = (TextView) getElement(SpeedoElements.DURATION);
                 if (duration_view != null) {
-                    String duration = activityHandler.getChronometerVal(); //SpeedoValues.DURATION.getCommand();
+                    String duration = activityHandler.getDuration(); //SpeedoValues.DURATION.getCommand();
 
                     // TODO was ist hier mit NULLpointer??
                     if (!duration_view.getText().equals(duration)) {

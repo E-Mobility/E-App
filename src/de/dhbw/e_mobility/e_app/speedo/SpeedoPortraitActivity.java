@@ -21,9 +21,9 @@ public class SpeedoPortraitActivity extends SpeedoActivity {
             @Override
             public void onClick(View view) {
                 if (timerAn) {
-                    activityHandler.stopChronometer();
+                    activityHandler.stopDurationTimer();
                 } else {
-                    activityHandler.startChronometer();
+                    activityHandler.startDurationTimer();
                 }
                 timerAn = !timerAn;
             }
