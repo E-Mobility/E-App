@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.view.WindowManager;
 import android.widget.TabHost;
 import android.widget.TabHost.TabSpec;
 
@@ -35,6 +36,9 @@ public class MainTabhost extends ActivityGroup {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_tabs);
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+
+
         // TODO changeContentView();
 
         activityHandler.setMainContext(this);
@@ -87,7 +91,7 @@ public class MainTabhost extends ActivityGroup {
             deviceProvider.unregisterReceiver();
             deviceProvider = null;
         }
-        activityHandler.stopDurationTimer();
+        // activityHandler.stopDurationTimer(); TODO del?
     }
 
     @Override

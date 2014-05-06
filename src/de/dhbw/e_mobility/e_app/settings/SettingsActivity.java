@@ -19,14 +19,14 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import de.dhbw.e_mobility.e_app.bluetooth.Commands;
+import de.dhbw.e_mobility.e_app.R;
+import de.dhbw.e_mobility.e_app.bluetooth.Command;
 import de.dhbw.e_mobility.e_app.bluetooth.DeviceProvider;
 import de.dhbw.e_mobility.e_app.common.ActivityHandler;
 import de.dhbw.e_mobility.e_app.common.IntentKeys;
-import de.dhbw.e_mobility.e_app.R;
-import de.dhbw.e_mobility.e_app.dialog.ReallyDialog;
 import de.dhbw.e_mobility.e_app.dialog.BluetoothDialogDisconnect;
 import de.dhbw.e_mobility.e_app.dialog.BluetoothDialogDiscovery;
+import de.dhbw.e_mobility.e_app.dialog.ReallyDialog;
 
 /**
  * This is the main Activity that displays the current connection session.
@@ -44,7 +44,7 @@ public class SettingsActivity extends PreferenceActivity implements
     private static final int SETTINGS_REQUEST_ADVANCED = 4;
     private static final int SETTINGS_REQUEST_COMMAND = 5;
 
-    private Commands clickedCommand;
+    private Command clickedCommand;
 
     // Get ActivityHandler object
     private ActivityHandler activityHandler = ActivityHandler.getInstance();
@@ -62,9 +62,6 @@ public class SettingsActivity extends PreferenceActivity implements
         addPreferencesFromResource(R.layout.activity_settings);
         setTheme(android.R.style.Theme_Black);
 
-        // Handler myHandler = getHandler();
-        // deviceProvider.setSettingsActivityHandler(myHandler);
-
         // Set setOnPreferenceClickListener to preferences
         Preference pref_bluetooth = getPreference(SettingsElements.BLUETOOTH);
         if (pref_bluetooth != null) {
@@ -72,18 +69,25 @@ public class SettingsActivity extends PreferenceActivity implements
                     .setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
                         @Override
                         public boolean onPreferenceClick(Preference preference) {
-                            // If already loged in asking for logout
+                            // Disable the preference, that user has to wait for feedback
+                            enableBluetoothPreference(false);
+
+                            // If already logged in asking for logout
                             if (settingsProvider.isLoggedIn()) {
-                                startActivityForResult(new Intent(
-                                                getApplicationContext(),
-                                                BluetoothDialogDisconnect.class),
-                                        BLUETOOTH_REQUEST_DISCONNECT
-                                );
+                                logout();
                                 return true;
                             }
-                            // TODO wenn auto login aus ist, funktioniert der login nicht mehr?!
                             deviceProvider.login();
                             return true;
+                        }
+
+                        // Asking if user really wants to log out
+                        private void logout() {
+                            startActivityForResult(new Intent(
+                                            getApplicationContext(),
+                                            BluetoothDialogDisconnect.class),
+                                    BLUETOOTH_REQUEST_DISCONNECT
+                            );
                         }
                     });
         }
@@ -134,7 +138,7 @@ public class SettingsActivity extends PreferenceActivity implements
         initPreference(sharedPreferences, SettingsElements.DISTANCE);
 
         String tmpKey;
-        final Commands[] tmpCommand = new Commands[1];
+        final Command[] tmpCommand = new Command[1];
         for (final SettingsElements element : SettingsElements.values()) {
             tmpKey = element.getKey();
             if (tmpKey.endsWith("_N")) {
@@ -210,7 +214,7 @@ public class SettingsActivity extends PreferenceActivity implements
                 EditTextPreference tmpPref = (EditTextPreference) getPreference(element);
                 if (tmpPref != null) {
                     tmpPref.setSummary(element.getSummary());
-                    Commands tmpCommand = element.getCommand();
+                    Command tmpCommand = element.getCommand();
                     tmpPref.setPersistent(false);
                     String tmpValue = tmpCommand.getValue();
                     tmpPref.setTitle(tmpCommand.getCommand() + "(" + tmpValue
@@ -224,9 +228,9 @@ public class SettingsActivity extends PreferenceActivity implements
                 Preference tmpPref = getPreference(element);
                 if (tmpPref != null) {
                     tmpPref.setSummary(element.getSummary());
-                    Commands tmpCommand = element.getCommand();
+                    Command tmpCommand = element.getCommand();
                     String tmpTitle = tmpCommand.getCommand();
-                    if (tmpCommand == Commands.LOGIN) {
+                    if (tmpCommand == Command.LOGIN) {
                         tmpTitle = "at-login";
                     } else if (tmpTitle == null) {
                         tmpTitle = "???";
@@ -309,16 +313,27 @@ public class SettingsActivity extends PreferenceActivity implements
                 } else if (msg.what == IntentKeys.START_DISCOVERING_DEVICES.getValue()) {
                     // STARTING THE DISCOVERY DIALOG
                     startActivityForResult(new Intent(getApplicationContext(),
-                                    BluetoothDialogDiscovery.class),
-                            BLUETOOTH_REQUEST_DISCOVERY
+                    BluetoothDialogDiscovery.class),
+                    BLUETOOTH_REQUEST_DISCOVERY
                     );
-
+                } else if (msg.what == IntentKeys.ENABLE_BLUETOOTH_PREF.getValue()) {
+                    enableBluetoothPreference(true);
+                } else if (msg.what == IntentKeys.DISABLE_BLUETOOTH_PREF.getValue()) {
+                    enableBluetoothPreference(false);
                 } else if (msg.what == IntentKeys.UPDATE_BT_INFO.getValue()) {
                     updateBluetoothInfo();
                 }
             }
 
         };
+    }
+
+    // Enables / disables the preference element for bluetooth settings
+    private void enableBluetoothPreference(boolean value) {
+        Preference pref_bluetooth = getPreference(SettingsElements.BLUETOOTH);
+        if (pref_bluetooth != null) {
+            pref_bluetooth.setEnabled(value);
+        }
     }
 
     // Returns a string from the data bundle
@@ -341,6 +356,8 @@ public class SettingsActivity extends PreferenceActivity implements
             if (reqCode == Activity.RESULT_OK) {
                 // Do next step for login
                 deviceProvider.doOnResult();
+            } else{
+                enableBluetoothPreference(true);
             }
         } else if (resCode == BLUETOOTH_REQUEST_DISCONNECT) {
             // If Bluetooth-Deivce should disconnect
@@ -356,6 +373,8 @@ public class SettingsActivity extends PreferenceActivity implements
                 deviceProvider.setDevice(address);
                 // Do next step for login
                 deviceProvider.doOnResult();
+            } else{
+                enableBluetoothPreference(true);
             }
         } else if (resCode == SETTINGS_REQUEST_ADVANCED) {
             CheckBoxPreference advancedPref = (CheckBoxPreference) getPreference(SettingsElements.ADVANCED);
@@ -364,7 +383,6 @@ public class SettingsActivity extends PreferenceActivity implements
                 enableAdvancedSettings(true, advancedPref);
             }
         } else if (resCode == SETTINGS_REQUEST_COMMAND) {
-            // TODO bessere loesung fuer zwischenspeicherung finden.. ((WIRKLICH??))
             if (reqCode == Activity.RESULT_OK) {
                 deviceProvider.sendCommand(clickedCommand);
             }

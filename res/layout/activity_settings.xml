@@ -11,6 +11,7 @@
 
     <Preference
         android:key="settings_bluetooth"
+        android:summary="bluetooth_pref_sum_init"
         android:title="@string/settings_bluetooth" />
 
     <!--

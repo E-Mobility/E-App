@@ -27,15 +27,18 @@
     <string name="discovery_pairedDevices">Pairing-Geräte</string>
     <string name="discovery_devices">Verfügbare Geräte</string>
     <string name="discovery_scan">Nach Geräten suchen</string>
- 
+
     <string name="device_offline">Gerät ist nicht erreichbar</string>
     <string name="device_not_paired">Gerät ist nicht gekoppelt</string>
 
     <!-- SettingsActivity -->
-    
+
     <string name="bluetooth_bound_bounded">Erfolgreich gekoppelt mit </string>
     <string name="bluetooth_bound_bounding">Kopplung läuft &#8230;</string>
     <string name="bluetooth_bound_none">Entkoppelt</string>
+
+    <string name="bluetooth_pref_sum_init">Tippen um zu verbinden</string>
+    <string name="login_failed_wrong_pw">Login fehlgeschlagen (evtl. falsches Passwort)</string>
 
 
     <string name="speed">Speed</string>
@@ -62,14 +65,14 @@
     <string name="settings_autolog">Auto Login</string>
     <string name="settings_bluetooth">Bluetooth</string>
     <string name="settings">Einstellungen</string>
-    
+
     <string name="settings_discovery_no_device">Es wurde kein Gerät ausgewält</string>
     <string name="settings_bluetoothNotAvailable">Bluetooth ist leider nicht möglich!</string>
     <string name="settings_bluetoothDisabled">Bluetooth ist deaktiviert</string>
     <string name="settings_bluetoothEnabled">Bluetooth aktiv, aber nicht verbunden</string>
     <string name="settings_bluetoothConnected">Verbunden mit </string>
     <string name="settings_bluetoothDisconnected">Verbindung getrennt</string>
-    
+
     <string name="title_connecting">connecting...</string>
     <string name="title_connected_to">connected: </string>
     <string name="title_not_connected">not connected</string>
@@ -87,14 +90,14 @@
     <string name="dialog_yes">Ja</string>
     <string name="dialog_no">Nein</string>
 
-    
-    
+
+
     <string name="bluetooth_info_enabled">Bluetooth aktiviert</string>
     <string name="bluetooth_info_connected">Verbunden mit&#x00A0;</string>
     <string name="bluetooth_info_loggedin">Eingeloggt bei&#x00A0;</string>
     <string name="bluetooth_info_none">Bluetooth nicht verfügbar</string>
 
-    
+
     <string name="digitalclock">Digitaluhr</string>
-    
+
 </resources>

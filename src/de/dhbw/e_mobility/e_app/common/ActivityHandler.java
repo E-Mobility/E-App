@@ -17,7 +17,7 @@ import java.util.concurrent.TimeUnit;
 
 import de.dhbw.e_mobility.e_app.R;
 import de.dhbw.e_mobility.e_app.bluetooth.BluetoothInfoState;
-import de.dhbw.e_mobility.e_app.bluetooth.Commands;
+import de.dhbw.e_mobility.e_app.bluetooth.Command;
 import de.dhbw.e_mobility.e_app.bluetooth.DeviceProvider;
 import de.dhbw.e_mobility.e_app.settings.SettingsElements;
 import de.dhbw.e_mobility.e_app.speedo.SpeedoValues;
@@ -31,7 +31,7 @@ public class ActivityHandler {
     private Handler handlerSettings = null;
     private Handler handlerDiscovery = null;
     // Maps with all commands or values
-    private HashMap<String, Commands> bluetooth_commands = null;
+    private HashMap<String, Command> bluetooth_commands = null;
     private HashMap<String, SpeedoValues> speedo_values = null;
     // Handling with activities
     private Vector<Activity> activities;
@@ -170,18 +170,6 @@ public class ActivityHandler {
         return true;
     }
 
-    // Fires a message plus a resource text to one of the handlers
-    //public boolean fireToHandler(int handlerID, int what, int resId, String txt) {
-    //    // TODO DEL
-    //    return fireToHandler(handlerID, what, getStr(resId) + txt);
-    //}
-
-    // Fires a resource text to one of the handlers
-    //public boolean fireToHandler(int handlerID, int what, int resId) {
-    //      // TODO DEL
-    //    return fireToHandler(handlerID, what, getStr(resId));
-    //}
-
     // Fires a message to one of the handlers
     public boolean fireToHandler(int handlerID, int what, String txt) {
         Bundle bundle = new Bundle();
@@ -225,8 +213,8 @@ public class ActivityHandler {
     // Saves all bluetooth commands in the map
     private void saveBluetoothCommands() {
         // Prepare the commands
-        bluetooth_commands = new HashMap<String, Commands>();
-        for (Commands command : Commands.values()) {
+        bluetooth_commands = new HashMap<String, Command>();
+        for (Command command : Command.values()) {
             bluetooth_commands.put(command.getCommand(), command);
         }
     }
@@ -241,7 +229,7 @@ public class ActivityHandler {
     }
 
     // Returns the bluetooth command map
-    public HashMap<String, Commands> getBluetoothCommands() {
+    public HashMap<String, Command> getBluetoothCommands() {
         return bluetooth_commands;
     }
 

@@ -2,7 +2,7 @@ package de.dhbw.e_mobility.e_app.bluetooth;
 
 import android.util.Log;
 
-public enum Commands {
+public enum Command {
     AT("at"), // Attetion
     AT_0("at-0"), // Attention without response
     AT_DFLT("at-dflt"), // Auf Werkseinstellungen zuruecksetzten
@@ -58,7 +58,7 @@ public enum Commands {
     private String value;
 
     // Constructor
-    private Commands(String theCommand) {
+    private Command(String theCommand) {
         command = theCommand;
         value = null;
     }

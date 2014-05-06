@@ -2,9 +2,16 @@ package de.dhbw.e_mobility.e_app.bluetooth;
 
 public enum BluetoothInfoState {
 
-    NONE("Kein Bluetooth verfügbar!"), DISCONNECTED("Nicht verbunden"), OFF(
-            "Bluetooth ist ausgeschaltet"), ON("Bluetooth ist eingeschaltet"), CONNECTED(
-            "Login fehlgeschlagen bei "), LOGGED_IN("Angemeldet an ");
+    NONE("Kein Bluetooth verfügbar!"),
+    INITIALIZED("Tippen um zu verbinden"),
+    ON("Bluetooth ist eingeschaltet"),
+    DEVICE_KNOWN("Gerät bereits gewählt"),
+    UNPAIRED("Gerät nicht gekoppelt"),
+    PAIRED("Gerät gekoppelt"),
+    CONNECTION_FAILED("Verbindung fehlgeschlagen"),
+    ACL_CONNECTED("Verbunden"),
+    LOGGED_IN("Verbunden mit "),
+    ACL_DISCONNECTED("Verbindung beendet");
 
     private String text;
 

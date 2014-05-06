@@ -9,134 +9,72 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 
+import de.dhbw.e_mobility.e_app.R;
 import de.dhbw.e_mobility.e_app.common.ActivityHandler;
 import de.dhbw.e_mobility.e_app.common.IntentKeys;
 import de.dhbw.e_mobility.e_app.speedo.SpeedoValues;
 
 public class ConnectionService {
 
-    // Current ServiceState
-    private ServiceState serviceState;
-
-    // Attributes to save the things before
-    private Commands lastCommand;
-    private String lastPush;
-
     // Get ActivityHandler object
     private ActivityHandler activityHandler = ActivityHandler.getInstance();
 
     // Threads
-    private ConnectThread connectThread;
-    private ConnectedThread connectedThread;
-    private HoldConnectionThread holdConnectionThread;
+    private SetupConnection setupConnection;
+    private ActiveConnection activeConnection;
+    private HoldConnection holdConnection;
+    private LoginTimeout loginTimeout;
 
     // Constructor
     public ConnectionService() {
-        serviceState = ServiceState.INIT;
-        lastCommand = null;
-        connectThread = null;
-        connectedThread = null;
-        holdConnectionThread = null;
+        setupConnection = null;
+        activeConnection = null;
+        holdConnection = null;
+        loginTimeout = null;
     }
 
     // Checks the if there is a connection currently
     public void checkConnectionAndLogin(BluetoothDevice device) {
-        if (serviceState == ServiceState.LOGGED_IN) {
-            activityHandler.fireToHandler(
-                    IntentKeys.HANDLLER_DEVICE_PROVIDER.getValue(),
-                    BluetoothInfoState.LOGGED_IN);
-        } else {
-            if (serviceState == ServiceState.LOGOUT) {
-                init();
-            }
-            connect(device);
-        }
-    }
-
-    // Initialize state and threads
-    private void init() {
-        serviceState = ServiceState.INIT;
-        cancelHoldConnectionThread();
-        if (connectedThread != null) {
-            connectedThread.init();
-            connectedThread = null;
-        }
-        cancelConnectThread();
-    }
-
-    // Starts the ConnectThread
-    private synchronized void connect(BluetoothDevice theDevice) {
-        // Cancel connect thread for reconnecting
-        cancelConnectThread();
-
-        // Cancel any thread currently running a connection
-        cancelConnectedThread();
-
-        // Start the thread to connect with the given device
-        connectThread = new ConnectThread(theDevice);
-        serviceState = ServiceState.CONNECTING;
-        connectThread.start();
-    }
-
-    // Starts the ConnectedThread
-    private synchronized void connected(BluetoothSocket theSocket) {
-        // Cancel any thread currently running a connection
-        cancelConnectedThread();
-
-        // Start the thread to manage the connection and perform transmissions
-        connectedThread = new ConnectedThread(theSocket);
-        // serviceState = ServiceState.CONNECTED;
-        connectedThread.start();
-    }
-
-    // Sends a command to the controller
-    private void write(Commands command) {
-        if (serviceState != ServiceState.LOGGED_IN
-                && serviceState != ServiceState.LOGIN) {
+        if (isLoggedIn()) {
+            fireToHandler(BluetoothInfoState.LOGGED_IN);
             return;
         }
-        if (connectedThread != null) {
-            connectedThread.write(command);
-        }
+        connect(device);
     }
 
-    // Cancels the mHoldConnectionThread
-    private synchronized void cancelHoldConnectionThread() {
-        if (holdConnectionThread != null) {
-            holdConnectionThread.interrupt();
-            holdConnectionThread = null;
-        }
+    // Returns true if active connection thread is running
+    private boolean isLoggedIn() {
+        return (activeConnection != null);
     }
 
-    // Cancels the mConnectThread
-    private synchronized void cancelConnectThread() {
-        if (connectThread != null) {
-            connectThread.interrupt();
-            connectThread.init();
-            connectThread = null;
-        }
+    // Starts the SetupConnection thread
+    private void connect(BluetoothDevice theDevice) {
+        // First close all threads if they are running
+        closeAllThreads();
+
+        // Start the thread to connect with the given device
+        setupConnection = new SetupConnection(theDevice);
+        setupConnection.start();
     }
 
-    // Cancels the mConnectedThread
-    private synchronized void cancelConnectedThread() {
-        if (connectedThread != null) {
-            connectedThread.cancel();
-            connectedThread = null;
-        }
+    // Starts the ActiveConnection
+    private void connected(BluetoothSocket theSocket) {
+        // Start the thread to handle the data transfer with the controller
+        activeConnection = new ActiveConnection(theSocket);
+        activeConnection.start();
     }
 
     // Saves the pushed values
     private void savePushValues(String pushValues) {
-        String typ = Commands.AT_PUSH_N.getValue();
+        String typ = Command.AT_PUSH_N.getValue();
         if (typ != null) {
             if (typ.equals("1")) {
                 String tmp[];
                 for (String line : pushValues.split("\n")) {
-                    tmp = line.split("[\\s]+");
+                    tmp = line.split("[\t\\s]+");
                     if (tmp.length > 6) {
                         SpeedoValues.U.setValue(Float.valueOf(tmp[0]) / 10); // from 1/10 V to V
                         SpeedoValues.I.setValue(Float.valueOf(tmp[1]) / 1000); // from mA to A
@@ -173,7 +111,7 @@ public class ConnectionService {
     // Saves the received parameter list
     private void saveParamList(String paramList) {
         // Prepare the commands
-        HashMap<String, Commands> bluetooth_commands = activityHandler
+        HashMap<String, Command> bluetooth_commands = activityHandler
                 .getBluetoothCommands();
 
         // Read the parameter list
@@ -193,59 +131,58 @@ public class ConnectionService {
         }
     }
 
-    // Sends the wanted command
-    public void sendCommand(Commands command) {
-        write(command);
+    // Sends a command to the controller
+    public void sendCommand(Command command) {
+        if (isLoggedIn()) {
+            activeConnection.send(command);
+        }
     }
 
-    // Stops all threads
-    public synchronized void stop() {
-        Log.d("CONNECTION-SERVICE", "stop()");
-        serviceState = ServiceState.LOGOUT;
-        cancelHoldConnectionThread();
-        cancelConnectedThread();
+    // Fires a state update to the handler
+    private void fireToHandler(BluetoothInfoState theState) {
+        activityHandler.fireToHandler(IntentKeys.HANDLLER_DEVICE_PROVIDER.getValue(), theState);
     }
 
-    // Different states of the controller connection
-    private enum ServiceState {
-        INIT, LOGOUT, CONNECTING, CONNECTED, LOGIN, LOGGED_IN
+    // Logout from controller and close the socket
+    public void logout() {
+        sendCommand(Command.AT_LOGOUT);
+        closeAllThreads();
     }
 
-    /**
-     * This thread runs while attempting to make an outgoing connection with a
-     * device. It runs straight through; the connection either succeeds or
-     * fails.
-     */
-    private class ConnectThread extends Thread {
+    // Cancels all threads
+    public void closeAllThreads() {
+        if (holdConnection != null) {
+            holdConnection.interrupt();
+            holdConnection = null;
+        }
+        if (loginTimeout != null) {
+            loginTimeout.interrupt();
+            loginTimeout = null;
+        }
+        if (activeConnection != null) {
+            activeConnection.interrupt();
+            activeConnection.closeThread();
+            activeConnection = null;
+        }
+        if (setupConnection != null) {
+            setupConnection.interrupt();
+            setupConnection.closeThread();
+            setupConnection = null;
+        }
+    }
+
+    // This thread builds the socket and tries to connect it with the controller
+    private class SetupConnection extends Thread {
         private BluetoothSocket bluetoothSocket;
 
-        public ConnectThread(BluetoothDevice theDevice) {
+        public SetupConnection(BluetoothDevice theDevice) {
             // Get a BluetoothSocket for a connection with the given BluetoothDevice
             BluetoothSocket tmpSocket = null;
             try {
-                Method m = theDevice.getClass().getMethod("createRfcommSocket",
-                        new Class[]{int.class});
+                Method m = theDevice.getClass().getMethod("createRfcommSocket", new Class[]{int.class});
                 tmpSocket = (BluetoothSocket) m.invoke(theDevice, 1);
-            } catch (SecurityException e) {
-                Log.e("CONNECTION-SERVICE",
-                        "Make createRfcommSocket() failed [SecurityException]",
-                        e);
-            } catch (NoSuchMethodException e) {
-                Log.e("CONNECTION-SERVICE",
-                        "Make createRfcommSocket() failed [NoSuchMethodException]",
-                        e);
-            } catch (IllegalArgumentException e) {
-                Log.e("CONNECTION-SERVICE",
-                        "Run createRfcommSocket() failed [IllegalArgumentException]",
-                        e);
-            } catch (IllegalAccessException e) {
-                Log.e("CONNECTION-SERVICE",
-                        "Run createRfcommSocket() failed [IllegalAccessException]",
-                        e);
-            } catch (InvocationTargetException e) {
-                Log.e("CONNECTION-SERVICE",
-                        "Run createRfcommSocket() failed [InvocationTargetException]",
-                        e);
+            } catch (Exception e) {
+                Log.e("CONNECTION-SERVICE", "Make createRfcommSocket() failed [" + e.getClass().getSimpleName().toString() + "]", e);
             }
             bluetoothSocket = tmpSocket;
         }
@@ -254,28 +191,20 @@ public class ConnectionService {
         public void run() {
             // Make a connection to the BluetoothSocket
             try {
-                // This is a blocking call and will only return on a
-                // successful connection or an exception
                 bluetoothSocket.connect();
-                Log.d("CONNECTION-SERVICE", "Connection sucessfull!");
+                Log.d("CONNECTION-SERVICE", "Connection successful!");
             } catch (IOException e) {
-                Log.e("CONNECTION-SERVICE", "Connection failed!", e);
-
-                // activityHandler.fireToast("Keine Verbindung moeglich!");
-                // activityHandler.fireToHandler(
-                // ActivityHandler.HANDLLER_DEVICE_PROVIDER,
-                // BluetoothInfoState.DISCONNECTED);
-                // TODO Fire a toast message
-
-                serviceState = ServiceState.INIT;
-                bluetoothSocket = null;
+                Log.d("CONNECTION-SERVICE", "Connection failed!");
+                fireToHandler(BluetoothInfoState.CONNECTION_FAILED);
+                closeAllThreads();
                 return;
             }
             // Start the connected thread
             connected(bluetoothSocket);
         }
 
-        private void init() {
+        // Reset all components thread components
+        private void closeThread() {
             try {
                 if (bluetoothSocket != null) {
                     bluetoothSocket.close();
@@ -287,16 +216,17 @@ public class ConnectionService {
         }
     }
 
-    /**
-     * This thread runs during a connection with a remote device. It handles all
-     * incoming and outgoing transmissions.
-     */
-    private class ConnectedThread extends Thread {
+    // Handles the active connection (reading and writing the socket)
+    private class ActiveConnection extends Thread {
+        // Stream attributes
         private InputStream inputStream;
         private OutputStream outputStream;
 
-        public ConnectedThread(BluetoothSocket theSocket) {
-            init();
+        // Attributes to save the things before
+        private Command previousCommand;
+        private String previousPush;
+
+        public ActiveConnection(BluetoothSocket theSocket) {
             // Get the BluetoothSocket input and output streams
             InputStream tmpInStream = null;
             OutputStream tmpOutStream = null;
@@ -312,20 +242,17 @@ public class ConnectionService {
 
         @Override
         public void run() {
-            final BufferedReader reader = new BufferedReader(
+            BufferedReader reader = new BufferedReader(
                     new InputStreamReader(inputStream));
 
             // Keep listening to the InputStream while connected
             try {
                 String line;
-                while (true) {
-                    if (serviceState == ServiceState.INIT) {
-                        break;
-                    }
+                while (!isInterrupted()) {
                     line = reader.readLine();
                     if (!line.equals("")) {
-                        if (lastCommand != null) { // TODO delete this if/else statement
-                            Log.d("CONNECTION-SERVICE", "LASTCOM: " + lastCommand.toString());
+                        if (previousCommand != null) { // TODO delete this if/else statement
+                            Log.d("CONNECTION-SERVICE", "LASTCOM: " + previousCommand.toString());
                         } else {
                             Log.d("CONNECTION-SERVICE", "LASTCOM: NULL");
                         }
@@ -333,82 +260,84 @@ public class ConnectionService {
                         if (line.startsWith("error")) {
                             // TODO reaction of error (unimportant)
                         } else if (line.startsWith("ok")) {
-                            if (isLastCommand(Commands.LOGIN)) {
-                                serviceState = ServiceState.LOGGED_IN;
+                            if (isPreviousCommand(Command.LOGIN)) {
+                                // Interrupt the timeout
+                                loginTimeout.interrupt();
 
-                                // Start the HoldConnectionThread
-                                holdConnectionThread = new HoldConnectionThread();
-                                holdConnectionThread.start();
-                                activityHandler
-                                        .fireToHandler(
-                                                IntentKeys.HANDLLER_DEVICE_PROVIDER.getValue(),
-                                                BluetoothInfoState.LOGGED_IN);
-
-                                // Asking for parameter list
-                                write(Commands.AT_PARAM_LIST);
-                            } else if (isLastCommand(Commands.AT_LOGOUT)) {
-                                serviceState = ServiceState.INIT;
-                                init();
-                                activityHandler
-                                        .fireToHandler(
-                                                IntentKeys.HANDLLER_DEVICE_PROVIDER.getValue(),
-                                                BluetoothInfoState.NONE);
-                                cancelConnectThread();
+                                // Start the HoldConnection
+                                holdConnection = new HoldConnection();
+                                holdConnection.start();
+                                fireToHandler(BluetoothInfoState.LOGGED_IN);
                             }
+                            restartPush();
                         } else if (line.equals("login >")) {
-                            serviceState = ServiceState.LOGIN;
-                            write(Commands.LOGIN);
-                        } else if (isLastCommand(Commands.AT_PARAM_LIST)) {
-                            if (line.startsWith(Commands.AT_CALIBH_N.getCommand())) {
-                                // Last element in parameter list
-                                lastCommand = null;
-                                Log.d("CONNECTION-SERVICE", "End of Param-List");
+                            if (loginTimeout == null) {
+                                // Start timer for login
+                                loginTimeout = new LoginTimeout();
+                                loginTimeout.start();
                             }
+                            send(Command.LOGIN);
+                        } else if (isPreviousCommand(Command.AT_PARAM_LIST)) {
+                            // Saving the pushed parameter list
                             saveParamList(line);
+                            if (line.startsWith(Command.AT_CALIBH_N.getCommand())) {
+                                // Last element in parameter list
+                                restartPush();
+                            }
                         } else {
+                            // Saving the pushed values
                             savePushValues(line);
-                        }
-
-                        // Start push after last command is finished
-                        if (lastCommand != Commands.AT_PUSH_N) {
-                            // TODO pruefen ob das korrekt ist
-                            Commands.AT_PUSH_N.setValue(lastPush);
-                            write(Commands.AT_PUSH_N);
                         }
                     }
                 }
             } catch (IOException e) {
-                Log.e("CONNECTION-SERVICE", "Fail in reading stream", e);
+                Log.d("CONNECTION-SERVICE", "Fail in reading stream");
             }
+            try {
+                // Close the BufferedReader
+                reader.close();
+            } catch (IOException e) {
+                Log.e("CONNECTION-SERVICE", "Fail in closing the BufferedReader");
+            }
+            closeAllThreads();
         }
 
         // Checks if the last command is the given on
-        private boolean isLastCommand(Commands command) {
-            if (command == lastCommand) {
-                if (command != Commands.AT_PARAM_LIST) {
-                    lastCommand = null;
-                }
+        private boolean isPreviousCommand(Command command) {
+            if (command == previousCommand) {
                 return true;
             }
             return false;
         }
 
-        // Write a command
-        private void write(Commands command) {
-            if (command != Commands.AT_0) {
-                // Save as last send command
-                lastCommand = command;
-
-                // Hold pushing data
-                if (command != Commands.AT_PUSH_N) {
-                    // TODO pruefen ob das korrekt ist
-                    lastPush = Commands.AT_PUSH_N.getValue();
-                    Commands.AT_PUSH_N.setValue("0");
-                    write(Commands.AT_PUSH_N);
-
+        // Restart pushing data
+        private void restartPush() {
+            Log.d("PUSH-RESTART", ":" + previousPush);
+            if (previousCommand != Command.AT_PARAM_LIST && previousCommand != Command.AT_PUSH_N) {
+                if (previousPush != null) {
+                    Command.AT_PUSH_N.setValue(previousPush);
+                    send(Command.AT_PUSH_N);
                 }
             }
+        }
 
+        // Stop pushing data
+        private void stopPush() {
+            previousPush = Command.AT_PUSH_N.getValue();
+            Log.d("PUSH-STOP", ":" + previousPush);
+            Command.AT_PUSH_N.setValue("0");
+            send(Command.AT_PUSH_N);
+        }
+
+        // Sends a command
+        private void send(Command command) {
+            if (command != Command.AT_0) {
+                if (command != Command.LOGIN && command != Command.AT_PUSH_N) {
+                    stopPush();
+                }
+                // Save previous sent command
+                previousCommand = command;
+            }
             Log.v("CONNECTION-SERVICE", "> " + command.toString());
             write((command.toString() + "\r").getBytes());
         }
@@ -418,33 +347,66 @@ public class ConnectionService {
             try {
                 outputStream.write(buffer);
             } catch (IOException e) {
-                Log.e("CONNECTION-SERVICE", "Exception during writing", e);
+                Log.d("CONNECTION-SERVICE", "Exception during writing");
             }
         }
 
-        private void init() {
-            inputStream = null;
-            outputStream = null;
-        }
-
-        private void cancel() {
-            write(Commands.AT_LOGOUT);
+        // Reset all components thread components
+        private void closeThread() {
+            if (inputStream != null) {
+                try {
+                    inputStream.close();
+                } catch (IOException e) {
+                    Log.e("CONNECTION-SERVICE", "Exception while closing the inputStream");
+                }
+                inputStream = null;
+            }
+            if (outputStream != null) {
+                try {
+                    outputStream.close();
+                } catch (IOException e) {
+                    Log.e("CONNECTION-SERVICE", "Exception while closing the outputStream");
+                }
+                outputStream = null;
+            }
+            previousCommand = null;
+            previousPush = null;
         }
     }
 
     // This thread holds the connection on sending attention simple signals
-    private class HoldConnectionThread extends Thread {
+    private class HoldConnection extends Thread {
         @Override
         public void run() {
             // Repeat message every 60 seconds
-            while (true) {
+            while (!isInterrupted()) {
                 try {
                     Thread.sleep(60000);
-                    write(Commands.AT_0);
+                    sendCommand(Command.AT_0);
                 } catch (InterruptedException e) {
                     Log.d("CONNECTION-SERVICE", "Sleep was interrupted");
                     break;
                 }
+            }
+        }
+    }
+
+    // This thread is waiting for login success or interrupt it after a while
+    private class LoginTimeout extends Thread {
+        @Override
+        public void run() {
+            try {
+                int ms = 2000;
+                Thread.sleep(ms);
+                if (isLoggedIn()) {
+                    Log.d("CONNECTION-SERVICE", "Login timed out after " + String.valueOf(ms) + " ms");
+                    String test = activityHandler.getStr(R.string.login_failed_wrong_pw);
+//                    activityHandler.fireToast(test); // TODO throws exception - not possible to fire toast here
+                    closeAllThreads();
+                    fireToHandler(BluetoothInfoState.CONNECTION_FAILED);
+                }
+            } catch (InterruptedException e) {
+                Log.d("CONNECTION-SERVICE", "Sleep was interrupted");
             }
         }
     }

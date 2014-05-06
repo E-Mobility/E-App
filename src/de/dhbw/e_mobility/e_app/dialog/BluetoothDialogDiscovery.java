@@ -116,7 +116,7 @@ public class BluetoothDialogDiscovery extends Activity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        // Definitely stop discovering
+        // Definitely logout discovering
         deviceProvider.cancelDiscovery();
         finish();
     }
