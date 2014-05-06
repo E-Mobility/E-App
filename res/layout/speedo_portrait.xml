@@ -140,7 +140,7 @@
             android:layout_weight="1"
             android:textSize="@dimen/medium_text_size"
             android:gravity="center"
-            android:text="h"
+            android:text="@string/durationUnit"
             android:textAppearance="?android:attr/textAppearanceLarge" />
 
     </LinearLayout>
@@ -183,18 +183,18 @@
                     android:id="@+id/portrait_battery_unit"
                     android:layout_width="84dp"
                     android:layout_height="wrap_content"
-                    android:text="%"
+                    android:text="@string/percent"
                     android:textAppearance="?android:attr/textAppearanceMedium"
                     android:textSize="@dimen/medium_text_size" />
 
             </LinearLayout>
 
-            <ImageView
-                android:id="@+id/portrait_battery_image"
+            <ProgressBar
+                style="?android:attr/progressBarStyleHorizontal"
+                android:id="@+id/portrait_battery_progress_bar"
                 android:layout_width="136dp"
                 android:layout_height="42dp"
-                android:layout_gravity="center"
-                android:src="@android:drawable/button_onoff_indicator_on" />
+                android:layout_gravity="center" />
 
         </LinearLayout>
 
@@ -218,35 +218,36 @@
                 android:layout_height="wrap_content">
 
                 <TextView
+                    android:id="@+id/portrait_assistance"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:textSize="@dimen/medium_text_size"
+                    android:textAppearance="?android:attr/textAppearanceMedium" />
+
+                <TextView
                     android:id="@+id/portrait_assistance_unit"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:gravity="center"
-                    android:text="Stufe"
+                    android:text="@string/percent"
                     android:textAppearance="?android:attr/textAppearanceMedium"
                     android:textSize="@dimen/medium_text_size" />
 
-                <TextView
-                    android:id="@+id/portrait_assistance"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="1"
-                    android:textSize="@dimen/medium_text_size"
-                    android:textAppearance="?android:attr/textAppearanceMedium" />
-
             </LinearLayout>
 
-            <ImageView
-                android:id="@+id/portrait_assistance_image"
+            <ProgressBar
+                style="?android:attr/progressBarStyleHorizontal"
+                android:id="@+id/portrait_assistance_progress_bar"
                 android:layout_width="136dp"
                 android:layout_height="42dp"
                 android:layout_weight="1"
-                android:src="@android:drawable/button_onoff_indicator_on" />
+                android:layout_gravity="center_horizontal" />
 
         </LinearLayout>
 
     </LinearLayout>
+
 
 </LinearLayout>

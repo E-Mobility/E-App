@@ -137,14 +137,20 @@ public class DeviceProvider {
                     } else if (infoState == BluetoothInfoState.CONNECTION_FAILED) {
                         // Connection to controller failed
                         enableBluetoothPreference(true);
+                    } else if (infoState == BluetoothInfoState.LOGIN_TIMEOUT) {
+                        // Timeout during login
+                        activityHandler.fireToast(infoState.toString());
                     }
                 }
 
                 // BluetoothDevice-ACTIONS
                 else if (msg.what == MyBroadcastReceiver.BT_ACTION_ACL_CONNECTED) {
-                    // Connection with controller
-                    bluetoothInfoState = BluetoothInfoState.ACL_CONNECTED;
-                    doOnResult();
+                    if(bluetoothInfoState == BluetoothInfoState.PAIRED) {
+                        // Connection with controller
+                        //bluetoothInfoState = BluetoothInfoState.ACL_CONNECTED;
+                        updateBluetoothInfo(BluetoothInfoState.ACL_CONNECTED);
+                        doOnResult();
+                    }
 //                } else if (msg.what == MyBroadcastReceiver.BT_ACTION_ACL_CONNECTED_BONDED) {
 //                } else if (msg.what == MyBroadcastReceiver.BT_ACTION_ACL_DISCONNECT_REQUESTED) {
                 } else if (msg.what == MyBroadcastReceiver.BT_ACTION_ACL_DISCONNECTED) {
@@ -157,6 +163,7 @@ public class DeviceProvider {
                     Bundle bundle = msg.getData();
                     if (bundle != null) {
                         activityHandler.fireToast(R.string.bluetooth_bound_bounded, IntentKeys.DEVICE_NAME.toString() + "(" + bundle.getString(IntentKeys.DEVICE_ADDRESS.toString()) + ")");
+                        doOnResult();
                     }
 //                } else if (msg.what == MyBroadcastReceiver.BT_ACTION_BOND_STATE_CHANGED_BOND_BONDING) {
                 } else if (msg.what == MyBroadcastReceiver.BT_ACTION_BOND_STATE_CHANGED_BOND_NONE) {
@@ -232,15 +239,16 @@ public class DeviceProvider {
 
     // Checks if device is paired
     private void checkIsPaired() {
-        if (bluetoothDevice.getBondState() == BluetoothDevice.BOND_BONDED
-                || createBond()) {
+        if (bluetoothDevice.getBondState() == BluetoothDevice.BOND_BONDED) {
+//                || createBond()) {
             bluetoothInfoState = BluetoothInfoState.PAIRED;
             doOnResult();
         } else {
-            Log.d("LOGIN", "Device is not paired / Pairing unsuccessful");
-            activityHandler.fireToast(R.string.device_not_paired);
-            updateBluetoothInfo(BluetoothInfoState.UNPAIRED);
-            enableBluetoothPreference(true);
+            createBond();
+//            Log.d("LOGIN", "Device is not paired / Pairing unsuccessful");
+//            activityHandler.fireToast(R.string.device_not_paired);
+//            updateBluetoothInfo(BluetoothInfoState.UNPAIRED);
+//            enableBluetoothPreference(true);
         }
     }
 
@@ -283,7 +291,7 @@ public class DeviceProvider {
             return;
         }
         if (bluetoothInfoState == BluetoothInfoState.ACL_CONNECTED) {
-            updateBluetoothInfo(BluetoothInfoState.ACL_CONNECTED);
+//            updateBluetoothInfo(BluetoothInfoState.ACL_CONNECTED);
             return;
         }
         if (bluetoothInfoState == BluetoothInfoState.LOGGED_IN) {

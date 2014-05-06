@@ -313,7 +313,7 @@ public class ConnectionService {
         // Restart pushing data
         private void restartPush() {
             Log.d("PUSH-RESTART", ":" + previousPush);
-            if (previousCommand != Command.AT_PARAM_LIST && previousCommand != Command.AT_PUSH_N) {
+            if (previousCommand != Command.AT_PUSH_N) {
                 if (previousPush != null) {
                     Command.AT_PUSH_N.setValue(previousPush);
                     send(Command.AT_PUSH_N);
@@ -400,8 +400,7 @@ public class ConnectionService {
                 Thread.sleep(ms);
                 if (isLoggedIn()) {
                     Log.d("CONNECTION-SERVICE", "Login timed out after " + String.valueOf(ms) + " ms");
-                    String test = activityHandler.getStr(R.string.login_failed_wrong_pw);
-//                    activityHandler.fireToast(test); // TODO throws exception - not possible to fire toast here
+                    fireToHandler(BluetoothInfoState.LOGIN_TIMEOUT);
                     closeAllThreads();
                     fireToHandler(BluetoothInfoState.CONNECTION_FAILED);
                 }

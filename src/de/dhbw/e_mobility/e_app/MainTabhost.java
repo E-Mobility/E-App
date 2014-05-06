@@ -1,13 +1,18 @@
 package de.dhbw.e_mobility.e_app;
 
 import android.app.ActivityGroup;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.WindowManager;
 import android.widget.TabHost;
 import android.widget.TabHost.TabSpec;
+
+import java.io.File;
+import java.io.IOException;
 
 import de.dhbw.e_mobility.e_app.bluetooth.DeviceProvider;
 import de.dhbw.e_mobility.e_app.common.ActivityHandler;
@@ -92,6 +97,22 @@ public class MainTabhost extends ActivityGroup {
             deviceProvider = null;
         }
         // activityHandler.stopDurationTimer(); TODO del?
+
+        // TODO! del --> just for debug loggin!!
+        saveLogcatToFile(getApplicationContext());
+    }
+
+    public void saveLogcatToFile(Context context) {
+        String fileName = "logcat_"+System.currentTimeMillis()+".txt";
+        File outputFile = new File(context.getExternalCacheDir(),fileName);
+        activityHandler.fireToast(outputFile.getPath());
+
+        try {
+            @SuppressWarnings("unused") Process process = Runtime.getRuntime().exec("logcat -f "+outputFile.getAbsolutePath());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        Log.d("SAVE LOGCAT", "TO: " + outputFile.getPath());
     }
 
     @Override

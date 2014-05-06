@@ -149,8 +149,7 @@ public class ActivityHandler {
     // Saves the main context
     public void setMainContext(Context theContext) {
         mainContext = theContext;
-        duration = 0;
-        duration_start = -1;
+        resetDuration();
     }
 
     // Fires a BluetoothInfoState to one of the handlers
@@ -318,8 +317,16 @@ public class ActivityHandler {
 
     // Stops the duration timer
     public void stopDurationTimer() {
-        long millis = SystemClock.elapsedRealtime() - duration_start;
-        duration += millis;
+        if (duration_start != -1) {
+            long millis = SystemClock.elapsedRealtime() - duration_start;
+            duration += millis;
+            duration_start = -1;
+        }
+    }
+
+    // Initialize the duration timer
+    public void resetDuration() {
+        duration = 0;
         duration_start = -1;
     }
 }

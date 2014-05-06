@@ -9,8 +9,8 @@ public enum SpeedoElements {
     TOUR_TITLE(R.id.portrait_tour_title), TOUR_RESET(R.id.portrait_tour_reset),
     DISTANCE_TITLE(R.id.portrait_distance_title), DISTANCE(R.id.portrait_distance), DISTANCE_UNIT(R.id.portrait_distance_unit),
     DURATION_TITLE(R.id.portrait_duration_title), DURATION(R.id.portrait_duration), DURATION_UNIT(R.id.portrait_duration_unit),
-    BATTERY_TITLE(R.id.portrait_battery_title), BATTERY(R.id.portrait_battery, R.id.landscape_battery), BATTERY_UNIT(R.id.portrait_battery_unit, R.id.landscape_battery_unit), BATTERY_IMAGE(R.id.portrait_battery_image, R.id.landscape_battery_image),
-    ASSISTANCE_TITLE(R.id.portrait_assistance_title), ASSISTANCE(R.id.portrait_assistance, R.id.landscape_assistance), ASSISTANCE_UNIT(R.id.portrait_assistance_unit, R.id.landscape_assistance_unit), ASSISTANCE_IMAGE(R.id.portrait_assistance_image, R.id.landscape_assistance_image);
+    BATTERY_TITLE(R.id.portrait_battery_title), BATTERY(R.id.portrait_battery, R.id.landscape_battery), BATTERY_UNIT(R.id.portrait_battery_unit, R.id.landscape_battery_unit), BATTERY_PROGRESS_BAR(R.id.portrait_battery_progress_bar, R.id.landscape_battery_progress_bar),
+    ASSISTANCE_TITLE(R.id.portrait_assistance_title), ASSISTANCE(R.id.portrait_assistance, R.id.landscape_assistance), ASSISTANCE_UNIT(R.id.portrait_assistance_unit, R.id.landscape_assistance_unit), ASSISTANCE_PROGRESS_BAR(R.id.portrait_assistance_progress_bar, R.id.landscape_assistance_progress_bar);
 
     private int portrait;
     private int landscape;

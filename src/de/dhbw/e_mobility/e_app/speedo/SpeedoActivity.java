@@ -5,6 +5,7 @@ import android.content.res.Resources;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import java.text.NumberFormat;
@@ -43,21 +44,19 @@ public abstract class SpeedoActivity extends Activity {
 
 
         // Settings for format the output numbers
-        int speedDecimalPlace = 1, distanceDecimalPlace = 1;
+        int speedDecimalPlace = 1, distanceDecimalPlace = 2;
         speedNumberFormat = NumberFormat.getNumberInstance();
         speedNumberFormat.setMinimumFractionDigits(speedDecimalPlace);
         speedNumberFormat.setMaximumFractionDigits(speedDecimalPlace);
         distanceNumberFormat = NumberFormat.getNumberInstance();
         distanceNumberFormat.setMinimumFractionDigits(distanceDecimalPlace);
         distanceNumberFormat.setMaximumFractionDigits(distanceDecimalPlace);
-
-        activityHandler.startDurationTimer();
     }
 
     // Testmetohd TODO del?
     private void initValues() {
-        SpeedoValues.V.setValue((float) 21.78354869688);
-        SpeedoValues.DISTANCE.setValue((float) 5);
+//        SpeedoValues.V.setValue((float) 21.78354869688);
+//        SpeedoValues.DISTANCE.setValue((float) 5);
     }
 
     // Updates the display elements
@@ -102,11 +101,23 @@ public abstract class SpeedoActivity extends Activity {
                 }
 
                 float unitFactor = activityHandler.getUnitFactor();
+                float speedVal = SpeedoValues.V.getValue();
+                int assistanceVal = (int) (speedVal * 20 / 5);
+                if (assistanceVal > 100) {
+                    assistanceVal = 100;
+                }
 
                 // Update speed
                 TextView speed_view = (TextView) getElement(SpeedoElements.SPEED);
                 if (speed_view != null) {
-                    String speed = String.valueOf(speedNumberFormat.format(SpeedoValues.V.getValue() * unitFactor));
+                    if (speedVal == 0) {
+                        // Stop duration timer
+                        activityHandler.stopDurationTimer();
+                    } else {
+                        // Start duration timer
+                        activityHandler.startDurationTimer();
+                    }
+                    String speed = String.valueOf(speedNumberFormat.format(speedVal * unitFactor));
 
                     // TODO was ist hier mit NULLpointer??
                     if (!speed_view.getText().equals(speed)) {
@@ -115,6 +126,13 @@ public abstract class SpeedoActivity extends Activity {
                 }
 
                 // Update distance
+                float factor = 1;
+                if (updateInterval != 0) {
+                    // Get factor to calculate distance
+                    factor = 60 * 60 * 1000 / updateInterval;
+                    // TODO! check this calculation
+                }
+                SpeedoValues.DISTANCE.setValue(SpeedoValues.DISTANCE.getValue() + (speedVal / factor));
                 TextView distance_view = (TextView) getElement(SpeedoElements.DISTANCE);
                 if (distance_view != null) {
                     String distance = String.valueOf(distanceNumberFormat.format(SpeedoValues.DISTANCE.getValue() * unitFactor));
@@ -133,6 +151,23 @@ public abstract class SpeedoActivity extends Activity {
                     // TODO was ist hier mit NULLpointer??
                     if (!duration_view.getText().equals(duration)) {
                         duration_view.setText(duration);
+                    }
+                }
+
+                // Update assistance text
+                TextView assistance_view = (TextView) getElement(SpeedoElements.ASSISTANCE);
+                if (assistance_view != null) {
+                    if (!assistance_view.getText().equals(String.valueOf(assistanceVal))) {
+                        assistance_view.setText(String.valueOf(assistanceVal));
+                    }
+                }
+
+                // Update assistance progress bar
+                ProgressBar assistance_progressBar = (ProgressBar) getElement(SpeedoElements.ASSISTANCE_PROGRESS_BAR);
+                if (assistance_progressBar != null) {
+                    if (assistance_progressBar.getProgress() != assistanceVal) {
+                        assistance_progressBar.setProgress(assistanceVal);
+                        // TODO change color
                     }
                 }
             }

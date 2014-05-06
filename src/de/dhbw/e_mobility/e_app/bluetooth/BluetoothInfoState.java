@@ -10,6 +10,7 @@ public enum BluetoothInfoState {
     PAIRED("Gerät gekoppelt"),
     CONNECTION_FAILED("Verbindung fehlgeschlagen"),
     ACL_CONNECTED("Verbunden"),
+    LOGIN_TIMEOUT("Login fehlgeschlagen (evtl. falsches Passwort)"),
     LOGGED_IN("Verbunden mit "),
     ACL_DISCONNECTED("Verbindung beendet");
 

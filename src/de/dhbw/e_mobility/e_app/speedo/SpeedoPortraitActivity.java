@@ -20,12 +20,9 @@ public class SpeedoPortraitActivity extends SpeedoActivity {
         tour_reset_view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (timerAn) {
-                    activityHandler.stopDurationTimer();
-                } else {
-                    activityHandler.startDurationTimer();
-                }
-                timerAn = !timerAn;
+                // TODO! asking if user really want.. and reset whole tour
+                activityHandler.resetDuration();
+                SpeedoValues.DISTANCE.setValue(0);
             }
         });
     }
