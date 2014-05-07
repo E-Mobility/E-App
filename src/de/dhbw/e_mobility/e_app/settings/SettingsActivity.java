@@ -369,7 +369,7 @@ public class SettingsActivity extends PreferenceActivity implements
             if (reqCode == Activity.RESULT_OK) {
                 // Save selected device
                 String address = getStringFromData(data, IntentKeys.DEVICE_ADDRESS);
-                activityHandler.saveDeviceAddress(address);
+                // activityHandler.saveDeviceAddress(address); // TODO ist jetzt bei logged_in
                 deviceProvider.setDevice(address);
                 // Do next step for login
                 deviceProvider.doOnResult();

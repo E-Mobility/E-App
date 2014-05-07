@@ -23,7 +23,7 @@
             android:layout_width="82dp"
             android:layout_height="wrap_content"
             android:gravity="right|center"
-            android:text="50"
+            android:text="TODO"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:textSize="@dimen/medium_text_size" />
 
@@ -41,8 +41,7 @@
             style="?android:attr/progressBarStyleHorizontal"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1.39"
-            android:progress="50" />
+            android:layout_weight="1.39" />
 
         <TextView
             android:id="@+id/landscape_assistance"

@@ -12,7 +12,6 @@ import java.io.OutputStream;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 
-import de.dhbw.e_mobility.e_app.R;
 import de.dhbw.e_mobility.e_app.common.ActivityHandler;
 import de.dhbw.e_mobility.e_app.common.IntentKeys;
 import de.dhbw.e_mobility.e_app.speedo.SpeedoValues;
@@ -119,6 +118,7 @@ public class ConnectionService {
         String value;
         String[] tmp;
         for (String line : paramList.split("\n")) {
+Log.d("PARAMLIST", line);
             tmp = line.split("=");
             if (tmp.length > 1) {
                 command_text = tmp[0];
@@ -257,8 +257,17 @@ public class ConnectionService {
                             Log.d("CONNECTION-SERVICE", "LASTCOM: NULL");
                         }
                         Log.v("CONNECTION-SERVICE", line);
-                        if (line.startsWith("error")) {
-                            // TODO reaction of error (unimportant)
+                        if (line.startsWith("ATE0")) {
+                            // Start timer for login
+                            loginTimeout = new LoginTimeout();
+                            loginTimeout.start();
+
+                            // Send an attention command
+                            send(Command.AT_0);
+
+                            // line.startsWith("error")) { reaction of error unimportant
+//  closeAllThreads();
+//  fireToHandler(BluetoothInfoState.CONNECTION_FAILED);
                         } else if (line.startsWith("ok")) {
                             if (isPreviousCommand(Command.LOGIN)) {
                                 // Interrupt the timeout
@@ -271,11 +280,13 @@ public class ConnectionService {
                             }
                             restartPush();
                         } else if (line.equals("login >")) {
-                            if (loginTimeout == null) {
+                            if (loginTimeout != null) {
+                                loginTimeout.interrupt();
+                                loginTimeout = null;
+                            }
                                 // Start timer for login
                                 loginTimeout = new LoginTimeout();
                                 loginTimeout.start();
-                            }
                             send(Command.LOGIN);
                         } else if (isPreviousCommand(Command.AT_PARAM_LIST)) {
                             // Saving the pushed parameter list
@@ -313,20 +324,20 @@ public class ConnectionService {
         // Restart pushing data
         private void restartPush() {
             Log.d("PUSH-RESTART", ":" + previousPush);
-            if (previousCommand != Command.AT_PUSH_N) {
-                if (previousPush != null) {
-                    Command.AT_PUSH_N.setValue(previousPush);
-                    send(Command.AT_PUSH_N);
-                }
-            }
+//            if (previousCommand != Command.AT_PUSH_N) {
+//                if (previousPush != null) {
+//                    Command.AT_PUSH_N.setValue(previousPush);
+//                    send(Command.AT_PUSH_N);
+//                }
+//            }
         }
 
         // Stop pushing data
         private void stopPush() {
-            previousPush = Command.AT_PUSH_N.getValue();
-            Log.d("PUSH-STOP", ":" + previousPush);
-            Command.AT_PUSH_N.setValue("0");
-            send(Command.AT_PUSH_N);
+//            previousPush = Command.AT_PUSH_N.getValue();
+//            Log.d("PUSH-STOP", ":" + previousPush);
+//            Command.AT_PUSH_N.setValue("0");
+//            send(Command.AT_PUSH_N);
         }
 
         // Sends a command

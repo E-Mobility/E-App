@@ -68,6 +68,8 @@ public class DeviceProvider {
     // Initializes all
     public void init() {
         setDevice(activityHandler.getDeviceAddress());
+        activityHandler.saveDeviceAddress(null);
+
         updateBluetoothInfo(BluetoothInfoState.INITIALIZED);
 
         myBroadcastReceiver = new MyBroadcastReceiver();
@@ -101,6 +103,11 @@ public class DeviceProvider {
         if (address != null) {
             bluetoothDevice = bluetoothAdapter.getRemoteDevice(address);
         }
+    }
+
+    // Resets the current bluetooth device
+    public void resetDevice() {
+        bluetoothDevice = null;
     }
 
     // Unregister the BroadcastReceiver
@@ -169,7 +176,10 @@ public class DeviceProvider {
                 } else if (msg.what == MyBroadcastReceiver.BT_ACTION_BOND_STATE_CHANGED_BOND_NONE) {
                     // Controller not bonded
                     // TODO!!!!!!
-                    doOnResult();
+//                    updateBluetoothInfo(BluetoothInfoState.CONNECTION_FAILED);
+                    enableBluetoothPreference(true);
+//                    doOnResult();
+
                     // Evtl. Ausgabe: Gerät ist noch nicht gekoppelt
                     // Möglicher Punkt um Pairinganfrage (bei Vollbild) hervorzuheben
 //                } else if (msg.what == MyBroadcastReceiver.BT_ACTION_CLASS_CHANGED) {
@@ -266,6 +276,8 @@ public class DeviceProvider {
                     IntentKeys.ENABLE_BLUETOOTH_PREF.getValue());
             return;
         }
+        // Reset the current saved device
+        resetDevice();
         activityHandler.fireToHandler(IntentKeys.HANDLLER_SETTINGS.getValue(),
                 IntentKeys.DISABLE_BLUETOOTH_PREF.getValue());
     }
@@ -296,11 +308,14 @@ public class DeviceProvider {
         }
         if (bluetoothInfoState == BluetoothInfoState.LOGGED_IN) {
             enableBluetoothPreference(true);
-            // Set default value for at-push
-            Command.AT_PUSH_N.setValue("1");
-            sendCommand(Command.AT_PUSH_N);
+            // Save device
+            activityHandler.saveDeviceAddress(bluetoothDevice.getAddress());
             // Asking for parameter list
             sendCommand(Command.AT_PARAM_LIST);
+            // Set default value for at-push
+//            Command.AT_PUSH_N.setValue("1");
+//            sendCommand(Command.AT_PUSH_N);
+            // TODO TODO TODO! enable push but also try to get param list
             return;
         }
         if (bluetoothInfoState == BluetoothInfoState.NONE) {

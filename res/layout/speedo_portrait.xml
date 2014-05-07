@@ -175,7 +175,7 @@
                     android:layout_width="89dp"
                     android:layout_height="wrap_content"
                     android:gravity="right|center"
-                    android:text="50"
+                    android:text="TODO"
                     android:textAppearance="?android:attr/textAppearanceMedium"
                     android:textSize="@dimen/medium_text_size" />
 
