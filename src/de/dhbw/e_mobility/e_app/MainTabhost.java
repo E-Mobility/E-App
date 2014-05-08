@@ -54,22 +54,22 @@ public class MainTabhost extends ActivityGroup {
         tabHost.setup(this.getLocalActivityManager());
 
         speedoTab = tabHost.newTabSpec(specSpeedo);
-        speedoTab.setIndicator(activityHandler.getStr(R.string.mainTab_speedo));
+        speedoTab.setIndicator(activityHandler.getStr(R.string.speedo_title));
 
         speedoLandscape = new Intent(this, SpeedoLandscapeActivity.class);
         speedoPortrait = new Intent(this, SpeedoPortraitActivity.class);
         speedoTab.setContent(speedoPortrait);
 
         TabSpec tourTab = tabHost.newTabSpec(specTour);
-        tourTab.setIndicator(activityHandler.getStr(R.string.mainTab_tour));
+        tourTab.setIndicator(activityHandler.getStr(R.string.stats_tour_title));
         tourTab.setContent(new Intent(this, StatsTourActivity.class));
 
         TabSpec totalTab = tabHost.newTabSpec(specTotal);
-        totalTab.setIndicator(activityHandler.getStr(R.string.mainTab_total));
+        totalTab.setIndicator(activityHandler.getStr(R.string.stats_total_title));
         totalTab.setContent(new Intent(this, StatsTotalActivity.class));
 
         TabSpec settingsTab = tabHost.newTabSpec(specSettings);
-        settingsTab.setIndicator(activityHandler.getStr(R.string.mainTab_settings));
+        settingsTab.setIndicator(activityHandler.getStr(R.string.settings_title));
         settingsTab.setContent(new Intent(this, SettingsActivity.class));
 
         tabHost.addTab(speedoTab);

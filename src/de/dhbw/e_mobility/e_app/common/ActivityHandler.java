@@ -276,11 +276,29 @@ public class ActivityHandler {
         return null;
     }
 
+    // Returns the saved battery capacity
+    public int getBattery() {
+        SharedPreferences tmpPref = getSharedPref();
+        if (tmpPref != null) {
+            return Integer.parseInt(tmpPref.getString(SettingsElements.BATTERY.getKey(), "0"));
+        }
+        return 0;
+    }
+
     // Saves the device address
     public void saveDeviceAddress(String address) {
         SharedPreferences tmpPref = getSharedPref();
         if (tmpPref != null) {
             tmpPref.edit().putString(SettingsElements.DEVICE.getKey(), address)
+                    .apply();
+        }
+    }
+
+    // Reset battery capacity
+    public void resetBattery() {
+        SharedPreferences tmpPref = getSharedPref();
+        if (tmpPref != null) {
+            tmpPref.edit().putString(SettingsElements.BATTERY.getKey(), "9000")
                     .apply();
         }
     }

@@ -178,11 +178,13 @@ public class DeviceProvider {
                         activityHandler.fireToast(R.string.bluetooth_bound_bounded, IntentKeys.DEVICE_NAME.toString() + "(" + bundle.getString(IntentKeys.DEVICE_ADDRESS.toString()) + ")");
                         doOnResult();
                     }
-//                } else if (msg.what == MyBroadcastReceiver.BT_ACTION_BOND_STATE_CHANGED_BOND_BONDING) {
+                } else if (msg.what == MyBroadcastReceiver.BT_ACTION_BOND_STATE_CHANGED_BOND_BONDING) {
+                    // TODO testen!!
+                    doOnResult();
                 } else if (msg.what == MyBroadcastReceiver.BT_ACTION_BOND_STATE_CHANGED_BOND_NONE) {
                     // Controller not bonded
                     enableBluetoothPreference(true);
-                    doOnResult();
+//                    doOnResult();
 
                     // Evtl. Ausgabe: Gerät ist noch nicht gekoppelt
                     // Möglicher Punkt um Pairinganfrage (bei Vollbild) hervorzuheben

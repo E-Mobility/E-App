@@ -77,9 +77,9 @@ public class MyBroadcastReceiver extends BroadcastReceiver {
                     IntentKeys.HANDLLER_DEVICE_PROVIDER.getValue(),
                     BT_ACTION_ACL_DISCONNECTED);
         } else if (BluetoothDevice.ACTION_BOND_STATE_CHANGED.equals(action)) {
-            Log.d("BluetoothDevice-ACTION", "ACTION_BOND_STATE_CHANGED");
             // TODO-!
             if (bonded) {
+                Log.d("BluetoothDevice-ACTION", "ACTION_BOND_STATE_CHANGED_BONDED");
                 Bundle bundle = new Bundle();
                 bundle.putString(IntentKeys.DEVICE_NAME.toString(),
                         extraDevice.getName());
@@ -88,7 +88,14 @@ public class MyBroadcastReceiver extends BroadcastReceiver {
                 activityHandler.fireToHandler(
                         IntentKeys.HANDLLER_DEVICE_PROVIDER.getValue(),
                         BT_ACTION_BOND_STATE_CHANGED_BOND_BONDED, bundle);
+            } else if(extraDevice.getBondState() == BluetoothDevice.BOND_BONDING) {
+                Log.d("BluetoothDevice-ACTION", "ACTION_BOND_STATE_CHANGED_BONDING");
+                activityHandler.fireToHandler(
+                        IntentKeys.HANDLLER_DEVICE_PROVIDER.getValue(),
+                        BT_ACTION_BOND_STATE_CHANGED_BOND_BONDING);
+                // TODO TESTEN!!
             } else {
+                Log.d("BluetoothDevice-ACTION", "ACTION_BOND_STATE_CHANGED_NONE");
                 activityHandler.fireToHandler(
                         IntentKeys.HANDLLER_DEVICE_PROVIDER.getValue(),
                         BT_ACTION_BOND_STATE_CHANGED_BOND_NONE);

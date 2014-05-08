@@ -6,7 +6,6 @@ public enum BluetoothInfoState {
     INITIALIZED("Tippen um zu verbinden"),
     ON("Bluetooth ist eingeschaltet"),
     DEVICE_KNOWN("Gerät bereits gewählt"),
-    UNPAIRED("Gerät nicht gekoppelt"),
     PAIRED("Gerät gekoppelt"),
     CONNECTION_FAILED("Verbindung fehlgeschlagen"),
     ACL_CONNECTED("Verbunden"),

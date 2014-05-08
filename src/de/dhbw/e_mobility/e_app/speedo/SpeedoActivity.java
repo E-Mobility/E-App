@@ -5,7 +5,6 @@ import android.content.res.Resources;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -43,7 +42,6 @@ public abstract class SpeedoActivity extends Activity {
 
         initValues();
 
-
         // Settings for format the output numbers
         int speedDecimalPlace = 1, distanceDecimalPlace = 2;
         speedNumberFormat = NumberFormat.getNumberInstance();
@@ -54,10 +52,8 @@ public abstract class SpeedoActivity extends Activity {
         distanceNumberFormat.setMaximumFractionDigits(distanceDecimalPlace);
     }
 
-    // Testmetohd TODO del?
+    // Test method
     private void initValues() {
-//        SpeedoValues.V.setValue((float) 21.78354869688);
-//        SpeedoValues.DISTANCE.setValue((float) 5);
     }
 
     // Updates the display elements
@@ -131,7 +127,6 @@ public abstract class SpeedoActivity extends Activity {
                 if (updateInterval != 0) {
                     // Get factor to calculate distance
                     factor = 60 * 60 * 1000 / updateInterval;
-                    // TODO! check this calculation
                 }
                 SpeedoValues.DISTANCE.setValue(SpeedoValues.DISTANCE.getValue() + (speedVal / factor));
                 TextView distance_view = (TextView) getElement(SpeedoElements.DISTANCE);
@@ -172,16 +167,37 @@ public abstract class SpeedoActivity extends Activity {
                     }
                 }
 
+                int capacity = activityHandler.getBattery();
+                capacity = ((capacity == 0) ? 0 : (int) ((capacity - SpeedoValues.C.getValue() * 1000) * 100 / capacity));
+                capacity = ((capacity < 0) ? 0 : capacity);
+
+                // Update battery text
+                TextView battery_view = (TextView) getElement(SpeedoElements.BATTERY);
+                if (battery_view != null) {
+                    if (!battery_view.getText().equals(String.valueOf(capacity))) {
+                        battery_view.setText(String.valueOf(capacity));
+                    }
+                }
+
+                // Update battery progress bar
+                ProgressBar battery_progressBar = (ProgressBar) getElement(SpeedoElements.BATTERY_PROGRESS_BAR);
+                if (battery_progressBar != null) {
+                    if (battery_progressBar.getProgress() != capacity) {
+                        battery_progressBar.setProgress(capacity);
+                        // TODO change color
+                    }
+                }
+
                 // Update bluetooth icon text
                 TextView bluetooth_text = (TextView) getElement(SpeedoElements.BLUETOOTH_TEXT);
                 if (bluetooth_text != null) {
                     if (SpeedoValues.LOGGED_IN.getValue() == 0) {
-                        if (!bluetooth_text.getText().equals(R.string.bluetooth_disconnected)) {
-                            bluetooth_text.setText(R.string.bluetooth_disconnected);
+                        if (!bluetooth_text.getText().equals(R.string.bluetooth_text_disconnected)) {
+                            bluetooth_text.setText(R.string.bluetooth_text_disconnected);
                         }
                     } else {
-                        if (!bluetooth_text.getText().equals(R.string.bluetooth_connected)) {
-                            bluetooth_text.setText(R.string.bluetooth_connected);
+                        if (!bluetooth_text.getText().equals(R.string.bluetooth_text_connected)) {
+                            bluetooth_text.setText(R.string.bluetooth_text_connected);
                         }
                     }
                 }

@@ -6,12 +6,11 @@
     android:layout_height="match_parent"
     android:key="settings_screen"
     android:persistent="true"
-    android:title="@string/settings"
+    android:title="@string/settings_title"
     tools:context=".SettingsActivity" >
 
     <Preference
         android:key="settings_bluetooth"
-        android:summary="bluetooth_pref_sum_init"
         android:title="@string/settings_bluetooth" />
 
     <!--
@@ -37,6 +36,11 @@
         android:entryValues="@array/settings_distance_unit"
         android:key="settings_distance"
         android:title="@string/settings_distance" />
+
+    <EditTextPreference
+        android:key="settings_battery"
+        android:summary="@string/settings_battery_sum"
+        android:title="@string/settings_battery" />
 
     <CheckBoxPreference
         android:defaultValue="false"
@@ -140,5 +144,9 @@
 
         <Preference android:key="settings_log" />
     </PreferenceScreen>
+
+    <Preference
+        android:key="settings_about"
+        android:title="@string/settings_about" />
 
 </PreferenceScreen>

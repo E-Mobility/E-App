@@ -1,6 +1,8 @@
 package de.dhbw.e_mobility.e_app.settings;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
@@ -16,7 +18,6 @@ import android.preference.PreferenceActivity;
 import android.preference.PreferenceManager;
 import android.preference.PreferenceScreen;
 import android.util.Log;
-import android.view.Menu;
 import android.view.MenuItem;
 
 import de.dhbw.e_mobility.e_app.R;
@@ -24,9 +25,7 @@ import de.dhbw.e_mobility.e_app.bluetooth.Command;
 import de.dhbw.e_mobility.e_app.bluetooth.DeviceProvider;
 import de.dhbw.e_mobility.e_app.common.ActivityHandler;
 import de.dhbw.e_mobility.e_app.common.IntentKeys;
-import de.dhbw.e_mobility.e_app.dialog.BluetoothDialogDisconnect;
 import de.dhbw.e_mobility.e_app.dialog.BluetoothDialogDiscovery;
-import de.dhbw.e_mobility.e_app.dialog.ReallyDialog;
 
 /**
  * This is the main Activity that displays the current connection session.
@@ -39,12 +38,7 @@ public class SettingsActivity extends PreferenceActivity implements
 
     // Intent Request Codes
     private static final int BLUETOOTH_REQUEST_ENABLE = 1;
-    private static final int BLUETOOTH_REQUEST_DISCONNECT = 2;
-    private static final int BLUETOOTH_REQUEST_DISCOVERY = 3;
-    private static final int SETTINGS_REQUEST_ADVANCED = 4;
-    private static final int SETTINGS_REQUEST_COMMAND = 5;
-
-    private Command clickedCommand;
+    private static final int BLUETOOTH_REQUEST_DISCOVERY = 2;
 
     // Get ActivityHandler object
     private ActivityHandler activityHandler = ActivityHandler.getInstance();
@@ -80,15 +74,22 @@ public class SettingsActivity extends PreferenceActivity implements
 
                         // Asking if user really wants to log out
                         private void logout() {
-                            startActivityForResult(new Intent(
-                                            getApplicationContext(),
-                                            BluetoothDialogDisconnect.class),
-                                    BLUETOOTH_REQUEST_DISCONNECT
-                            );
+                            new AlertDialog.Builder(activityHandler.getMainContext())
+                                    .setTitle(R.string.dialog_disconnect_title)
+                                    .setMessage(R.string.dialog_disconnect)
+                                    .setPositiveButton(R.string.dialog_yes, new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int whichButton) {
+                                            deviceProvider.logoutAndResetDevice();
+                                        }
+                                    }).setNegativeButton(R.string.dialog_no, new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int whichButton) {
+                                    enableBluetoothPreference(true);
+                                }
+                            }).show();
                         }
                     });
         }
-        CheckBoxPreference pref_advanced = (CheckBoxPreference) getPreference(SettingsElements.ADVANCED);
+        final CheckBoxPreference pref_advanced = (CheckBoxPreference) getPreference(SettingsElements.ADVANCED);
         if (pref_advanced != null) {
             pref_advanced
                     .setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
@@ -100,11 +101,17 @@ public class SettingsActivity extends PreferenceActivity implements
                                     : "false"));
                             enableAdvancedSettings(false, tmpPref);
                             if (tmpChecked) {
-                                startActivityForResult(new Intent(
-                                                getApplicationContext(),
-                                                SettingsAdvancedDialog.class),
-                                        SETTINGS_REQUEST_ADVANCED
-                                );
+                                new AlertDialog.Builder(activityHandler.getMainContext())
+                                        .setTitle(R.string.dialog_advanced_settings_title)
+                                        .setMessage(R.string.dialog_advanced_settings)
+                                        .setPositiveButton(R.string.dialog_yes, new DialogInterface.OnClickListener() {
+                                            public void onClick(DialogInterface dialog, int whichButton) {
+                                                enableAdvancedSettings(true, pref_advanced);
+                                            }
+                                        }).setNegativeButton(R.string.dialog_no, new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int whichButton) {
+                                    }
+                                }).show();
                             }
                             return true;
                         }
@@ -150,9 +157,30 @@ public class SettingsActivity extends PreferenceActivity implements
             pref_logging.setSummary(null);
         }
 
+        final Preference pref_about = getPreference(SettingsElements.ABOUT);
+        if (pref_about != null) {
+            pref_about
+                    .setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+                        @Override
+                        public boolean onPreferenceClick(Preference preference) {
+                            new AlertDialog.Builder(activityHandler.getMainContext())
+                                    .setTitle(R.string.settings_about)
+                                    .setMessage(R.string.settings_about_text)
+                                    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int which) {
+                                        }
+                                    })
+                                    .show();
+                            return true;
+                        }
+                    });
+        }
+
         SharedPreferences sharedPreferences = PreferenceManager
                 .getDefaultSharedPreferences(this);
         initPreference(sharedPreferences, SettingsElements.PASSWORD);
+        activityHandler.resetBattery();
+        initPreference(sharedPreferences, SettingsElements.BATTERY);
         initPreference(sharedPreferences, SettingsElements.DISTANCE);
 
         String tmpKey;
@@ -192,15 +220,18 @@ public class SettingsActivity extends PreferenceActivity implements
                         @Override
                         public boolean onPreferenceClick(Preference changedPref) {
                             Log.d("Command-click", changedPref.getKey());
-                            startActivityForResult(
-                                    new Intent(getApplicationContext(),
-                                            ReallyDialog.class),
-                                    SETTINGS_REQUEST_COMMAND
-                            );
-
                             tmpCommand[0] = element.getCommand();
-                            clickedCommand = tmpCommand[0];
-                            // deviceProvider.sendCommand(tmpCommand);
+                            new AlertDialog.Builder(activityHandler.getMainContext())
+                                    .setTitle(R.string.dialog_really_title)
+                                    .setMessage(R.string.dialog_really)
+                                    .setPositiveButton(R.string.dialog_yes, new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int whichButton) {
+                                            deviceProvider.sendCommand(tmpCommand[0]);
+                                        }
+                                    }).setNegativeButton(R.string.dialog_no, new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int whichButton) {
+                                }
+                            }).show();
                             return true;
                         }
                     });
@@ -307,12 +338,6 @@ public class SettingsActivity extends PreferenceActivity implements
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_settings, menu);
-        return true;
-    }
-
-    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         return super.onOptionsItemSelected(item);
     }
@@ -367,20 +392,13 @@ public class SettingsActivity extends PreferenceActivity implements
     }
 
     @Override
-    public void onActivityResult(int resCode, int reqCode, Intent data) {
+    protected void onActivityResult(int resCode, int reqCode, Intent data) {
 
         if (resCode == BLUETOOTH_REQUEST_ENABLE) {
             // If Enable-Bluetooth is true
             if (reqCode == Activity.RESULT_OK) {
                 // Do next step for login
                 deviceProvider.doOnResult();
-            } else {
-                enableBluetoothPreference(true);
-            }
-        } else if (resCode == BLUETOOTH_REQUEST_DISCONNECT) {
-            // If Bluetooth-Deivce should disconnect
-            if (reqCode == Activity.RESULT_OK) {
-                deviceProvider.logoutAndResetDevice();
             } else {
                 enableBluetoothPreference(true);
             }
@@ -395,17 +413,6 @@ public class SettingsActivity extends PreferenceActivity implements
             } else {
                 enableBluetoothPreference(true);
             }
-        } else if (resCode == SETTINGS_REQUEST_ADVANCED) {
-            CheckBoxPreference advancedPref = (CheckBoxPreference) getPreference(SettingsElements.ADVANCED);
-            // If message is confirmed
-            if (reqCode == Activity.RESULT_OK) {
-                enableAdvancedSettings(true, advancedPref);
-            }
-        } else if (resCode == SETTINGS_REQUEST_COMMAND) {
-            if (reqCode == Activity.RESULT_OK) {
-                deviceProvider.sendCommand(clickedCommand);
-            }
-            clickedCommand = null;
         }
     }
 
@@ -440,6 +447,27 @@ public class SettingsActivity extends PreferenceActivity implements
                 String value = sharedPreferences.getString(key, "");
                 tmpPref.setTitle(activityHandler
                         .getStr(R.string.settings_password)
+                        + " ("
+                        + value
+                        + ")");
+            }
+        } else if (key.equals(SettingsElements.BATTERY.getKey())) {
+            EditTextPreference tmpPref = (EditTextPreference) findPreference(key);
+            if (tmpPref == null) {
+                Log.e("Settings", "Preference not found! (" + key + ")");
+            } else {
+                String value = sharedPreferences.getString(key, "");
+                // Check if value is valid integer
+                try {
+                    Integer.parseInt(value);
+                } catch (Exception e) {
+                    activityHandler.fireToast(R.string.settings_battery_wrong_input);
+                    activityHandler.resetBattery();
+                    value = sharedPreferences.getString(key, "");
+                    tmpPref.setText(value);
+                }
+                tmpPref.setTitle(activityHandler
+                        .getStr(R.string.settings_battery)
                         + " ("
                         + value
                         + ")");

@@ -1,25 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- TODO TODO TODO Unnötige Texte löschen und andere anpassen -->
-    <!-- TODO alle texte in den layouts in strings.xml einpflegen -->
+    <!-- Titles -->
+    <string name="main_title">E-App</string>
+    <string name="speedo_title">Tacho</string>
+    <string name="stats_tour_title">Tour Statistik</string>
+    <string name="stats_total_title">Gesamt Statistik</string>
+    <string name="settings_title">Einstellungen</string>
 
-    <string name="app_name">E-App</string>
-    <string name="action_settings">Einstellungen</string>
-    <string name="action_tacho">Tacho</string>
-    <string name="action_main">Home</string>
-    <string name="action_about">Über</string>
-    <string name="action_speedo">Tacho</string>
-    <string name="action_help">Hilfe</string>
-    <string name="bluetooth">Bluetooth Verbindung</string>
-    <string name="refresh">Neu laden</string>
-    <string name="passwort">Passwort</string>
+    <string name="digitalclock">Digitaluhr</string>
 
-    <string name="mainTab_speedo">Tacho</string>
-    <string name="mainTab_tour">Tour Status</string>
-    <string name="mainTab_total">Gesamt Status</string>
-    <string name="mainTab_settings">Einstellungen</string>
+    <!-- Settings -->
+    <string name="settings_bluetooth">Bluetooth</string>
+    <string name="settings_password">Passwort</string>
+    <string name="settings_password_sum">Gespeichertes Passwort ändern</string>
+    <string name="settings_autolog">Auto Login</string>
+    <string name="settings_autolog_sum">Beim Start automatisch mit Controller verbinden</string>
+    <string name="settings_distance">Einheit</string>
+    <string name="settings_battery">Akkukapazität</string>
+    <string name="settings_battery_sum">Gespeicherte Akkukapazität in mAh ändern</string>
+    <string name="settings_battery_wrong_input">Ungültige Eingabe! Nur Ganzzahlen möglich!</string>
+    <string name="settings_advanced">Experten Ansicht</string>
+    <string name="settings_controller">Controller Konfiguration &#8230;</string>
+    <string name="settings_about">Info</string>
+    <string name="settings_about_text">Projekt im Rahmen einer Studienarbeit zu Elektromobilität.\r\n\r\nDHBW Karlsruhe 2014\r\ne-mobility@googlegroups.com</string>
 
-    <!-- DeviceListActivity -->
+    <string name="bluetooth_text_connected">verbunden</string>
+    <string name="bluetooth_text_disconnected">nicht verbunden</string>
+
+    <string name="bluetooth_info_enabled">Bluetooth aktiviert</string>
+    <string name="bluetooth_bound_bounded">Erfolgreich gekoppelt mit </string>
+    <string name="settings_bluetoothNotAvailable">Bluetooth ist leider nicht möglich!</string>
+
+    <string name="logging">Logfile</string>
+
+    <!-- Speedo -->
+    <string name="percent">%</string>
+    <string name="durationUnit">h</string>
+    <string name="speed">Geschwindigkeit</string>
+    <string name="current_tour">Aktuelle Tour</string>
+    <string name="tour_reset">Tour Reset</string>
+    <string name="distance">Distanz</string>
+    <string name="duration">Dauer</string>
+    <string name="battery">Akkustand</string>
+    <string name="assistance">Unterstützung</string>
+
+    <!-- DeviceProvider -->
     <string name="discovery_scanning">Suche läuft &#8230;</string>
     <string name="discovery_select">Gerät auswählen</string>
     <string name="discovery_noDevices">Kein Bluetooth-Gerät in der Nähe gefunden</string>
@@ -28,81 +53,17 @@
     <string name="discovery_devices">Verfügbare Geräte</string>
     <string name="discovery_scan">Nach Geräten suchen</string>
 
-    <string name="device_offline">Gerät ist nicht erreichbar</string>
-    <string name="device_not_paired">Gerät ist nicht gekoppelt</string>
-
-    <!-- SettingsActivity -->
-    <string name="bluetooth_connected">verbunden</string>
-    <string name="bluetooth_disconnected">nicht verbunden</string>
-
-    <string name="bluetooth_bound_bounded">Erfolgreich gekoppelt mit </string>
-    <string name="bluetooth_bound_bounding">Kopplung läuft &#8230;</string>
-    <string name="bluetooth_bound_none">Entkoppelt</string>
-
-    <string name="bluetooth_pref_sum_init">Tippen um zu verbinden</string>
-    <string name="login_failed_wrong_pw">Login fehlgeschlagen (evtl. falsches Passwort)</string>
-    <string name="percent">%</string>
-    <string name="durationUnit">h</string>
-    <string name="logging">Logfile</string>
-
-
-    <string name="speed">Speed</string>
-    <string name="current_tour">Aktuelle Tour</string>
-    <string name="tour_reset">Tour Reset</string>
-    <string name="distance">Distanz</string>
-    <string name="duration">Dauer</string>
-    <string name="battery">Akkustand</string>
-    <string name="assistance">Unterstützung</string>
-
-    <string name="settings_distance">Einheit</string>
-
-    <string name="settings_con_">blabla</string>
-    <string name="settings_controller">Controller Konfiguration...</string>
+    <!-- Dialog -->
     <string name="dialog_really_title">Achtung!</string>
-    <string name="dialog_really_text">Möchten Sie die Aktion wirklich durchführen?</string>
+    <string name="dialog_really">Möchten Sie die Aktion wirklich durchführen?</string>
+    <string name="dialog_reset_tour_title">Achtung!</string>
+    <string name="dialog_reset_tour">Möchten Sie die aktuelle Tour wirklich zurücksetzten?</string>
     <string name="dialog_advanced_settings_title">Achtung!</string>
-    <string name="dialog_advanced_settings">Vorsicht mit der Experten Ansicht!\n\rÄnderungen wirken sich direkt auf den Controller aus.\n\rDurch manche Änderungen ist die Verkehrszulassung nicht mehr gewährleistet.\n\r\n\rMöchten Sie die Experten Ansicht wirklich aktivieren?</string>
-    <string name="settings_advanced">Experten Ansicht</string>
-    <string name="settings_password_sum">Gespeichertes Passwort ändern</string>
-    <string name="settings_password">Passwort</string>
-    <string name="settings_speed">Geschwindigkeit</string>
-    <string name="settings_autolog_sum">Beim Start automatisch mit Controller verbinden</string>
-    <string name="settings_autolog">Auto Login</string>
-    <string name="settings_bluetooth">Bluetooth</string>
-    <string name="settings">Einstellungen</string>
-
-    <string name="settings_discovery_no_device">Es wurde kein Gerät ausgewält</string>
-    <string name="settings_bluetoothNotAvailable">Bluetooth ist leider nicht möglich!</string>
-    <string name="settings_bluetoothDisabled">Bluetooth ist deaktiviert</string>
-    <string name="settings_bluetoothEnabled">Bluetooth aktiv, aber nicht verbunden</string>
-    <string name="settings_bluetoothConnected">Verbunden mit </string>
-    <string name="settings_bluetoothDisconnected">Verbindung getrennt</string>
-
-    <string name="title_connecting">connecting...</string>
-    <string name="title_connected_to">connected: </string>
-    <string name="title_not_connected">not connected</string>
-
-    <string name="action_advanced_settings">Erweitere Einstellungen</string>
-
-    <string name="activity_main_title">E-App</string>
-    <string name="activity_tacho_title">Tacho</string>
-    <string name="activity_status_tour_title">Tour Statistik</string>
-    <string name="activity_status_total_title">Gesamt Statistik</string>
-    <string name="activity_settings_title">Einstellungen/Settings</string>
-    <string name="dialog_deviceList_title">Gerät auswählen</string>
-    <string name="dialog_disconnect_title">Verbindung trennen</string>
+    <string name="dialog_advanced_settings">Achtung Experten Ansicht!\n\rVorgenommene Änderungen wirken sich direkt auf den Controller aus.Durch einige ist die Verkehrszulassung nicht mehr gewährleistet.\n\r\n\rMöchten Sie die Experten Ansicht wirklich aktivieren?</string>
+    <string name="dialog_disconnect_title">Achtung!</string>
     <string name="dialog_disconnect">Verbindung wirklich trennen?</string>
+    <string name="dialog_deviceList_title">Gerät auswählen</string>
     <string name="dialog_yes">Ja</string>
     <string name="dialog_no">Nein</string>
-
-
-
-    <string name="bluetooth_info_enabled">Bluetooth aktiviert</string>
-    <string name="bluetooth_info_connected">Verbunden mit&#x00A0;</string>
-    <string name="bluetooth_info_loggedin">Eingeloggt bei&#x00A0;</string>
-    <string name="bluetooth_info_none">Bluetooth nicht verfügbar</string>
-
-
-    <string name="digitalclock">Digitaluhr</string>
 
 </resources>

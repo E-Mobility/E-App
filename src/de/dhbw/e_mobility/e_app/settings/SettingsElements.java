@@ -12,6 +12,8 @@ public enum SettingsElements {
     CONTROLLER("settings_controller"), //
     DEVICE("settings_device"), //
     LOGGING("settings_log"), //
+    BATTERY("settings_battery"), //
+    ABOUT("settings_about"), //
 
     AT_0("AT_0_", Command.AT_0, "Attention without response"), //
     AT_DFLT("AT_DFLT_", Command.AT_DFLT,
