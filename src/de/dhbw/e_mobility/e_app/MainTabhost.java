@@ -17,6 +17,7 @@ import java.io.IOException;
 import de.dhbw.e_mobility.e_app.bluetooth.DeviceProvider;
 import de.dhbw.e_mobility.e_app.common.ActivityHandler;
 import de.dhbw.e_mobility.e_app.settings.SettingsActivity;
+import de.dhbw.e_mobility.e_app.settings.SettingsElements;
 import de.dhbw.e_mobility.e_app.speedo.SpeedoLandscapeActivity;
 import de.dhbw.e_mobility.e_app.speedo.SpeedoPortraitActivity;
 import de.dhbw.e_mobility.e_app.total_stats.StatsTotalActivity;
@@ -96,23 +97,22 @@ public class MainTabhost extends ActivityGroup {
             deviceProvider.unregisterReceiver();
             deviceProvider = null;
         }
-        // activityHandler.stopDurationTimer(); TODO del?
-
-        // TODO! del --> just for debug loggin!!
-        saveLogcatToFile(getApplicationContext());
+        if (SettingsElements.LOGGING.getSummary() != null) {
+            saveLogcatToFile(getApplicationContext());
+        }
     }
 
     public void saveLogcatToFile(Context context) {
-        String fileName = "logcat_"+System.currentTimeMillis()+".txt";
-        File outputFile = new File(context.getExternalCacheDir(),fileName);
+        String fileName = "logcat_" + System.currentTimeMillis() + ".txt";
+        File outputFile = new File(context.getExternalCacheDir(), fileName);
         activityHandler.fireToast(outputFile.getPath());
 
         try {
-            @SuppressWarnings("unused") Process process = Runtime.getRuntime().exec("logcat -f "+outputFile.getAbsolutePath());
+            @SuppressWarnings("unused") Process process = Runtime.getRuntime().exec("logcat -f " + outputFile.getAbsolutePath());
         } catch (IOException e) {
             e.printStackTrace();
         }
-        Log.d("SAVE LOGCAT", "TO: " + outputFile.getPath());
+        Log.d("SAVE LOGCAT", "TO: " + outputFile.getAbsolutePath());
     }
 
     @Override

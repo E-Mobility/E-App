@@ -11,6 +11,8 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.lang.reflect.Method;
 import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.Queue;
 
 import de.dhbw.e_mobility.e_app.common.ActivityHandler;
 import de.dhbw.e_mobility.e_app.common.IntentKeys;
@@ -25,14 +27,18 @@ public class ConnectionService {
     private SetupConnection setupConnection;
     private ActiveConnection activeConnection;
     private HoldConnection holdConnection;
-    private LoginTimeout loginTimeout;
+    private HashMap<String, Timeout> timeouts;
+
+    // Queue for commands
+    private Queue<String> commandQueue;
 
     // Constructor
     public ConnectionService() {
         setupConnection = null;
         activeConnection = null;
         holdConnection = null;
-        loginTimeout = null;
+        timeouts = new HashMap<String, Timeout>();
+        commandQueue = new LinkedList<String>();
     }
 
     // Checks the if there is a connection currently
@@ -44,9 +50,15 @@ public class ConnectionService {
         connect(device);
     }
 
-    // Returns true if active connection thread is running
+    // Returns true if hold connection thread is running
     private boolean isLoggedIn() {
-        return (activeConnection != null);
+        return (holdConnection != null);
+    }
+
+    // Returns true if active connection thread is running
+    private boolean isConnected() {
+        // return (activeConnection != null);
+        return isLoggedIn();
     }
 
     // Starts the SetupConnection thread
@@ -118,7 +130,7 @@ public class ConnectionService {
         String value;
         String[] tmp;
         for (String line : paramList.split("\n")) {
-Log.d("PARAMLIST", line);
+            Log.d("PARAMLIST", line);
             tmp = line.split("=");
             if (tmp.length > 1) {
                 command_text = tmp[0];
@@ -131,10 +143,26 @@ Log.d("PARAMLIST", line);
         }
     }
 
-    // Sends a command to the controller
+    // Saves the command in the queue
     public void sendCommand(Command command) {
+        // Commands can only be sent when you are logged in
         if (isLoggedIn()) {
-            activeConnection.send(command);
+            String tmpPushVal = null;
+            // If command is not push_n you have to pause it
+            if (command != Command.AT_PUSH_N) {
+                tmpPushVal = Command.AT_PUSH_N.getValue();
+                Command.AT_PUSH_N.setValue("0");
+                commandQueue.add(Command.AT_PUSH_N.toString());
+            }
+            commandQueue.add(command.toString());
+            if (tmpPushVal != null && command != Command.AT_LOGOUT) {
+                Command.AT_PUSH_N.setValue(tmpPushVal);
+                commandQueue.add(Command.AT_PUSH_N.toString());
+            }
+            // Start sending commands
+            if (activeConnection != null) {
+                activeConnection.sendNextCommand();
+            }
         }
     }
 
@@ -145,7 +173,9 @@ Log.d("PARAMLIST", line);
 
     // Logout from controller and close the socket
     public void logout() {
-        sendCommand(Command.AT_LOGOUT);
+        if (activeConnection != null) {
+            activeConnection.send(Command.AT_LOGOUT);
+        }
         closeAllThreads();
     }
 
@@ -155,10 +185,12 @@ Log.d("PARAMLIST", line);
             holdConnection.interrupt();
             holdConnection = null;
         }
-        if (loginTimeout != null) {
-            loginTimeout.interrupt();
-            loginTimeout = null;
+        for (Timeout timeout : timeouts.values()) {
+            if (timeout != null) {
+                timeout.interrupt();
+            }
         }
+        timeouts.clear();
         if (activeConnection != null) {
             activeConnection.interrupt();
             activeConnection.closeThread();
@@ -169,6 +201,9 @@ Log.d("PARAMLIST", line);
             setupConnection.closeThread();
             setupConnection = null;
         }
+
+        // Also clear command queue
+        commandQueue.clear();
     }
 
     // This thread builds the socket and tries to connect it with the controller
@@ -182,7 +217,7 @@ Log.d("PARAMLIST", line);
                 Method m = theDevice.getClass().getMethod("createRfcommSocket", new Class[]{int.class});
                 tmpSocket = (BluetoothSocket) m.invoke(theDevice, 1);
             } catch (Exception e) {
-                Log.e("CONNECTION-SERVICE", "Make createRfcommSocket() failed [" + e.getClass().getSimpleName().toString() + "]", e);
+                Log.e("CONNECTION-SERVICE", "Make createRfcommSocket() failed [" + e.getClass().getSimpleName() + "]", e);
             }
             bluetoothSocket = tmpSocket;
         }
@@ -223,8 +258,8 @@ Log.d("PARAMLIST", line);
         private OutputStream outputStream;
 
         // Attributes to save the things before
-        private Command previousCommand;
-        private String previousPush;
+        private String previousCommand;
+        private boolean currentlySending;
 
         public ActiveConnection(BluetoothSocket theSocket) {
             // Get the BluetoothSocket input and output streams
@@ -238,6 +273,8 @@ Log.d("PARAMLIST", line);
             }
             inputStream = tmpInStream;
             outputStream = tmpOutStream;
+
+            currentlySending = false;
         }
 
         @Override
@@ -252,49 +289,63 @@ Log.d("PARAMLIST", line);
                     line = reader.readLine();
                     if (!line.equals("")) {
                         if (previousCommand != null) { // TODO delete this if/else statement
-                            Log.d("CONNECTION-SERVICE", "LASTCOM: " + previousCommand.toString());
+                            Log.d("CONNECTION-SERVICE", "previousCommand: " + previousCommand);
                         } else {
-                            Log.d("CONNECTION-SERVICE", "LASTCOM: NULL");
+                            Log.d("CONNECTION-SERVICE", "previousCommand: NULL");
                         }
                         Log.v("CONNECTION-SERVICE", line);
                         if (line.startsWith("ATE0")) {
-                            // Start timer for login
-                            loginTimeout = new LoginTimeout();
-                            loginTimeout.start();
-
+                            // Start timer for connection
+                            if (!timeouts.containsKey(ConnectTimeout.class.getName())) {
+                                Log.d("TIMEOUT-THREAD", "StartConnect");
+                                ConnectTimeout connectTimeout = new ConnectTimeout();
+                                connectTimeout.start();
+                                timeouts.put(ConnectTimeout.class.getName(), connectTimeout);
+                            }
                             // Send an attention command
                             send(Command.AT_0);
 
                             // line.startsWith("error")) { reaction of error unimportant
-//  closeAllThreads();
-//  fireToHandler(BluetoothInfoState.CONNECTION_FAILED);
+                            //  closeAllThreads();
+                            //  fireToHandler(BluetoothInfoState.CONNECTION_FAILED);
+                        } else if (line.startsWith("login >")) {
+                            // Interrupt connect timer
+                            if (timeouts.containsKey(ConnectTimeout.class.getName())) {
+                                Log.d("TIMEOUT-THREAD", "InterruptConnect");
+                                timeouts.get(ConnectTimeout.class.getName()).interrupt();
+                                timeouts.remove(ConnectTimeout.class.getName());
+                            }
+                            // Start timer for connection
+                            if (!timeouts.containsKey(LoginTimeout.class.getName())) {
+                                Log.d("TIMEOUT-THREAD", "StartLogin");
+                                LoginTimeout loginTimeout = new LoginTimeout();
+                                loginTimeout.start();
+                                timeouts.put(LoginTimeout.class.getName(), loginTimeout);
+                            }
+                            send(Command.LOGIN);
+                        } else if (isPreviousCommand(Command.AT_PARAM_LIST)) {
+                            if (line.startsWith(Command.AT_CALIBH_N.getCommand())) {
+                                // Last element in parameter list
+                                resetAndSendNextCommand();
+                            }
+                            // Saving the pushed parameter list
+                            saveParamList(line);
                         } else if (line.startsWith("ok")) {
                             if (isPreviousCommand(Command.LOGIN)) {
-                                // Interrupt the timeout
-                                loginTimeout.interrupt();
+                                // Interrupt login timer
+                                if (timeouts.containsKey(LoginTimeout.class.getName())) {
+                                    Log.d("TIMEOUT-THREAD", "InterruptLogin");
+                                    timeouts.get(LoginTimeout.class.getName()).interrupt();
+                                    timeouts.remove(LoginTimeout.class.getName());
+                                }
 
                                 // Start the HoldConnection
+                                Log.d("TIMEOUT-THREAD", "StartHold");
                                 holdConnection = new HoldConnection();
                                 holdConnection.start();
                                 fireToHandler(BluetoothInfoState.LOGGED_IN);
                             }
-                            restartPush();
-                        } else if (line.equals("login >")) {
-                            if (loginTimeout != null) {
-                                loginTimeout.interrupt();
-                                loginTimeout = null;
-                            }
-                                // Start timer for login
-                                loginTimeout = new LoginTimeout();
-                                loginTimeout.start();
-                            send(Command.LOGIN);
-                        } else if (isPreviousCommand(Command.AT_PARAM_LIST)) {
-                            // Saving the pushed parameter list
-                            saveParamList(line);
-                            if (line.startsWith(Command.AT_CALIBH_N.getCommand())) {
-                                // Last element in parameter list
-                                restartPush();
-                            }
+                            resetAndSendNextCommand();
                         } else {
                             // Saving the pushed values
                             savePushValues(line);
@@ -315,42 +366,52 @@ Log.d("PARAMLIST", line);
 
         // Checks if the last command is the given on
         private boolean isPreviousCommand(Command command) {
-            if (command == previousCommand) {
-                return true;
-            }
-            return false;
-        }
-
-        // Restart pushing data
-        private void restartPush() {
-            Log.d("PUSH-RESTART", ":" + previousPush);
-//            if (previousCommand != Command.AT_PUSH_N) {
-//                if (previousPush != null) {
-//                    Command.AT_PUSH_N.setValue(previousPush);
-//                    send(Command.AT_PUSH_N);
-//                }
-//            }
-        }
-
-        // Stop pushing data
-        private void stopPush() {
-//            previousPush = Command.AT_PUSH_N.getValue();
-//            Log.d("PUSH-STOP", ":" + previousPush);
-//            Command.AT_PUSH_N.setValue("0");
-//            send(Command.AT_PUSH_N);
+            return (command.toString().equals(previousCommand));
         }
 
         // Sends a command
         private void send(Command command) {
-            if (command != Command.AT_0) {
-                if (command != Command.LOGIN && command != Command.AT_PUSH_N) {
-                    stopPush();
-                }
+            send(command.toString());
+        }
+
+        private void send(String command) {
+            if (!command.equals(Command.AT_0.toString())) {
                 // Save previous sent command
                 previousCommand = command;
             }
-            Log.v("CONNECTION-SERVICE", "> " + command.toString());
-            write((command.toString() + "\r").getBytes());
+            Log.v("CONNECTION-SERVICE", "> " + command);
+            write((command + "\r").getBytes());
+        }
+
+        // Sends the next command from queue
+        private void sendNextCommand() {
+            // Sending just one command at the same time
+            if (!currentlySending) {
+
+                // Interrupt timer for command
+                if (timeouts.containsKey(CommandTimeout.class.getName())) {
+                    timeouts.get(CommandTimeout.class.getName()).interrupt();
+                    timeouts.remove(CommandTimeout.class.getName());
+                }
+
+                String tmpCommand = commandQueue.poll();
+                if (tmpCommand != null) {
+                    send(tmpCommand);
+
+                    // Start timer for command
+                    if (!timeouts.containsKey(CommandTimeout.class.getName())) {
+                        CommandTimeout commandTimeout = new CommandTimeout();
+                        commandTimeout.start();
+                        timeouts.put(CommandTimeout.class.getName(), commandTimeout);
+                    }
+                }
+            }
+        }
+
+        // Resets the currently sending attribute
+        public void resetAndSendNextCommand() {
+            currentlySending = false;
+            sendNextCommand();
         }
 
         // Write to the connected OutputStream
@@ -381,7 +442,6 @@ Log.d("PARAMLIST", line);
                 outputStream = null;
             }
             previousCommand = null;
-            previousPush = null;
         }
     }
 
@@ -393,7 +453,9 @@ Log.d("PARAMLIST", line);
             while (!isInterrupted()) {
                 try {
                     Thread.sleep(60000);
-                    sendCommand(Command.AT_0);
+                    if (activeConnection != null) {
+                        activeConnection.send(Command.AT_0);
+                    }
                 } catch (InterruptedException e) {
                     Log.d("CONNECTION-SERVICE", "Sleep was interrupted");
                     break;
@@ -403,21 +465,104 @@ Log.d("PARAMLIST", line);
     }
 
     // This thread is waiting for login success or interrupt it after a while
-    private class LoginTimeout extends Thread {
+    private class LoginTimeout extends Timeout {
+
+        @Override
+        protected String getTopic() {
+            return "Login";
+        }
+
+        @Override
+        protected int getMs() {
+            return 2000;
+        }
+
+        @Override
+        protected boolean isJobDone() {
+            return isLoggedIn();
+        }
+
+        @Override
+        protected void fireTimeOutMessages() {
+            fireToHandler(BluetoothInfoState.LOGIN_TIMEOUT);
+            closeAllThreads();
+            fireToHandler(BluetoothInfoState.CONNECTION_FAILED);
+        }
+    }
+
+    // This thread is waiting for connection success or interrupt it after a while
+    private class ConnectTimeout extends Timeout {
+
+        @Override
+        protected String getTopic() {
+            return "Connect";
+        }
+
+        @Override
+        protected int getMs() {
+            return 2000;
+        }
+
+        @Override
+        protected boolean isJobDone() {
+            return isConnected();
+        }
+
+        @Override
+        protected void fireTimeOutMessages() {
+            closeAllThreads();
+            fireToHandler(BluetoothInfoState.CONNECTION_FAILED);
+        }
+    }
+
+    // This thread is waiting for sending the next command
+    private class CommandTimeout extends Timeout {
+
+        @Override
+        protected String getTopic() {
+            return "Command";
+        }
+
+        @Override
+        protected int getMs() {
+            return 1500;
+        }
+
+        @Override
+        protected boolean isJobDone() {
+            return false;
+        }
+
+        @Override
+        protected void fireTimeOutMessages() {
+            activeConnection.resetAndSendNextCommand();
+//            activeConnection.sendNextCommand();
+        }
+    }
+
+    // This is a abstract waiting thread
+    private abstract class Timeout extends Thread {
         @Override
         public void run() {
             try {
-                int ms = 2000;
+                int ms = getMs();
                 Thread.sleep(ms);
-                if (isLoggedIn()) {
-                    Log.d("CONNECTION-SERVICE", "Login timed out after " + String.valueOf(ms) + " ms");
-                    fireToHandler(BluetoothInfoState.LOGIN_TIMEOUT);
-                    closeAllThreads();
-                    fireToHandler(BluetoothInfoState.CONNECTION_FAILED);
+                if (!isJobDone()) {
+                    Log.d("CONNECTION-SERVICE", "(" + getTopic() + ") Time out after " + String.valueOf(ms) + " ms");
+
+                    fireTimeOutMessages();
                 }
             } catch (InterruptedException e) {
-                Log.d("CONNECTION-SERVICE", "Sleep was interrupted");
+                Log.d("CONNECTION-SERVICE", "(" + getTopic() + ") Sleep was interrupted");
             }
         }
+
+        protected abstract String getTopic();
+
+        protected abstract int getMs();
+
+        protected abstract boolean isJobDone();
+
+        protected abstract void fireTimeOutMessages();
     }
 }

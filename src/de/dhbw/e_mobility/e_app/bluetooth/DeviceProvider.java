@@ -16,7 +16,6 @@ import de.dhbw.e_mobility.e_app.R;
 import de.dhbw.e_mobility.e_app.common.ActivityHandler;
 import de.dhbw.e_mobility.e_app.common.IntentKeys;
 import de.dhbw.e_mobility.e_app.dialog.BluetoothDialogDiscovery;
-import de.dhbw.e_mobility.e_app.settings.SettingsProvider;
 
 public class DeviceProvider {
 
@@ -29,14 +28,12 @@ public class DeviceProvider {
     // Get ActivityHandler object
     private ActivityHandler activityHandler = ActivityHandler.getInstance();
 
-    // Get SettingsProvider object
-    private SettingsProvider settingsProvider = SettingsProvider.getInstance();
-
     // Private objects
     private BluetoothAdapter bluetoothAdapter = null;
     private MyBroadcastReceiver myBroadcastReceiver = null;
     private ConnectionService connectionService = null;
     private BluetoothDevice bluetoothDevice = null;
+    private BluetoothDevice tmpBuetoothDevice = null;
 
     // Lists for displaying the paired and discovered devices
     private ArrayAdapter<String> pairedDevicesArrayAdapter;
@@ -105,11 +102,6 @@ public class DeviceProvider {
         }
     }
 
-    // Resets the current bluetooth device
-    public void resetDevice() {
-        bluetoothDevice = null;
-    }
-
     // Unregister the BroadcastReceiver
     public void unregisterReceiver() {
         activityHandler.getMainContext().unregisterReceiver(myBroadcastReceiver);
@@ -118,12 +110,17 @@ public class DeviceProvider {
     // Update the bluetooth info
     private void updateBluetoothInfo(BluetoothInfoState theState) {
         bluetoothInfoState = theState;
-        if (theState == BluetoothInfoState.LOGGED_IN) {
-            settingsProvider.setBluetoothState(theState, bluetoothDevice.getName());
-        } else {
-            settingsProvider.setBluetoothState(theState);
-        }
         activityHandler.fireToHandler(IntentKeys.HANDLLER_SETTINGS.getValue(), IntentKeys.UPDATE_BT_INFO.getValue());
+    }
+
+    // Returns the bluetooth state for the preference summary
+    public String getBluetoothState() {
+        return bluetoothInfoState.toString() + ((bluetoothInfoState == BluetoothInfoState.LOGGED_IN) ? bluetoothDevice.getName() : "");
+    }
+
+    // Returns true if the device is currently logged in
+    public boolean isLoggedIn() {
+        return (bluetoothInfoState == BluetoothInfoState.LOGGED_IN);
     }
 
     // Setup the handler for this class
@@ -136,23 +133,26 @@ public class DeviceProvider {
                     // TODO was ist hier mit NULLpointer??
                     BluetoothInfoState infoState = BluetoothInfoState.values()[msg.getData().getInt(IntentKeys.MESSAGE_NUMBER.toString())];
 
-                    updateBluetoothInfo(infoState);
                     if (infoState == BluetoothInfoState.LOGGED_IN) {
                         // Login was successful
+                        bluetoothDevice = tmpBuetoothDevice;
                         Log.d("LOGIN", "Login was successful (" + bluetoothDevice.getName() + ")");
+                        updateBluetoothInfo(infoState);
                         doOnResult();
                     } else if (infoState == BluetoothInfoState.CONNECTION_FAILED) {
                         // Connection to controller failed
                         enableBluetoothPreference(true);
+                        updateBluetoothInfo(infoState);
                     } else if (infoState == BluetoothInfoState.LOGIN_TIMEOUT) {
                         // Timeout during login
                         activityHandler.fireToast(infoState.toString());
+                        updateBluetoothInfo(infoState);
                     }
                 }
 
                 // BluetoothDevice-ACTIONS
                 else if (msg.what == MyBroadcastReceiver.BT_ACTION_ACL_CONNECTED) {
-                    if(bluetoothInfoState == BluetoothInfoState.PAIRED) {
+                    if (bluetoothInfoState == BluetoothInfoState.PAIRED) {
                         // Connection with controller
                         //bluetoothInfoState = BluetoothInfoState.ACL_CONNECTED;
                         updateBluetoothInfo(BluetoothInfoState.ACL_CONNECTED);
@@ -175,10 +175,8 @@ public class DeviceProvider {
 //                } else if (msg.what == MyBroadcastReceiver.BT_ACTION_BOND_STATE_CHANGED_BOND_BONDING) {
                 } else if (msg.what == MyBroadcastReceiver.BT_ACTION_BOND_STATE_CHANGED_BOND_NONE) {
                     // Controller not bonded
-                    // TODO!!!!!!
-//                    updateBluetoothInfo(BluetoothInfoState.CONNECTION_FAILED);
                     enableBluetoothPreference(true);
-//                    doOnResult();
+                    doOnResult();
 
                     // Evtl. Ausgabe: Gerät ist noch nicht gekoppelt
                     // Möglicher Punkt um Pairinganfrage (bei Vollbild) hervorzuheben
@@ -206,7 +204,6 @@ public class DeviceProvider {
                             BluetoothDialogDiscovery.BT_DISCOVERY_FINISHED);
                 } else if (msg.what == MyBroadcastReceiver.BT_ACTION_DISCOVERY_STARTED) {
                     // Started discovering
-                    // TODO
                     activityHandler.fireToast(R.string.discovery_scanning);
 //                } else if (msg.what == MyBroadcastReceiver.BT_ACTION_LOCAL_NAME_CHANGED) {
 //                } else if (msg.what == MyBroadcastReceiver.BT_ACTION_REQUEST_DISCOVERABLE) {
@@ -214,7 +211,6 @@ public class DeviceProvider {
 //                } else if (msg.what == MyBroadcastReceiver.BT_ACTION_SCAN_MODE_CHANGED) {
                 } else if (msg.what == MyBroadcastReceiver.BT_ACTION_STATE_CHANGED) {
                     // Bluetooth was enabled
-                    // TODO
                     activityHandler.fireToast(R.string.bluetooth_info_enabled);
                 }
             }
@@ -250,15 +246,10 @@ public class DeviceProvider {
     // Checks if device is paired
     private void checkIsPaired() {
         if (bluetoothDevice.getBondState() == BluetoothDevice.BOND_BONDED) {
-//                || createBond()) {
             bluetoothInfoState = BluetoothInfoState.PAIRED;
             doOnResult();
         } else {
             createBond();
-//            Log.d("LOGIN", "Device is not paired / Pairing unsuccessful");
-//            activityHandler.fireToast(R.string.device_not_paired);
-//            updateBluetoothInfo(BluetoothInfoState.UNPAIRED);
-//            enableBluetoothPreference(true);
         }
     }
 
@@ -266,7 +257,9 @@ public class DeviceProvider {
     private void checkConnectionAndLogin() {
         // Update password
         Command.LOGIN.setValue(activityHandler.getPassword());
-        connectionService.checkConnectionAndLogin(bluetoothDevice);
+        tmpBuetoothDevice = bluetoothDevice;
+        bluetoothDevice = null;
+        connectionService.checkConnectionAndLogin(tmpBuetoothDevice);
     }
 
     // Enables the preference element for bluetooth settings
@@ -277,7 +270,6 @@ public class DeviceProvider {
             return;
         }
         // Reset the current saved device
-        resetDevice();
         activityHandler.fireToHandler(IntentKeys.HANDLLER_SETTINGS.getValue(),
                 IntentKeys.DISABLE_BLUETOOTH_PREF.getValue());
     }
@@ -302,10 +294,9 @@ public class DeviceProvider {
             checkConnectionAndLogin();
             return;
         }
-        if (bluetoothInfoState == BluetoothInfoState.ACL_CONNECTED) {
-//            updateBluetoothInfo(BluetoothInfoState.ACL_CONNECTED);
-            return;
-        }
+//        if (bluetoothInfoState == BluetoothInfoState.ACL_CONNECTED) {
+//            return;
+//        }
         if (bluetoothInfoState == BluetoothInfoState.LOGGED_IN) {
             enableBluetoothPreference(true);
             // Save device
@@ -313,16 +304,14 @@ public class DeviceProvider {
             // Asking for parameter list
             sendCommand(Command.AT_PARAM_LIST);
             // Set default value for at-push
-//            Command.AT_PUSH_N.setValue("1");
-//            sendCommand(Command.AT_PUSH_N);
-            // TODO TODO TODO! enable push but also try to get param list
+            Command.AT_PUSH_N.setValue("1");
+            sendCommand(Command.AT_PUSH_N);
             return;
         }
         if (bluetoothInfoState == BluetoothInfoState.NONE) {
             // There is no bluetooth available on this device
             Log.d("LOGIN", "Bluetooth not available");
             updateBluetoothInfo(BluetoothInfoState.NONE);
-            return;
         }
     }
 
@@ -363,7 +352,7 @@ public class DeviceProvider {
             return (Boolean) createBondMethod
                     .invoke(bluetoothDevice);
         } catch (Exception e) {
-            Log.e("DEVICE-PROVIDER", "Fail in creating bond [" + e.getClass().getSimpleName().toString() + "]:" + e);
+            Log.e("DEVICE-PROVIDER", "Fail in creating bond [" + e.getClass().getSimpleName() + "]:" + e);
             e.printStackTrace();
         }
         return false;

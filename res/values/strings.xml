@@ -41,6 +41,7 @@
     <string name="login_failed_wrong_pw">Login fehlgeschlagen (evtl. falsches Passwort)</string>
     <string name="percent">%</string>
     <string name="durationUnit">h</string>
+    <string name="logging">Logfile</string>
 
 
     <string name="speed">Speed</string>

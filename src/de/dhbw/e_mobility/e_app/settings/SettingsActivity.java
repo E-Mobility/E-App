@@ -49,9 +49,6 @@ public class SettingsActivity extends PreferenceActivity implements
     // Get ActivityHandler object
     private ActivityHandler activityHandler = ActivityHandler.getInstance();
 
-    // Get SettingsProvider object
-    private SettingsProvider settingsProvider = SettingsProvider.getInstance();
-
     // Get DeviceProvider object
     private DeviceProvider deviceProvider = DeviceProvider
             .getInstance();
@@ -73,7 +70,7 @@ public class SettingsActivity extends PreferenceActivity implements
                             enableBluetoothPreference(false);
 
                             // If already logged in asking for logout
-                            if (settingsProvider.isLoggedIn()) {
+                            if (deviceProvider.isLoggedIn()) {
                                 logout();
                                 return true;
                             }
@@ -130,6 +127,27 @@ public class SettingsActivity extends PreferenceActivity implements
                             return true;
                         }
                     });
+        }
+
+        final Preference pref_logging = getPreference(SettingsElements.LOGGING);
+        if (pref_logging != null) {
+            pref_logging
+                    .setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+                        @Override
+                        public boolean onPreferenceClick(Preference preference) {
+                            if (pref_logging.getSummary() == null) {
+                                SettingsElements.LOGGING.setSummary("save");
+                                pref_logging.setSummary("save on close");
+                            } else {
+                                SettingsElements.LOGGING.setSummary(null);
+                                pref_logging.setSummary(null);
+                            }
+                            return true;
+                        }
+                    });
+            pref_logging.setTitle(R.string.logging);
+            SettingsElements.LOGGING.setSummary(null);
+            pref_logging.setSummary(null);
         }
 
         SharedPreferences sharedPreferences = PreferenceManager
@@ -284,7 +302,7 @@ public class SettingsActivity extends PreferenceActivity implements
     private void updateBluetoothInfo() {
         Preference tmpPref = getPreference(SettingsElements.BLUETOOTH);
         if (tmpPref != null) {
-            tmpPref.setSummary(settingsProvider.getBluetoothState());
+            tmpPref.setSummary(deviceProvider.getBluetoothState());
         }
     }
 
@@ -313,8 +331,8 @@ public class SettingsActivity extends PreferenceActivity implements
                 } else if (msg.what == IntentKeys.START_DISCOVERING_DEVICES.getValue()) {
                     // STARTING THE DISCOVERY DIALOG
                     startActivityForResult(new Intent(getApplicationContext(),
-                    BluetoothDialogDiscovery.class),
-                    BLUETOOTH_REQUEST_DISCOVERY
+                                    BluetoothDialogDiscovery.class),
+                            BLUETOOTH_REQUEST_DISCOVERY
                     );
                 } else if (msg.what == IntentKeys.ENABLE_BLUETOOTH_PREF.getValue()) {
                     enableBluetoothPreference(true);
@@ -356,7 +374,7 @@ public class SettingsActivity extends PreferenceActivity implements
             if (reqCode == Activity.RESULT_OK) {
                 // Do next step for login
                 deviceProvider.doOnResult();
-            } else{
+            } else {
                 enableBluetoothPreference(true);
             }
         } else if (resCode == BLUETOOTH_REQUEST_DISCONNECT) {
@@ -369,11 +387,10 @@ public class SettingsActivity extends PreferenceActivity implements
             if (reqCode == Activity.RESULT_OK) {
                 // Save selected device
                 String address = getStringFromData(data, IntentKeys.DEVICE_ADDRESS);
-                // activityHandler.saveDeviceAddress(address); // TODO ist jetzt bei logged_in
                 deviceProvider.setDevice(address);
                 // Do next step for login
                 deviceProvider.doOnResult();
-            } else{
+            } else {
                 enableBluetoothPreference(true);
             }
         } else if (resCode == SETTINGS_REQUEST_ADVANCED) {
@@ -409,9 +426,11 @@ public class SettingsActivity extends PreferenceActivity implements
     // Updating the preference summary
     private void updatePreference(SharedPreferences sharedPreferences,
                                   String key) {
-        if (key.equals(SettingsElements.AUTOLOG.getKey()) || key.equals(SettingsElements.ADVANCED.getKey())) {
+        if (key.equals(SettingsElements.AUTOLOG.getKey()) || key.equals(SettingsElements.ADVANCED.getKey())
+                || key.equals(SettingsElements.DEVICE.getKey()) || key.equals(SettingsElements.LOGGING.getKey())) {
             return;
-        } else if (key.equals(SettingsElements.PASSWORD.getKey())) {
+        }
+        if (key.equals(SettingsElements.PASSWORD.getKey())) {
             EditTextPreference tmpPref = (EditTextPreference) findPreference(key);
             if (tmpPref == null) {
                 Log.e("Settings", "Preference not found! (" + key + ")");

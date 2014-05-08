@@ -70,13 +70,11 @@ public enum Command {
 
     // Returns the value
     public String getValue() {
-        Log.d("COMMAND", "get: " + value);
         return value;
     }
 
     // Saves the value
     public void setValue(String theValue) {
-        Log.d("COMMAND", "SET: " + theValue);
         value = theValue;
     }
 

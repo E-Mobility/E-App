@@ -137,6 +137,8 @@
         <Preference android:key="AT_PARAM_LIST_" />
 
         <Preference android:key="AT_LOGIN_" />
+
+        <Preference android:key="settings_log" />
     </PreferenceScreen>
 
 </PreferenceScreen>

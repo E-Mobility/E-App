@@ -11,6 +11,7 @@ public enum SettingsElements {
     ADVANCED("settings_advanced"), //
     CONTROLLER("settings_controller"), //
     DEVICE("settings_device"), //
+    LOGGING("settings_log"), //
 
     AT_0("AT_0_", Command.AT_0, "Attention without response"), //
     AT_DFLT("AT_DFLT_", Command.AT_DFLT,
@@ -126,6 +127,11 @@ public enum SettingsElements {
     // Returns the summary of the element
     public String getSummary() {
         return summary;
+    }
+
+    // Saves the summary of the element
+    public void setSummary(String theSummary) {
+        summary = theSummary;
     }
 
     @Override
