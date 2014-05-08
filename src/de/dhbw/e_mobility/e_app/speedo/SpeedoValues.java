@@ -9,7 +9,7 @@ public enum SpeedoValues {
     M("M"), // (A) Aktueller max. Strom / current max amperage
     D("D"), // (multiple of 50x speedometer impulse) Distanz / distnace
     P("P"), // Aktuelles Profil / current profile
-    DISTANCE, DURATION;
+    DISTANCE, DURATION, LOGGED_IN;
 
     private float value;
     private String command;

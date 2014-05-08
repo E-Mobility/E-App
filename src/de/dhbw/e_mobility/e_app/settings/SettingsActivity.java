@@ -381,6 +381,8 @@ public class SettingsActivity extends PreferenceActivity implements
             // If Bluetooth-Deivce should disconnect
             if (reqCode == Activity.RESULT_OK) {
                 deviceProvider.logoutAndResetDevice();
+            } else {
+                enableBluetoothPreference(true);
             }
         } else if (resCode == BLUETOOTH_REQUEST_DISCOVERY) {
             // If Bluetooth-Deivce was selected

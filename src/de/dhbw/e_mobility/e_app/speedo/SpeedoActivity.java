@@ -5,6 +5,7 @@ import android.content.res.Resources;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -168,6 +169,20 @@ public abstract class SpeedoActivity extends Activity {
                     if (assistance_progressBar.getProgress() != assistanceVal) {
                         assistance_progressBar.setProgress(assistanceVal);
                         // TODO change color
+                    }
+                }
+
+                // Update bluetooth icon text
+                TextView bluetooth_text = (TextView) getElement(SpeedoElements.BLUETOOTH_TEXT);
+                if (bluetooth_text != null) {
+                    if (SpeedoValues.LOGGED_IN.getValue() == 0) {
+                        if (!bluetooth_text.getText().equals(R.string.bluetooth_disconnected)) {
+                            bluetooth_text.setText(R.string.bluetooth_disconnected);
+                        }
+                    } else {
+                        if (!bluetooth_text.getText().equals(R.string.bluetooth_connected)) {
+                            bluetooth_text.setText(R.string.bluetooth_connected);
+                        }
                     }
                 }
             }

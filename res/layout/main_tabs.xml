@@ -17,14 +17,21 @@
 
             <ImageView
                 android:id="@+id/tab_bluetooth_icon"
-                android:layout_width="58dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="0.20"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:visibility="gone"
                 android:src="@android:drawable/stat_sys_data_bluetooth" />
+            <!-- TODO also show text or different bluetooth icon in portrait -->
+            <TextView
+                android:id="@+id/tab_bluetooth_text"
+                android:visibility="gone"
+                android:layout_weight="0.20"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
 
             <LinearLayout
                 android:layout_width="252dp"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_gravity="fill"
                 android:layout_weight="0.20"
                 android:orientation="vertical">
@@ -45,12 +52,12 @@
         <TabWidget
             android:id="@android:id/tabs"
             android:layout_height="wrap_content"
-            android:layout_width="fill_parent"></TabWidget>
+            android:layout_width="fill_parent" />
 
         <FrameLayout
             android:id="@android:id/tabcontent"
             android:layout_height="fill_parent"
-            android:layout_width="fill_parent"></FrameLayout>
+            android:layout_width="fill_parent" />
 
     </LinearLayout>
 

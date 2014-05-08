@@ -3,7 +3,7 @@ package de.dhbw.e_mobility.e_app.speedo;
 import de.dhbw.e_mobility.e_app.R;
 
 public enum SpeedoElements {
-    BLUETOOTH_ICON(R.id.tab_bluetooth_icon, R.id.landscape_bluetooth_icon), CLOCK(R.id.tab_clock, R.id.landscape_clock),
+    BLUETOOTH_ICON(R.id.tab_bluetooth_icon, R.id.landscape_bluetooth_icon), BLUETOOTH_TEXT(R.id.tab_bluetooth_text, R.id.landscape_bluetooth_text), CLOCK(R.id.tab_clock, R.id.landscape_clock),
     SPEED_TITLE(R.id.portrait_speed_title), SPEED(R.id.portrait_speed, R.id.landscape_speed), SPEED_UNIT(R.id.portrait_speed_unit, R.id.landscape_speed_unit),
     MODE(R.id.portrait_mode, R.id.landscape_mode),
     TOUR_TITLE(R.id.portrait_tour_title), TOUR_RESET(R.id.portrait_tour_reset),

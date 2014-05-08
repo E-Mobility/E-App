@@ -16,6 +16,7 @@ import de.dhbw.e_mobility.e_app.R;
 import de.dhbw.e_mobility.e_app.common.ActivityHandler;
 import de.dhbw.e_mobility.e_app.common.IntentKeys;
 import de.dhbw.e_mobility.e_app.dialog.BluetoothDialogDiscovery;
+import de.dhbw.e_mobility.e_app.speedo.SpeedoValues;
 
 public class DeviceProvider {
 
@@ -111,6 +112,11 @@ public class DeviceProvider {
     private void updateBluetoothInfo(BluetoothInfoState theState) {
         bluetoothInfoState = theState;
         activityHandler.fireToHandler(IntentKeys.HANDLLER_SETTINGS.getValue(), IntentKeys.UPDATE_BT_INFO.getValue());
+        if(theState == BluetoothInfoState.LOGGED_IN) {
+            SpeedoValues.LOGGED_IN.setValue(1);
+        } else {
+            SpeedoValues.LOGGED_IN.setValue(0);
+        }
     }
 
     // Returns the bluetooth state for the preference summary

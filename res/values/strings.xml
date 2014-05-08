@@ -32,6 +32,8 @@
     <string name="device_not_paired">Gerät ist nicht gekoppelt</string>
 
     <!-- SettingsActivity -->
+    <string name="bluetooth_connected">verbunden</string>
+    <string name="bluetooth_disconnected">nicht verbunden</string>
 
     <string name="bluetooth_bound_bounded">Erfolgreich gekoppelt mit </string>
     <string name="bluetooth_bound_bounding">Kopplung läuft &#8230;</string>
