@@ -53,6 +53,4 @@
             android:label="@string/dialog_deviceList_title"
             android:theme="@style/AppDialog" />
     </application>
-    <!-- TODO Bildschirmstandby verhindern -->
-    <!-- TODO Kein Vollbild, weil sonst z.B. die Pairinganfrage im Hintergrund unentdeckt bleibt -->
 </manifest>

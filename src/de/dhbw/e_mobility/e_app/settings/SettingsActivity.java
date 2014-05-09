@@ -33,9 +33,6 @@ import de.dhbw.e_mobility.e_app.dialog.BluetoothDialogDiscovery;
 public class SettingsActivity extends PreferenceActivity implements
         OnSharedPreferenceChangeListener {
 
-    // TODO INFO
-    // http://developer.android.com/guide/topics/ui/settings.html
-
     // Intent Request Codes
     private static final int BLUETOOTH_REQUEST_ENABLE = 1;
     private static final int BLUETOOTH_REQUEST_DISCOVERY = 2;

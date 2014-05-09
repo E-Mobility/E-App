@@ -21,7 +21,7 @@
                 android:layout_height="match_parent"
                 android:visibility="gone"
                 android:src="@android:drawable/stat_sys_data_bluetooth" />
-            <!-- TODO also show text or different bluetooth icon in portrait -->
+            <!-- TODO also show text or different bluetooth icon in portrait like in landscape mode -->
             <TextView
                 android:id="@+id/tab_bluetooth_text"
                 android:visibility="gone"

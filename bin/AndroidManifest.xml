@@ -52,22 +52,5 @@
             android:configChanges="orientation|keyboardHidden"
             android:label="@string/dialog_deviceList_title"
             android:theme="@style/AppDialog" />
-        <activity
-            android:name=".dialog.BluetoothDialogDisconnect"
-            android:configChanges="orientation|keyboardHidden"
-            android:label="@string/dialog_disconnect_title"
-            android:theme="@style/AppDialog" />
-        <activity
-            android:name=".settings.SettingsAdvancedDialog"
-            android:configChanges="orientation|keyboardHidden"
-            android:label="@string/dialog_advanced_settings_title"
-            android:theme="@style/AppDialog" />
-        <activity
-            android:name=".dialog.ReallyDialog"
-            android:configChanges="orientation|keyboardHidden"
-            android:label="@string/dialog_really_title"
-            android:theme="@style/AppDialog" />
     </application>
-    <!-- TODO Bildschirmstandby verhindern -->
-    <!-- TODO Kein Vollbild, weil sonst z.B. die Pairinganfrage im Hintergrund unentdeckt bleibt -->
 </manifest>

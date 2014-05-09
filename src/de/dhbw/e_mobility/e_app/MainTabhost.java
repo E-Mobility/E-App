@@ -40,6 +40,7 @@ public class MainTabhost extends ActivityGroup {
         setContentView(R.layout.main_tabs);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
+        // TODO just show SpeedoLandscapeActivity after turning device (without the tab host)
 
         // TODO changeContentView();
 
