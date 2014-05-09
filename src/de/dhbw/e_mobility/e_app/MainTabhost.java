@@ -25,10 +25,6 @@ import de.dhbw.e_mobility.e_app.tour_stats.StatsTourActivity;
 
 public class MainTabhost extends ActivityGroup {
 
-    private static String specSpeedo = "speedo";
-    private static String specTour = "statusTour";
-    private static String specTotal = "statusTotal";
-    private static String specSettings = "settings";
     // Get ActivityHandler object
     private ActivityHandler activityHandler = ActivityHandler.getInstance();
     // Get DeviceProvider object
@@ -53,6 +49,7 @@ public class MainTabhost extends ActivityGroup {
         TabHost tabHost = (TabHost) findViewById(android.R.id.tabhost);
         tabHost.setup(this.getLocalActivityManager());
 
+        String specSpeedo = "speedo";
         speedoTab = tabHost.newTabSpec(specSpeedo);
         speedoTab.setIndicator(activityHandler.getStr(R.string.speedo_title));
 
@@ -60,14 +57,17 @@ public class MainTabhost extends ActivityGroup {
         speedoPortrait = new Intent(this, SpeedoPortraitActivity.class);
         speedoTab.setContent(speedoPortrait);
 
+        String specTour = "statusTour";
         TabSpec tourTab = tabHost.newTabSpec(specTour);
         tourTab.setIndicator(activityHandler.getStr(R.string.stats_tour_title));
         tourTab.setContent(new Intent(this, StatsTourActivity.class));
 
+        String specTotal = "statusTotal";
         TabSpec totalTab = tabHost.newTabSpec(specTotal);
         totalTab.setIndicator(activityHandler.getStr(R.string.stats_total_title));
         totalTab.setContent(new Intent(this, StatsTotalActivity.class));
 
+        String specSettings = "settings";
         TabSpec settingsTab = tabHost.newTabSpec(specSettings);
         settingsTab.setIndicator(activityHandler.getStr(R.string.settings_title));
         settingsTab.setContent(new Intent(this, SettingsActivity.class));
@@ -138,7 +138,7 @@ public class MainTabhost extends ActivityGroup {
 
         if (tachoIsCurrent) {
             tabHost.setCurrentTab(0);
-            // TODO CurrentTab-Workaround aendern
+            // TODO change current tab-workaround
             // (damit Intent nicht "einfriert")
         }
     }

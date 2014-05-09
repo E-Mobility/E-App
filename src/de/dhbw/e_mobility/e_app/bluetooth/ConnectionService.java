@@ -288,7 +288,7 @@ public class ConnectionService {
                 while (!isInterrupted()) {
                     line = reader.readLine();
                     if (!line.equals("")) {
-                        if (previousCommand != null) { // TODO delete this if/else statement
+                        if (previousCommand != null) {
                             Log.d("CONNECTION-SERVICE", "previousCommand: " + previousCommand);
                         } else {
                             Log.d("CONNECTION-SERVICE", "previousCommand: NULL");

@@ -1,28 +1,31 @@
 package de.dhbw.e_mobility.e_app.bluetooth;
 
+import de.dhbw.e_mobility.e_app.R;
+import de.dhbw.e_mobility.e_app.common.ActivityHandler;
+
 public enum BluetoothInfoState {
 
-    NONE("Kein Bluetooth verfügbar!"),
-    INITIALIZED("Tippen um zu verbinden"),
-    ON("Bluetooth ist eingeschaltet"),
-    DEVICE_KNOWN("Gerät bereits gewählt"),
-    PAIRED("Gerät gekoppelt"),
-    CONNECTION_FAILED("Verbindung fehlgeschlagen"),
-    ACL_CONNECTED("Verbunden"),
-    LOGIN_TIMEOUT("Login fehlgeschlagen (evtl. falsches Passwort)"),
-    LOGGED_IN("Verbunden mit "),
-    ACL_DISCONNECTED("Verbindung beendet");
+    NONE(R.string.bt_info_none),
+    INITIALIZED(R.string.bt_info_initialized),
+    ON(R.string.bt_info_on),
+    DEVICE_KNOWN(R.string.bt_info_known_device),
+    PAIRED(R.string.bt_info_paired),
+    CONNECTION_FAILED(R.string.bt_info_connection_failed),
+    ACL_CONNECTED(R.string.bt_info_acl_connected),
+    LOGIN_TIMEOUT(R.string.bt_info_login_timeout),
+    LOGGED_IN(R.string.bt_info_logged_in),
+    ACL_DISCONNECTED(R.string.bt_info_acl_disconnected);
 
-    private String text;
+    private int textRes;
 
     // Constructor
-    private BluetoothInfoState(String theText) {
-        text = theText;
+    private BluetoothInfoState(int theText) {
+        textRes = theText;
     }
 
     @Override
     // Returns the text
     public String toString() {
-        return text;
+        return ActivityHandler.getInstance().getStr(textRes);
     }
 }

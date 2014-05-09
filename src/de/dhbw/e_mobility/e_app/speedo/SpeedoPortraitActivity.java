@@ -13,8 +13,6 @@ import de.dhbw.e_mobility.e_app.bluetooth.DeviceProvider;
 
 public class SpeedoPortraitActivity extends SpeedoActivity {
 
-    private boolean timerAn = true;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

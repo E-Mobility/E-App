@@ -66,12 +66,10 @@ public abstract class SpeedoActivity extends Activity {
                 if (speed_unit_view != null) {
                     if (speedUnits.length > 1) {
                         if (!activityHandler.isKm()) {
-                            // TODO was ist hier mit NULLpointer??
                             if (!speed_unit_view.getText().equals(speedUnits[1])) {
                                 speed_unit_view.setText(speedUnits[1]);
                             }
                         } else {
-                            // TODO was ist hier mit NULLpointer??
                             if (!speed_unit_view.getText().equals(speedUnits[0])) {
                                 speed_unit_view.setText(speedUnits[0]);
                             }
@@ -84,12 +82,10 @@ public abstract class SpeedoActivity extends Activity {
                 if (distance_unit_view != null) {
                     if (distanceUnits.length > 1) {
                         if (!activityHandler.isKm()) {
-                            // TODO was ist hier mit NULLpointer??
                             if (!distance_unit_view.getText().equals(distanceUnits[1])) {
                                 distance_unit_view.setText(speedUnits[1]);
                             }
                         } else {
-                            // TODO was ist hier mit NULLpointer??
                             if (!distance_unit_view.getText().equals(distanceUnits[0])) {
                                 distance_unit_view.setText(distanceUnits[0]);
                             }
@@ -116,7 +112,6 @@ public abstract class SpeedoActivity extends Activity {
                     }
                     String speed = String.valueOf(speedNumberFormat.format(speedVal * unitFactor));
 
-                    // TODO was ist hier mit NULLpointer??
                     if (!speed_view.getText().equals(speed)) {
                         speed_view.setText(speed);
                     }
@@ -133,7 +128,6 @@ public abstract class SpeedoActivity extends Activity {
                 if (distance_view != null) {
                     String distance = String.valueOf(distanceNumberFormat.format(SpeedoValues.DISTANCE.getValue() * unitFactor));
 
-                    // TODO was ist hier mit NULLpointer??
                     if (!distance_view.getText().equals(distance)) {
                         distance_view.setText(distance);
                     }
@@ -144,7 +138,6 @@ public abstract class SpeedoActivity extends Activity {
                 if (duration_view != null) {
                     String duration = activityHandler.getDuration(); //SpeedoValues.DURATION.getCommand();
 
-                    // TODO was ist hier mit NULLpointer??
                     if (!duration_view.getText().equals(duration)) {
                         duration_view.setText(duration);
                     }
@@ -192,11 +185,11 @@ public abstract class SpeedoActivity extends Activity {
                 TextView bluetooth_text = (TextView) getElement(SpeedoElements.BLUETOOTH_TEXT);
                 if (bluetooth_text != null) {
                     if (SpeedoValues.LOGGED_IN.getValue() == 0) {
-                        if (!bluetooth_text.getText().equals(R.string.bluetooth_text_disconnected)) {
+                        if (!bluetooth_text.getText().equals(String.valueOf(R.string.bluetooth_text_disconnected))) {
                             bluetooth_text.setText(R.string.bluetooth_text_disconnected);
                         }
                     } else {
-                        if (!bluetooth_text.getText().equals(R.string.bluetooth_text_connected)) {
+                        if (!bluetooth_text.getText().equals(String.valueOf(R.string.bluetooth_text_connected))) {
                             bluetooth_text.setText(R.string.bluetooth_text_connected);
                         }
                     }

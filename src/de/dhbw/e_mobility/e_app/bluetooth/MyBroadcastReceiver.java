@@ -15,33 +15,33 @@ public class MyBroadcastReceiver extends BroadcastReceiver {
 
     // BluetoothDevice-ACTIONS
     public static final int BT_ACTION_ACL_CONNECTED = 10;
-    public static final int BT_ACTION_ACL_CONNECTED_BONDED = 11;
-    public static final int BT_ACTION_ACL_DISCONNECT_REQUESTED = 12;
+    //    public static final int BT_ACTION_ACL_CONNECTED_BONDED = 11;
+//    public static final int BT_ACTION_ACL_DISCONNECT_REQUESTED = 12;
     public static final int BT_ACTION_ACL_DISCONNECTED = 13;
     public static final int BT_ACTION_BOND_STATE_CHANGED_BOND_BONDED = 14;
     public static final int BT_ACTION_BOND_STATE_CHANGED_BOND_BONDING = 15;
     public static final int BT_ACTION_BOND_STATE_CHANGED_BOND_NONE = 16;
-    public static final int BT_ACTION_CLASS_CHANGED = 17;
+    //    public static final int BT_ACTION_CLASS_CHANGED = 17;
     public static final int BT_ACTION_FOUND = 18;
-    public static final int BT_ACTION_NAME_CHANGED = 19;
-    public static final int BT_ACTION_PAIRING_REQUEST = 20;
-    public static final int BT_ACTION_UUID = 21;
+//    public static final int BT_ACTION_NAME_CHANGED = 19;
+//    public static final int BT_ACTION_PAIRING_REQUEST = 20;
+//    public static final int BT_ACTION_UUID = 21;
 
     // BluetoothAdapter-ACTIONS
-    public static final int BT_ACTION_CONNECTION_STATE_CHANGED = 30;
+//    public static final int BT_ACTION_CONNECTION_STATE_CHANGED = 30;
     public static final int BT_ACTION_DISCOVERY_FINISHED = 34;
     public static final int BT_ACTION_DISCOVERY_STARTED = 35;
-    public static final int BT_ACTION_LOCAL_NAME_CHANGED = 36;
-    public static final int BT_ACTION_REQUEST_DISCOVERABLE = 37;
-    public static final int BT_ACTION_REQUEST_ENABLE = 38;
-    public static final int BT_ACTION_SCAN_MODE_CHANGED = 39;
+    //    public static final int BT_ACTION_LOCAL_NAME_CHANGED = 36;
+//    public static final int BT_ACTION_REQUEST_DISCOVERABLE = 37;
+//    public static final int BT_ACTION_REQUEST_ENABLE = 38;
+//    public static final int BT_ACTION_SCAN_MODE_CHANGED = 39;
     public static final int BT_ACTION_STATE_CHANGED = 40;
 
     // CONNECTION_STATE for BluetoothAdapter (Not implemented before API 11)
-    public static final int STATE_DISCONNECTED = 0;
-    public static final int STATE_CONNECTING = 1;
-    public static final int STATE_CONNECTED = 2;
-    public static final int STATE_DISCONNECTING = 3;
+//    public static final int STATE_DISCONNECTED = 0;
+//    public static final int STATE_CONNECTING = 1;
+//    public static final int STATE_CONNECTED = 2;
+//    public static final int STATE_DISCONNECTING = 3;
 
     // Get ActivityHandler object
     private ActivityHandler activityHandler = ActivityHandler.getInstance();
@@ -63,7 +63,6 @@ public class MyBroadcastReceiver extends BroadcastReceiver {
         // BluetoothDevice-ACTIONS
         if (BluetoothDevice.ACTION_ACL_CONNECTED.equals(action)) {
             Log.d("BluetoothDevice-ACTION", "ACTION_ACL_CONNECTED");
-            // TODO-!
             activityHandler.fireToHandler(
                     IntentKeys.HANDLLER_DEVICE_PROVIDER.getValue(),
                     BT_ACTION_ACL_CONNECTED);
@@ -72,12 +71,10 @@ public class MyBroadcastReceiver extends BroadcastReceiver {
             Log.d("BluetoothDevice-ACTION", "ACTION_ACL_DISCONNECT_REQUESTED");
         } else if (BluetoothDevice.ACTION_ACL_DISCONNECTED.equals(action)) {
             Log.d("BluetoothDevice-ACTION", "ACTION_ACL_DISCONNECTED");
-            // TODO-!
             activityHandler.fireToHandler(
                     IntentKeys.HANDLLER_DEVICE_PROVIDER.getValue(),
                     BT_ACTION_ACL_DISCONNECTED);
         } else if (BluetoothDevice.ACTION_BOND_STATE_CHANGED.equals(action)) {
-            // TODO-!
             if (bonded) {
                 Log.d("BluetoothDevice-ACTION", "ACTION_BOND_STATE_CHANGED_BONDED");
                 Bundle bundle = new Bundle();
@@ -88,12 +85,12 @@ public class MyBroadcastReceiver extends BroadcastReceiver {
                 activityHandler.fireToHandler(
                         IntentKeys.HANDLLER_DEVICE_PROVIDER.getValue(),
                         BT_ACTION_BOND_STATE_CHANGED_BOND_BONDED, bundle);
-            } else if(extraDevice.getBondState() == BluetoothDevice.BOND_BONDING) {
+            } else if (extraDevice.getBondState() == BluetoothDevice.BOND_BONDING) {
+                // TODO was ist hier mit NULLpointer??
                 Log.d("BluetoothDevice-ACTION", "ACTION_BOND_STATE_CHANGED_BONDING");
                 activityHandler.fireToHandler(
                         IntentKeys.HANDLLER_DEVICE_PROVIDER.getValue(),
                         BT_ACTION_BOND_STATE_CHANGED_BOND_BONDING);
-                // TODO TESTEN!!
             } else {
                 Log.d("BluetoothDevice-ACTION", "ACTION_BOND_STATE_CHANGED_NONE");
                 activityHandler.fireToHandler(
@@ -104,12 +101,12 @@ public class MyBroadcastReceiver extends BroadcastReceiver {
             Log.d("BluetoothDevice-ACTION", "ACTION_CLASS_CHANGED");
         } else if (BluetoothDevice.ACTION_FOUND.equals(action)) {
             Log.d("BluetoothDevice-ACTION", "ACTION_FOUND");
-            // TODO-!
             // If device is already paired it is already in the paired list
             if (!bonded) {
                 Bundle bundle = new Bundle();
                 bundle.putString(IntentKeys.DEVICE_NAME.toString(),
                         extraDevice.getName());
+                // TODO was ist hier mit NULLpointer??
                 bundle.putString(IntentKeys.DEVICE_ADDRESS.toString(),
                         extraDevice.getAddress());
                 activityHandler.fireToHandler(
@@ -120,6 +117,7 @@ public class MyBroadcastReceiver extends BroadcastReceiver {
             Log.d("BluetoothDevice-ACTION", "ACTION_NAME_CHANGED");
         } else if (action
                 .equals("android.bluetooth.device.action.PAIRING_REQUEST")) {
+            // TODO was ist hier mit NULLpointer??
             Log.d("BluetoothDevice-ACTION", "ACTION_PAIRING_REQUEST");
         } else if (action.equals("android.bleutooth.device.action.UUID")) {
             Log.d("BluetoothDevice-ACTION",
@@ -132,13 +130,11 @@ public class MyBroadcastReceiver extends BroadcastReceiver {
             Log.d("BluetoothAdapter-ACTION", "ACTION_CONNECTION_STATE_CHANGED");
         } else if (BluetoothAdapter.ACTION_DISCOVERY_FINISHED.equals(action)) {
             Log.d("BluetoothAdapter-ACTION", "ACTION_DISCOVERY_FINISHED");
-            // TODO-!
             activityHandler.fireToHandler(
                     IntentKeys.HANDLLER_DEVICE_PROVIDER.getValue(),
                     BT_ACTION_DISCOVERY_FINISHED);
         } else if (BluetoothAdapter.ACTION_DISCOVERY_STARTED.equals(action)) {
             Log.d("BluetoothAdapter-ACTION", "ACTION_DISCOVERY_STARTED");
-            // TODO-!
             activityHandler.fireToHandler(
                     IntentKeys.HANDLLER_DEVICE_PROVIDER.getValue(),
                     BT_ACTION_DISCOVERY_STARTED);
@@ -152,7 +148,6 @@ public class MyBroadcastReceiver extends BroadcastReceiver {
             Log.d("BluetoothAdapter-ACTION", "ACTION_SCAN_MODE_CHANGED");
         } else if (BluetoothAdapter.ACTION_STATE_CHANGED.equals(action)) {
             Log.d("BluetoothAdapter-ACTION", "ACTION_STATE_CHANGED");
-            // TODO-!
             activityHandler.fireToHandler(
                     IntentKeys.HANDLLER_DEVICE_PROVIDER.getValue(),
                     BT_ACTION_STATE_CHANGED);

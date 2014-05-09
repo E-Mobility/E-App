@@ -112,7 +112,7 @@ public class DeviceProvider {
     private void updateBluetoothInfo(BluetoothInfoState theState) {
         bluetoothInfoState = theState;
         activityHandler.fireToHandler(IntentKeys.HANDLLER_SETTINGS.getValue(), IntentKeys.UPDATE_BT_INFO.getValue());
-        if(theState == BluetoothInfoState.LOGGED_IN) {
+        if (theState == BluetoothInfoState.LOGGED_IN) {
             SpeedoValues.LOGGED_IN.setValue(1);
         } else {
             SpeedoValues.LOGGED_IN.setValue(0);
@@ -179,15 +179,12 @@ public class DeviceProvider {
                         doOnResult();
                     }
                 } else if (msg.what == MyBroadcastReceiver.BT_ACTION_BOND_STATE_CHANGED_BOND_BONDING) {
-                    // TODO testen!!
+                    // Controller is bonding - sometimes it forgets to asking for pairing code after selecting one in discovery dialog
                     doOnResult();
                 } else if (msg.what == MyBroadcastReceiver.BT_ACTION_BOND_STATE_CHANGED_BOND_NONE) {
                     // Controller not bonded
                     enableBluetoothPreference(true);
-//                    doOnResult();
-
-                    // Evtl. Ausgabe: Gerät ist noch nicht gekoppelt
-                    // Möglicher Punkt um Pairinganfrage (bei Vollbild) hervorzuheben
+                    doOnResult();
 //                } else if (msg.what == MyBroadcastReceiver.BT_ACTION_CLASS_CHANGED) {
                 } else if (msg.what == MyBroadcastReceiver.BT_ACTION_FOUND) {
                     // Add device to discoveredDevicesArrayAdapter
