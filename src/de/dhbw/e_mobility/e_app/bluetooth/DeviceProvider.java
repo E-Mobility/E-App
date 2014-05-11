@@ -286,7 +286,6 @@ public class DeviceProvider {
             return;
         }
         if (bluetoothInfoState == BluetoothInfoState.ON) {
-            Log.d("UPDATE", "onResult ON");
             updateBluetoothInfo(BluetoothInfoState.ON);
             checkDeviceKnown();
             return;

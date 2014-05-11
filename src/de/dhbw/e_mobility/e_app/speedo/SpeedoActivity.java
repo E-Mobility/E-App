@@ -83,7 +83,7 @@ public abstract class SpeedoActivity extends Activity {
                     if (distanceUnits.length > 1) {
                         if (!activityHandler.isKm()) {
                             if (!distance_unit_view.getText().equals(distanceUnits[1])) {
-                                distance_unit_view.setText(speedUnits[1]);
+                                distance_unit_view.setText(distanceUnits[1]);
                             }
                         } else {
                             if (!distance_unit_view.getText().equals(distanceUnits[0])) {
@@ -95,7 +95,7 @@ public abstract class SpeedoActivity extends Activity {
 
                 float unitFactor = activityHandler.getUnitFactor();
                 float speedVal = SpeedoValues.V.getValue();
-                int assistanceVal = (int) (speedVal * 20 / 5);
+                int assistanceVal = (int) (speedVal * 4);
                 if (assistanceVal > 100) {
                     assistanceVal = 100;
                 }

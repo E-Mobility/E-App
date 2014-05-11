@@ -71,7 +71,7 @@
     <string name="dialog_reset_tour_title">Achtung!</string>
     <string name="dialog_reset_tour">Möchten Sie die aktuelle Tour wirklich zurücksetzten?</string>
     <string name="dialog_advanced_settings_title">Achtung!</string>
-    <string name="dialog_advanced_settings">Achtung Experten Ansicht!\n\rVorgenommene Änderungen wirken sich direkt auf den Controller aus.Durch einige ist die Verkehrszulassung nicht mehr gewährleistet.\n\r\n\rMöchten Sie die Experten Ansicht wirklich aktivieren?</string>
+    <string name="dialog_advanced_settings">Achtung Experten Ansicht!\n\rVorgenommene Änderungen wirken sich direkt auf den Controller aus. Durch einige Einstellungen ist die Verkehrszulassung nicht mehr gewährleistet.\n\r\n\rMöchten Sie die Experten Ansicht wirklich aktivieren?</string>
     <string name="dialog_disconnect_title">Achtung!</string>
     <string name="dialog_disconnect">Verbindung wirklich trennen?</string>
     <string name="dialog_deviceList_title">Gerät auswählen</string>
